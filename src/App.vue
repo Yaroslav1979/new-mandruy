@@ -3,30 +3,27 @@
     <!-- <h1> {{title}} </h1> -->
     <!-- <mainButton @click="increment" outlined>Click</mainButton> -->
     <!-- <DirectivesTest /> -->
-    <ApartmentsItem 
-    :descr="apartment.descr"
-    :price="apartment.price"
-    :rating="apartment.rating"
-    imgSrc="https://picsum.photos/id/10/300/300"
-    />
+   <ApartmentsList :items="apartments" />
   </div>  
 </template>
 
 <script>
 // import mainButton from './components/mainButton.vue'
 // import DirectivesTest from './components/DirectivesTest.vue'
-import ApartmentsItem from './components/apartment/ApartmentsItem.vue'
+import ApartmentsList from './components/apartment/ApartmentsList.vue'
+import apartments from './components/apartment/apartments'
 
 export default {
   name: 'App',
   components: {
     // mainButton ,
     // DirectivesTest,
-    ApartmentsItem, 
+    ApartmentsList, 
   },
  
   data() {
     return {
+      apartments,
       apartment: {
         id: '3265652',
         title: 'Lorum jbqw3r',
