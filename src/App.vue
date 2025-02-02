@@ -1,9 +1,23 @@
 <template>
   <div :id="$style.app">
-    <!-- <h1> {{title}} </h1> -->
+    <h1> {{ text }} </h1>
+      
     <!-- <mainButton @click="increment" outlined>Click</mainButton> -->
     <!-- <DirectivesTest /> -->
-   <ApartmentsList :items="apartments" />
+     <!-- <input type="text" v-model="text"> -->
+     <CustomInput v-model="text" />
+   <ApartmentsList :items="apartments">
+    <!-- <template v-slot:title>New title</template> -->
+    <template v-slot:apartment="{ apartment }"> 
+      <ApartmentsItem 
+              :key="apartment.id"
+              :descr="apartment.descr"
+              :rating="apartment.rating"
+              :imgSrc="apartment.imgUrl"
+              :price="apartment.price"            
+         />
+      </template>
+    </ApartmentsList>
   </div>  
 </template>
 
@@ -11,6 +25,8 @@
 // import mainButton from './components/mainButton.vue'
 // import DirectivesTest from './components/DirectivesTest.vue'
 import ApartmentsList from './components/apartment/ApartmentsList.vue'
+import ApartmentsItem from './components/apartment/ApartmentsItem.vue'
+import CustomInput from './components/shared/CustomInput.vue'
 import apartments from './components/apartment/apartments'
 
 export default {
@@ -19,26 +35,14 @@ export default {
     // mainButton ,
     // DirectivesTest,
     ApartmentsList, 
+    ApartmentsItem,
+    CustomInput,
   },
  
   data() {
     return {
-      apartments,
-      apartment: {
-        id: '3265652',
-        title: 'Lorum jbqw3r',
-        descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
-        price: 1258.00,
-        rating: 4.5,
-        lacation: {
-          city: 'Rivne',          
-        },
-        owner: {
-          name: 'Olga',
-          phone: '125-25-2152',
-          email: 'fr@gr.com'
-        },
-      },
+      text: '',
+      apartments,      
     }
   },
   // computed: {
