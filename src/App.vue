@@ -1,7 +1,7 @@
 <template>
   <div :id="$style.app">
     <h1> {{ text }} </h1>
-      
+      <CustomSelect :items="['name', 'label', 'salary']" />
     <!-- <mainButton @click="increment" outlined>Click</mainButton> -->
     <!-- <DirectivesTest /> -->
      <!-- <input type="text" v-model="text"> -->
@@ -27,6 +27,7 @@
 import ApartmentsList from './components/apartment/ApartmentsList.vue'
 import ApartmentsItem from './components/apartment/ApartmentsItem.vue'
 import CustomInput from './components/shared/CustomInput.vue'
+import CustomSelect from './components/shared/CustomSelect.vue'
 import apartments from './components/apartment/apartments'
 
 export default {
@@ -37,6 +38,7 @@ export default {
     ApartmentsList, 
     ApartmentsItem,
     CustomInput,
+    CustomSelect,
   },
  
   data() {
