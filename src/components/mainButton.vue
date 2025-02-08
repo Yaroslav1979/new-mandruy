@@ -1,23 +1,27 @@
 <template>
-    <button v-on="listeners" v-bind:type="type" v-bind:class="{btn: true, 'btn--outlined': outlined}">
-        <slot type="button"></slot>
+    <button 
+        v-bind="$attrs"
+        v-bind:type="type"
+        v-bind:class="{ btn: true, 'btn--outlined': outlined }">
+        <slot></slot>
     </button>
 </template>
 
 <script>
-    export default {
-        name: `mainButton`,
-        props: {
-            type: {
-                type: String,
-                default: 'button',
-            },
-            outlined: {
-                type: Boolean,
-                default: false,
-            }
+export default {
+    name: "MainButton",
+    props: {
+        type: {
+            type: String,
+            default: "button",
+        },
+        outlined: {
+            type: Boolean,
+            default: false,
         }
-    }
+    },
+    inheritAttrs: false // Виключає передачу всіх атрибутів, якщо потрібно контролювати вручну
+};
 </script>
 
 <style lang="scss" scoped>
@@ -35,8 +39,6 @@
         background: none;
         border: 1px solid #ff662d;  
         color: #ff662d;     
-
     }
 }
-
 </style>

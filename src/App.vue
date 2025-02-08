@@ -1,12 +1,17 @@
 <template>
-  <div :id="$style.app">
+  <div id="app">
     <h1> {{ text }} </h1>
-      <CustomSelect :items="['name', 'label', 'salary']" />
+    <Container>
+      <ApartmentFilterForm class="apartments-filter" @submit="(data) => logger(data)" />
+
+    </Container> 
+      <!-- <CustomSelect :items="['name', 'label', 'salary']" /> -->
     <!-- <mainButton @click="increment" outlined>Click</mainButton> -->
     <!-- <DirectivesTest /> -->
      <!-- <input type="text" v-model="text"> -->
-     <CustomInput v-model="text" />
-   <ApartmentsList :items="apartments">
+     <!-- <CustomInput v-model="text" /> -->
+   
+    <ApartmentsList :items="apartments">
     <!-- <template v-slot:title>New title</template> -->
     <template v-slot:apartment="{ apartment }"> 
       <ApartmentsItem 
@@ -14,8 +19,9 @@
               :descr="apartment.descr"
               :rating="apartment.rating"
               :imgSrc="apartment.imgUrl"
-              :price="apartment.price"            
+              :price="apartment.price"                
          />
+         <!-- @click.native="handlItemClick"         -->
       </template>
     </ApartmentsList>
   </div>  
@@ -26,9 +32,11 @@
 // import DirectivesTest from './components/DirectivesTest.vue'
 import ApartmentsList from './components/apartment/ApartmentsList.vue'
 import ApartmentsItem from './components/apartment/ApartmentsItem.vue'
-import CustomInput from './components/shared/CustomInput.vue'
-import CustomSelect from './components/shared/CustomSelect.vue'
+// import CustomInput from './components/shared/CustomInput.vue'
+// import CustomSelect from './components/shared/CustomSelect.vue'
 import apartments from './components/apartment/apartments'
+import ApartmentFilterForm from './components/apartment/ApartmentFilterForm.vue'
+import Container from './components/shared/Container.vue'
 
 export default {
   name: 'App',
@@ -37,8 +45,10 @@ export default {
     // DirectivesTest,
     ApartmentsList, 
     ApartmentsItem,
-    CustomInput,
-    CustomSelect,
+    // CustomInput,
+    // CustomSelect,
+    ApartmentFilterForm,
+    Container
   },
  
   data() {
@@ -52,15 +62,15 @@ export default {
   //     return `Amount of clicks ${this.amountOfClick}`
   //   }
   // },
-  // methods: {
-  //   increment() {
-  //     this.amountOfClick += 1
-  //   }
-  // }
+  methods: {
+   logger(value) {
+      console.log(value, '--form value');
+    }
+  }
 }
 </script>
 
-<style module>
+<style lang="scss" scoped>
 #app {
   font-family: Montserrat, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -68,5 +78,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.apartments-filter {
+  margin-bottom: 40px;
 }
 </style>

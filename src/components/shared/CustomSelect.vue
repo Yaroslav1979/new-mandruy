@@ -1,50 +1,48 @@
 <template>
-    <select v-on="listeners" class="custom-select"> 
+    <select 
+        v-bind="$attrs" 
+        class="custom-select" 
+        :value="modelValue"
+        @change="onInput"
+    > 
         <option 
-        v-for="item in formatedItems" 
-        :key="item.value"
-        :value="item.value"
-        > {{ item.label }} </option>
+            v-for="item in formattedItems" 
+            :key="item.value"
+            :value="item.value"
+        > 
+            {{ item.label }} 
+        </option>
     </select>
 </template>
 
 <script>
-    export default {
-        name: 'CustomSelect',
-        props: {
-            items: {
-                type: Array,
-                required: true,
-            }
-        },
-        computed: {
-            listeners() {
-                return {
-                    ...this.listeners,
-                    input: event => this.$emit('input', event.target.value)
-                }
-            },
-            formatedItems() {
-                return this.items.map(item => {
-                    // if (typeof item === 'Object') {
-                    //     return item
-                    // } else {
-                    //     return { 
-                    //         value: item,
-                    //         label: item
-                    //     }                       
-                    // } або:
-                return typeof item === 'object'
-                ? item
-                :   { value: item, label: item }                   
-                })
-            }
+export default {
+    name: "CustomSelect",
+    props: {
+        modelValue: String, // Додаємо підтримку v-model
+        items: {
+            type: Array,
+            required: true
+        }
+    },
+    computed: {
+        formattedItems() {
+            return this.items.map(item =>
+                typeof item === "object"
+                    ? item
+                    : { value: item, label: item }
+            );
+        }
+    },
+    methods: {
+        onInput(event) {
+            this.$emit("update:modelValue", event.target.value);
         }
     }
+};
 </script>
 
 <style lang="scss" scoped>
-
 @import '../../assets/scss/variables';
 
 .custom-select {
@@ -55,5 +53,6 @@
     padding: 8px 15px;
     cursor: pointer;
     display: inline-block;
+    min-width: 220px;
 }
 </style>
