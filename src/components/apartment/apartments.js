@@ -6,7 +6,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1258.00,
         rating: 4.5,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -22,7 +22,7 @@ export default [
         descr: 'loerfqbgerfgfhm,fg cgvdmk bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1558.00,
         rating: 4.0,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -38,7 +38,7 @@ export default [
         descr: 'loerfqbgerfg bSDFHGRTGJwergh jkwergj A VFregjuhcvm , HTGKUYC lwerkghodf. mksldwgo',
         price: 1290.00,
         rating: 4.9,
-        lacation: {
+        location: {
           city: 'Lviv',          
         },
         owner: {
@@ -54,7 +54,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , tuuuuuuuuewgb lwerkghodf. mksldwgo',
         price: 1000.00,
         rating: 3.5,
-        lacation: {
+        location: {
           city: 'Lutsk',          
         },
         owner: {
@@ -70,7 +70,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm fsdhcv fs ty lwerkghodf. mksldwgo',
         price: 2258.00,
         rating: 4.8,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -86,7 +86,7 @@ export default [
         descr: 'loerfqbgerfg brffffbbtryj errh wergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1890.00,
         rating: 4.5,
-        lacation: {
+        location: {
           city: 'Sarny',          
         },
         owner: {
@@ -102,7 +102,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj reg  fcsdhn rfffffffh   fghdh juhcvm , lwerkghodf. mksldwgo',
         price: 1558.00,
         rating: 4.2,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -118,7 +118,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm ,dryn sh dfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfse  lwerkghodf. mksldwgo',
         price: 1290.00,
         rating: 3.5,
-        lacation: {
+        location: {
           city: 'Lviv',          
         },
         owner: {
@@ -134,7 +134,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1800.00,
         rating: 4.6,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -150,7 +150,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mdsg sdrg r sdrhsrnj sfhjfg ksldwgo',
         price: 1210.00,
         rating: 4.5,
-        lacation: {
+        location: {
           city: 'Berezne',          
         },
         owner: {
@@ -166,7 +166,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , sfdrgholgwefjlhn aefgaerhjk ilug wer lwerkghodf. mksldwgo',
         price: 1600.00,
         rating: 4.4,
-        lacation: {
+        location: {
           city: 'Dubno',          
         },
         owner: {
@@ -182,7 +182,7 @@ export default [
         descr: 'LKKHDYSD sadgwloerfqbgerfg bwergh jkwergj regjuhcvm ,xfg vdfgh srt lwerkghodf. mksldwgo',
         price: 1200.00,
         rating: 4.5,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -198,7 +198,7 @@ export default [
         descr: 'Kghfgwehnk, loerfqbgerfg bwergh jkwergj regjuhcvm ,aewb aewrvb lwerkghodf. mksldwgo',
         price: 1200.00,
         rating: 4.0,
-        lacation: {
+        location: {
           city: 'Sarny',          
         },
         owner: {
@@ -214,7 +214,7 @@ export default [
         descr: 'LJcftse fjhg sdr loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 2000.00,
         rating: 4.9,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -230,7 +230,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1700.00,
         rating: 5.0,
-        lacation: {
+        location: {
           city: 'Lviv',          
         },
         owner: {
@@ -246,7 +246,7 @@ export default [
         descr: 'Ksgv gjqwerg gjkef2rtkh f4ghulv wjke45 loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1900.00,
         rating: 4.9,
-        lacation: {
+        location: {
           city: 'Ratne',          
         },
         owner: {
@@ -262,7 +262,7 @@ export default [
         descr: 'Lmjhawdjh jhasegy jkbtvuw4 mjtvbu7 loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1150.00,
         rating: 3.8,
-        lacation: {
+        location: {
           city: 'Kovel',          
         },
         owner: {
@@ -278,7 +278,7 @@ export default [
         descr: 'loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1250.00,
         rating: 4.5,
-        lacation: {
+        location: {
           city: 'Lutsk',          
         },
         owner: {
@@ -294,7 +294,7 @@ export default [
         descr: 'Rumnfvb mnkm,. dkflundfklmbjklhio loerfqbgerfg bwergh jkwergj regjuhcvm , lwerkghodf. mksldwgo',
         price: 1500.00,
         rating: 4.3,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {
@@ -310,7 +310,7 @@ export default [
         descr: 'JHFGVdtuqwe l fbrn loer dsrgrth et5ru 56u8n7 67m5ijb jkrt ;/ r5tkuhno gsrtyiob5 tghikty,bn 54t3vbygsdferkuy uyj8orv5wmn uuioy8905my7  46m7i jk678  n679, o87ityuj 879 678fghjk uyiuyk uyikrfqbgerfg bwergh jkwergj regjuhcvm, lwerkghodf. mksldwgo',
         price: 1210.00,
         rating: 4.0,
-        lacation: {
+        location: {
           city: 'Rivne',          
         },
         owner: {

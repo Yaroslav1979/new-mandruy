@@ -10,6 +10,7 @@
             placeholder="Ціна, від"
         />
         <SubmitButon
+            @click="handleSubmit"
             class="form__submit"
             type="submit"
         > 
@@ -46,6 +47,7 @@ export default {
     },
     methods: {
     handleSubmit() {
+        console.log("Форма відправлена", this.city, this.price); // Перевіримо, чи спрацьовує
         // event.preventDefault(); // Запобігаємо відправці форми браузером
         this.$emit('submit', {
             city: this.city,

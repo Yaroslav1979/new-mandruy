@@ -12,6 +12,7 @@
                 <div class="apartments-item__price"> 
                     UAH {{ price }}
                 </div>
+                <router-link :to="{name: 'apartment'}" class="apartments-item__link"></router-link>
             </div>
         </div>
     </div>
@@ -106,6 +107,7 @@ import StarRating from "../StarRating"
     left: 0;
     width: 100%;
     height: 100%;
-  }
+  } 
+  
 }
 </style>

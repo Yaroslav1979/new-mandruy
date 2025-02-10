@@ -12,7 +12,7 @@
 
 <style lang="scss" scoped>
 .container {
-    max-width: 1110px;
+    max-width: 1110px;   
     margin: 0 auto;
 }
 </style>
