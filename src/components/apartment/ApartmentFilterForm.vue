@@ -7,7 +7,10 @@
         />
         <CustomInput
             v-model="price" 
+           
             placeholder="Ціна, від"
+            errorMessage="Не повинно бути пустим"
+            :rules="rules"
         />
         <SubmitButon
             @click="handleSubmit"
@@ -23,6 +26,7 @@
 import CustomInput from '../shared/CustomInput.vue';
 import CustomSelect from '../shared/CustomSelect.vue';
 import SubmitButon from '../mainButton.vue';
+import { isRequired, charLimit } from '../../utils/validationRules';
 
 export default {
     components: {
@@ -37,6 +41,9 @@ export default {
         }
     },
     computed: {
+        rules() {
+            return [isRequired, charLimit(10)]
+        },
         cities() {
             return [
                 { value: '', label: 'Місто', selected: true },

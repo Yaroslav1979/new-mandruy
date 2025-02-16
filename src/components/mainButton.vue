@@ -2,7 +2,7 @@
     <button 
         v-bind="$attrs"
         v-bind:type="type"
-        v-bind:class="{ btn: true, 'btn--outlined': outlined }"
+        v-bind:class="{ 'btn': true, 'btn--outlined': outlined }"
         @click="$emit('click')"
         > 
         <slot></slot>

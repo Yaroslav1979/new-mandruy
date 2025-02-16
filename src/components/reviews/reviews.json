@@ -1,22 +1,22 @@
 [
     {
-      "author": "Alex",
-      "content": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore velit reiciendis modi magnam, aliquid architecto cumque saepe recusandae est optio accusamus ducimus itaque assumenda eius culpa earum. Aspernatur, molestiae dicta!",
+      "author": "Олексій",
+      "content": "Місце для короткочасного проживання – просто ідеальне. Квартира добре обладнана, були деякі дрібні недоліки: на кухні трохи не вистачало посуду, а ванна була не зовсім чистою. Однак все це швидко виправили після нашого звернення. Усі основні зручності працювали справно, а господарі дуже ввічливі. Якщо не придиратися до деталей, це чудове місце для відпочинку!",
       "rating": 3.5
     },
     {
-      "author": "Ron",
-      "content": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore velit reiciendis modi magnam, aliquid architecto cumque saepe recusandae est optio accusamus ducimus itaque assumenda eius culpa earum. Aspernatur, molestiae dicta!",
+      "author": "Марія",
+      "content": "Квартира була дуже чистою та комфортною. Все, що нам потрібно було, було в наявності. Сподобалась хороша шумоізоляція, тому ми не чули жодного шуму з вулиці. Але трохи неприємно було, що одне з ліжок було не зовсім зручним, тож я не спала так добре, як би хотіла. Однак це не зіпсувало загального враження – однозначно варта своїх грошей!",
       "rating": 4.5
     },
     {
-      "author": "Marry",
-      "content": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore velit reiciendis modi magnam, aliquid architecto cumque saepe recusandae est optio accusamus ducimus itaque assumenda eius culpa earum. Aspernatur, molestiae dicta!",
+      "author": "Роман",
+      "content": "Чудова квартира, дуже затишна і сучасно оформлена. Всі необхідні зручності були на місці, а розташування дозволяло легко дістатися до основних туристичних місць. Окремо хочу відзначити комунікацію з господарем – дуже привітний та корисний. Єдине, що можна було б покращити – трохи більше місця для зберігання речей. В цілому дуже задоволений, рекомендуємо!",
       "rating": 4.8
     },
     {
-      "author": "John",
-      "content": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore velit reiciendis modi magnam, aliquid architecto cumque saepe recusandae est optio accusamus ducimus itaque assumenda eius culpa earum. Aspernatur, molestiae dicta!",
+      "author": "Женя",
+      "content": "Квартира загалом непогана, але була кілька недоліків. Система опалення працювала не дуже стабільно, і ми відчували прохолоду вночі. Крім того, вікна були не зовсім герметичні, тому чути було багато шуму з вулиці. Однак сама квартира просторна, з хорошими меблями і зручним розташуванням. Якщо ці недоліки будуть виправлені, це буде чудове місце для проживання.",
       "rating": 2.8
     }
   ]
