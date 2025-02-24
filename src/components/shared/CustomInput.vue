@@ -2,6 +2,8 @@
     <div class="wrapper-input">
         <input 
             v-bind="$attrs" 
+            v-on="$attrs"
+            @blur="blurHandler"
             class="custom-input" 
             :class="!isValid && 'custom-input--error'"
             :value="modelValue"
@@ -17,10 +19,15 @@ export default {
     data() {
         return {
             isValid: true,
-            error: ''
+            error: '',
+            isFirstInput: true,
         };
     },
-    inject: ['form'],
+    inject: {
+        form: {
+            default: null
+        }
+    },
     inheritAttrs: false,
     props: {
         modelValue: String, // Додаємо підтримку v-model
@@ -34,11 +41,16 @@ export default {
         }
     },
     watch: {
-        modelValue(value) {  
-            this.validate(value);
-            console.log("Введене значення:", value);
+    modelValue(value) {  
+        if (!value && this.isFirstInput) return; // Не запускаємо валідацію при першому вводі або очищенні
+        if (!value) {
+            this.isValid = true;
+            this.error = '';
+            return;
         }
-    },
+        this.validate(value);
+    }
+},
     mounted() {
         if  (!this.form) return
 
@@ -54,6 +66,8 @@ export default {
             this.$emit("update:modelValue", event.target.value);
         },
         validate(value) {
+            this.isValid = true;
+            this.error = '';
             for (const rule of this.rules) {
                 const result = rule(value);
                 
@@ -68,14 +82,23 @@ export default {
                     this.error = this.errorMessage;
                     return;
                 }
+            }           
+        },
+        blurHandler() {
+            if (this.isFirstInput) {
+                this.validate();
             }
-
-            this.isValid = true;
-            this.error = '';
+             this.isFirstInput = false
         },
         reset() {
-          this.$emit('input', '')
-        }
+    this.isFirstInput = true;
+    this.isValid = true;
+    this.error = '';
+    
+    // Очищаємо модельне значення
+    this.$emit('update:modelValue', '');
+}
+
     }
 };
 </script>
@@ -86,18 +109,19 @@ export default {
 .wrapper-input {
     position: relative;
     display: inline-flex;
+    padding: 12px 0;
 }
 
 .custom-input {
     height: 40px;
-    min-width: 220px;
+    /* min-width: 500px; */
     width: 100%;
     border: 2px solid $main-color;
     font-size: 18px;
     outline: none;
     line-height: inherit;
     padding: 8px 15px;
-    margin-right: 25%;
+    /* margin-right: 25%; */
 
     &::placeholder {
         color: inherit;

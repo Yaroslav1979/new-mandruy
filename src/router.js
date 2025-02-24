@@ -4,7 +4,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from './pages/HomePage.vue';
 import AboutApartment from './pages/AboutApartment.vue';
 import ErrorPage from './pages/ErrorPage.vue';
-import LoginPage from './pages/LoginPage'
+import LoginPage from './pages/LoginPage';
+import RegistrationPage from './pages/RegistrationPage'
 
 const routes = [
   {
@@ -21,6 +22,11 @@ const routes = [
   path: '/login',
   name: 'login-page',
   component: LoginPage,
+},
+{
+  path: '/registration',
+  name: 'registration-page',
+  component: RegistrationPage,
 },
   {
     path: '/:pathMatch(.*)*', // Новий формат для Vue 3

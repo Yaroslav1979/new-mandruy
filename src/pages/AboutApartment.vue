@@ -1,29 +1,30 @@
 <template>
   <main class="apartment-page">
-    <Container>
-      <div v-if="apartment" class="apartment-page__content">
-        <ApartmentsMainInfo :apartment="apartment" />
-        <div class="apartment-page__additional-info">
-          <ApartmentOwner
-            :owner="apartment.owner"
-            class="apartment-page__owner"
-          />
-          <Reviews :reviews="reviewsList" />
+    <SectionWithHeaderSpacer>
+      <Container>
+        <div v-if="apartment" class="apartment-page__content">
+          <ApartmentsMainInfo :apartment="apartment" />
+          <div class="apartment-page__additional-info">
+            <ApartmentOwner
+              :owner="apartment.owner"
+              class="apartment-page__owner"
+            />
+            <Reviews :reviews="reviewsList" />
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </SectionWithHeaderSpacer>
   </main>
 </template>
 
 <script>
 import { getApartmentById } from "../services/apartments.service.js";
 import Container from "../components/shared/Container.vue";
-// import apartments from "../components/apartment/apartments";
+import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
 import ApartmentsMainInfo from "../components/apartment/ApartmentsMainInfo.vue";
 import ApartmentOwner from "../components/apartment/ApartmentOwner.vue";
 import Reviews from "../components/reviews";
 import reviewsList from "../components/reviews/reviews.json";
-
 
 export default {
   name: "ApartmentPage",
@@ -32,12 +33,13 @@ export default {
     ApartmentsMainInfo,
     ApartmentOwner,
     Reviews,
+    SectionWithHeaderSpacer,
   },
-data() {
-   return {
-    apartment: null
-}
-},
+  data() {
+    return {
+      apartment: null,
+    };
+  },
   computed: {
     reviewsList() {
       return reviewsList;
@@ -50,7 +52,7 @@ data() {
   },
   async created() {
     try {
-        const {id} = this.$route.params
+      const { id } = this.$route.params;
       const { data } = await getApartmentById(id);
       this.apartment = data;
     } catch (error) {

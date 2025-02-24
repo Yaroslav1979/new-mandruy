@@ -2,7 +2,8 @@
   <div id="app">
     <div class="content"> 
       <AppHeader />
-      <router-view />      
+      <router-view />   
+      <!-- <notifications  />    -->
     </div>
     <AppFooter />    
 </div> 
@@ -34,6 +35,6 @@ export default {
 }
 .content {
   flex-grow: 1;
-  padding-top: 120px;
+  /* padding-top: 120px; */
 }
 </style>
