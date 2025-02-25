@@ -1,9 +1,9 @@
 <template>
   <div id="app">
+    <Notifications />  
     <div class="content"> 
       <AppHeader />
-      <router-view />   
-      <!-- <notifications  />    -->
+      <router-view />       
     </div>
     <AppFooter />    
 </div> 
@@ -12,13 +12,21 @@
 <script>
 import AppFooter from './components/shared/MainFooter'
 import AppHeader from './components/shared/MainHeader'
+import Notifications from './components/notifications'
 
 export default {
   name: 'App',
   components: {   
     AppFooter,
     AppHeader,
+    Notifications
   },
+  // mounted() {
+  //   this.$notify({
+  //     title: 'Importent message',
+  //     text: 'Hello user!'
+  //   })
+  // }
   
 }
 

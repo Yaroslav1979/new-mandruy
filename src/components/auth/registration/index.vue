@@ -113,8 +113,12 @@ export default {
                 
                 // Очищуємо всі поля
                 this.formData.reset();
-            } catch (error) {
-                console.error(error);
+            } catch (error) {               
+                this.$notify({
+                  type: 'error',
+                  title: 'Відбулася помилка',
+                  text: error.message,
+                });
             } finally {
               this.loading = false
             }

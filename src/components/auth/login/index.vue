@@ -20,7 +20,7 @@
         :rules="passwordRules"
         class="login__input"
       />
-      <Button type="submit" class="login__btn">Увійти</Button>
+      <Button type="submit" class="login__btn" :loading="loading">Увійти</Button>
     </Form>
   </AuthContainer>
 </template>
@@ -87,7 +87,11 @@ export default {
               };
                 console.log(data);
             } catch (error) {
-                console.error(error);
+              this.$notify({
+                  type: 'error',
+                  title: 'Відбулася помилка',
+                  text: error.message,
+                });
                 } finally {
                   this.loading = false;
                 }
