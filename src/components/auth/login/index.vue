@@ -31,7 +31,7 @@ import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-import { loginUser } from '../../../services/auth.service'
+// import { loginUser } from '../../../services/auth.service'
 import {
   emailValidation,
   passwordValidation,
@@ -73,19 +73,22 @@ export default {
   methods: {
     async handleSubmit() {
       const { form } = this.$refs
-      const isFormValid = this.$refs.form.validate();
-      const { email, password } = this.formData;
+      const isFormValid = form.validate();
+      // const { email, password } = this.formData;
 
       if (isFormValid) {
             try {
               this.loading = true;
-                const {data} = await loginUser(password, email);
+              await this.$store.dispatch('login', this.formData);
+
+                this.$router.push({name: 'home'})
+
                 form.reset();
-                this.formData = { // Очистка полів після успішної реєстрації
-              email: '',
-              password: '',        
-              };
-                console.log(data);
+              //   this.formData = { // Очистка полів після успішної реєстрації
+              // email: '',
+              // password: '',        
+              // };
+              //   console.log(data);
             } catch (error) {
               this.$notify({
                   type: 'error',

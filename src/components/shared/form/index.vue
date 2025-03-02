@@ -1,11 +1,12 @@
 <template>
-  <form v-bind="$attrs" v-on="$attrs" class="form">
+  <form v-bind="$attrs" class="form">
     <slot></slot>
   </form>
 </template>
 
 <script>
 export default {
+  
   name: "FormPage",
   provide() {
     return {

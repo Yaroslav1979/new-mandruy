@@ -2,7 +2,7 @@
     <div class="wrapper-input">
         <input 
             v-bind="$attrs" 
-            v-on="$attrs"
+            
             @blur="blurHandler"
             class="custom-input" 
             :class="!isValid && 'custom-input--error'"

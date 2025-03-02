@@ -5,32 +5,28 @@
       <AppHeader />
       <router-view />       
     </div>
+    
     <AppFooter />    
 </div> 
 </template>
 
 <script>
-import AppFooter from './components/shared/MainFooter'
-import AppHeader from './components/shared/MainHeader'
-import Notifications from './components/notifications'
+// import { useStore } from 'vuex';
+// import { computed, onMounted } from 'vue';
+import AppFooter from './components/shared/MainFooter';
+import AppHeader from './components/shared/MainHeader';
+import Notifications from './components/notifications';
 
 export default {
   name: 'App',
-  components: {   
+  components: {
     AppFooter,
     AppHeader,
     Notifications
-  },
-  // mounted() {
-  //   this.$notify({
-  //     title: 'Importent message',
-  //     text: 'Hello user!'
-  //   })
-  // }
-  
+  }, 
 }
-
 </script>
+
 
 <style lang="scss" scoped>
 #app {

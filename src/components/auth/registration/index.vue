@@ -48,7 +48,7 @@ import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-import { registerUser } from '../../../services/auth.service'
+// import { registerUser } from '../../../services/auth.service'
 import {
   emailValidation,
   passwordValidation,
@@ -102,17 +102,23 @@ export default {
   },
   methods: {
     async handleSubmit() {
-        const isFormValid = this.$refs.form.validate();
+      const { form } = this.$refs
+        const isFormValid = form.validate();
         const { name, password, email } = this.formData;
 
         if (isFormValid) {
             try {
-                this.loading = true;
-                const { data } = await registerUser({ name, password, email });
-                console.log(data);
+                this.loading = true;              
                 
+
+               await this.$store.dispatch('registration', { name, password, email });
+               
+                
+                console.log(this.$store.state)
+
+                this.$router.push({name: 'home'})
                 // Очищуємо всі поля
-                this.formData.reset();
+                form.reset();
             } catch (error) {               
                 this.$notify({
                   type: 'error',
