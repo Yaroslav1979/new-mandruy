@@ -16,6 +16,7 @@
 import AppFooter from './components/shared/MainFooter';
 import AppHeader from './components/shared/MainHeader';
 import Notifications from './components/notifications';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'App',
@@ -24,6 +25,12 @@ export default {
     AppHeader,
     Notifications
   }, 
+  computed: {
+    ...mapGetters('auth', ['isLoggedIn'])
+  },
+  mounted() {
+    console.log(this.isLoggedIn);
+  }
 }
 </script>
 
@@ -34,8 +41,8 @@ export default {
   flex-direction: column;
   min-height: 100vh;
   font-family: Montserrat, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;  
+  /* -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;   */
 }
 .content {
   flex-grow: 1;

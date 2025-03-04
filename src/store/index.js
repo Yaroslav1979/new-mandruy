@@ -1,37 +1,16 @@
 import { createStore } from 'vuex';
-import {loginUser, registerUser} from  '../services/auth.service'
+import authModule from  './modules/auth';
+import createPersistedState from 'vuex-persistedstate'
 
-const initialState = {
-     user: null,
-        token: '',
-}
+const dataState = createPersistedState( {
+    path: ['auth.token']
+})
 
 const store = createStore({  // Використовуємо createStore
-    state: { ...initialState }, 
-    mutations: {
-        setUserDadta(state, userData) {
-            state.user = userData;
-        },
-        setToken(state, token) {
-            state.token = token;
-        },
+    modules: {
+        auth: authModule,
     },
-    actions: {
-        async login({ commit }, payload) {
-          const {data} = await loginUser(payload)
-          const {user, token} = data
-
-          commit('setUserData', user)
-          commit('setToken', token)
-        },
-         async registration({ commit }, payload) {
-          const {data} = await registerUser(payload)
-          const {user, token} = data
-
-          commit('setUserData', user)
-          commit('setToken', token)
-        }
-    }
+    plagins: [dataState],
 });
 
 export default store

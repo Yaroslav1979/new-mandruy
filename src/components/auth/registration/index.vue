@@ -111,7 +111,7 @@ export default {
                 this.loading = true;              
                 
 
-               await this.$store.dispatch('registration', { name, password, email });
+               await this.$store.dispatch('auth/registration', { name, password, email });
                
                 
                 console.log(this.$store.state)
