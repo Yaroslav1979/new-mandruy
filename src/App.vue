@@ -37,10 +37,10 @@ export default {
 
 <style lang="scss" scoped>
 #app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  margin: 0px;
+  
+  max-width: 1920px;
+  font-family: e-Ukraine, sans-serif;
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;   */
 }

@@ -6,7 +6,7 @@
 
 <script>
     export default {
-        nam: "SectionSpacer"
+        name: "SectionSpacer"
     }
 </script>
 

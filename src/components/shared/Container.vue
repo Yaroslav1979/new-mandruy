@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <slot>Defoult value</slot>
+        <slot>Default value</slot>
     </div>
 </template>
 
@@ -12,7 +12,7 @@
 
 <style lang="scss" scoped>
 .container {
-    max-width: 1110px;   
+    /* width: 100%; */
     margin: 0 auto;
 }
 </style>
