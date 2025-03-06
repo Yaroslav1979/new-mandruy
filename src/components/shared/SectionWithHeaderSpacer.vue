@@ -13,6 +13,6 @@
 <style lang="scss" scoped>
 
 .section-spacer {   
-    padding-top: 120px;
+    padding-top: 200px;
 }
 </style>

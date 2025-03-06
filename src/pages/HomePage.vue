@@ -1,7 +1,15 @@
 <template>
   <main class="homepage">
+  <SectionWithHeaderSpacer>    
+    <AboutService />
+  </SectionWithHeaderSpacer>
     <SectionWithHeaderSpacer>
-      <Container>
+    <SocialNet/>
+  </SectionWithHeaderSpacer>
+
+    <SectionWithHeaderSpacer>
+      
+      <Container>        
         <ApartmentFilterForm class="apartments-filter" @submit="filter" />
       </Container>
       <Container>
@@ -24,6 +32,8 @@
 </template>
 
 <script>
+import AboutService from "../components/shared/AboutService.vue"
+import SocialNet from "../components/shared/SocialNet.vue"
 import ApartmentsList from "../components/apartment/ApartmentsList.vue";
 import ApartmentsItem from "../components/apartment/ApartmentsItem.vue";
 // import apartments from '../components/apartment/apartments'
@@ -35,6 +45,8 @@ import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpace
 export default {
   name: "App",
   components: {
+    AboutService,
+    SocialNet,
     ApartmentsList,
     ApartmentsItem,
     ApartmentFilterForm,

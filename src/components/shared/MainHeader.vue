@@ -29,7 +29,7 @@
               Дізнатися більше
               <img
                 src="../../assets/svg/arrow-more.svg"
-                alt="logo"
+                alt="Arrow"
                 class="icon"
               />
             </a>
