@@ -28,6 +28,9 @@
         </ApartmentsList>
       </Container>
     </SectionWithHeaderSpacer>
+    <ActiveMap />
+    <MainQuastions />
+    <ContactsUs />
   </main>
 </template>
 
@@ -41,7 +44,9 @@ import ApartmentFilterForm from "../components/apartment/ApartmentFilterForm.vue
 import Container from "../components/shared/Container.vue";
 import { getApartmentsList } from "../services/apartments.service";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.vue";
-
+import MainQuastions from "../components/shared/MainQuastions.vue"
+import ActiveMap from "../components/shared/ActiveMap.vue"
+import ContactsUs from "../components/shared/ContactsUs.vue"
 export default {
   name: "App",
   components: {
@@ -52,6 +57,9 @@ export default {
     ApartmentFilterForm,
     Container,
     SectionWithHeaderSpacer,
+    ActiveMap,
+    MainQuastions,
+    ContactsUs,
   },
 
   data() {
