@@ -9,6 +9,7 @@
             :value="modelValue"
             @input="updateValue"
         />
+        <!-- <img src="../../assets/png/iconSearch.png" alt="" class="search-icon"> -->
         <span v-if="!isValid" class="custom-input__error">{{ error }}</span>
     </div>
 </template>
@@ -107,28 +108,41 @@ export default {
 @import "../../assets/scss/variables";
 
 .wrapper-input {
-    position: relative;
+    display: flex;  
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; 
+    /* position: relative;
     display: inline-flex;
-    padding: 12px 0;
+    padding: 12px 0; */
 }
 
 .custom-input {
-    height: 40px;
+    /* height: 40px; */
     /* min-width: 500px; */
-    width: 100%;
+    /* width: 100%;
     border: 2px solid $main-color;
     font-size: 18px;
     outline: none;
     line-height: inherit;
-    padding: 8px 15px;
+    padding: 8px 15px; */
     /* margin-right: 25%; */
+    display: flex;
+  align-content: center;
+  background-color: white;
+  border-radius: 5px;
+  border: 4px solid #F2EFF8;
+  width: 1012px;
+  height: 68px;
+  font-size: 26px;
+  padding: 0 20px;
 
     &::placeholder {
-        color: inherit;
+        color: gray;
     }
 
     &--error {
-        border-color: red;
+        border-color: rgba(255, 0, 0, 0.428);
     }
 
     &__error {
@@ -141,4 +155,5 @@ export default {
         line-height: 1.3;
     }
 }
+
 </style>

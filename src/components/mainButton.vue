@@ -51,7 +51,7 @@ export default {
 
 <style lang="scss" scoped>
 .btn {
-    position: relative;
+    /* position: relative;
     display: inline-block;
     font-size: 18px;
     background: #ff662d;
@@ -59,7 +59,7 @@ export default {
     cursor: pointer;
     min-width: 220px;
     border: 1px solid transparent;
-    padding: 8px 15px;
+    padding: 8px 15px; */
 
     &--outlined {
         background: none;
