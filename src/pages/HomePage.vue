@@ -1,15 +1,14 @@
 <template>
   <main class="homepage">
-  <SectionWithHeaderSpacer>    
-    <AboutService />
-  </SectionWithHeaderSpacer>
     <SectionWithHeaderSpacer>
-    <SocialNet/>
-  </SectionWithHeaderSpacer>
+      <AboutService />
+    </SectionWithHeaderSpacer>
+    <SectionWithHeaderSpacer>
+      <SocialNet />
+    </SectionWithHeaderSpacer>
 
     <SectionWithHeaderSpacer>
-      
-      <Container>        
+      <Container>
         <ApartmentFilterForm class="apartments-filter" @submit="filter" />
       </Container>
       <Container>
@@ -29,35 +28,47 @@
       </Container>
     </SectionWithHeaderSpacer>
     <ActiveMap />
+
+    <section>
+      
+
+  <AddPlaceForm :categories="categories" />
+
+
+    </section>
+    
     <MainQuastions />
     <ContactsUs />
   </main>
 </template>
 
 <script>
-import AboutService from "../components/shared/AboutService.vue"
-import SocialNet from "../components/shared/SocialNet.vue"
+import AboutService from "../components/shared/AboutService.vue";
+import SocialNet from "../components/shared/SocialNet.vue";
 import ApartmentsList from "../components/apartment/ApartmentsList.vue";
 import ApartmentsItem from "../components/apartment/ApartmentsItem.vue";
-// import apartments from '../components/apartment/apartments'
+import categories from "../components/categories/categories.js";
 import ApartmentFilterForm from "../components/apartment/ApartmentFilterForm.vue";
 import Container from "../components/shared/Container.vue";
 import { getApartmentsList } from "../services/apartments.service";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.vue";
-import MainQuastions from "../components/shared/MainQuastions.vue"
-import ActiveMap from "../components/shared/ActiveMap.vue"
-import ContactsUs from "../components/shared/ContactsUs.vue"
+import MainQuastions from "../components/shared/MainQuastions.vue";
+import ActiveMap from "../components/shared/ActiveMap.vue";
+import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
+import ContactsUs from "../components/shared/ContactsUs.vue";
+
 export default {
   name: "App",
   components: {
     AboutService,
     SocialNet,
     ApartmentsList,
-    ApartmentsItem,
+    ApartmentsItem,    
+    AddPlaceForm,
     ApartmentFilterForm,
     Container,
     SectionWithHeaderSpacer,
-    ActiveMap,
+    ActiveMap,    
     MainQuastions,
     ContactsUs,
   },
@@ -66,6 +77,7 @@ export default {
     return {
       text: "",
       apartments: [],
+      categories: categories || [],
       filters: {
         city: "",
         price: "",

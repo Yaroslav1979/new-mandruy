@@ -29,6 +29,7 @@ import SubmitButon from "../mainButton.vue";
 import { isRequired, charLimit } from "../../utils/validationRules";
 
 export default {
+  name: 'FilterForm',
   components: {
     CustomSelect,
     CustomInput,
