@@ -13,7 +13,7 @@
     import Container from '../shared/Container.vue'
 
     export default {
-        name: 'ApartmentsList',
+        name: 'PlacesList',
         components: {
            
             Container

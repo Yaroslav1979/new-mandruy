@@ -112,26 +112,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 100%; 
-    /* position: relative;
-    display: inline-flex;
-    padding: 12px 0; */
 }
-
-.custom-input {
-    /* height: 40px; */
-    /* min-width: 500px; */
-    /* width: 100%;
-    border: 2px solid $main-color;
-    font-size: 18px;
-    outline: none;
-    line-height: inherit;
-    padding: 8px 15px; */
-    /* margin-right: 25%; */
+.custom-input {    
     display: flex;
   align-content: center;
   background-color: white;
-  border-radius: 5px;
-  border: 4px solid #F2EFF8;
+  border-radius: 8px;
+  border: 2px solid $main-color;
   width: 1012px;
   height: 68px;
   font-size: 26px;

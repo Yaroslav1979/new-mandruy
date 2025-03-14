@@ -12,7 +12,7 @@
 
 <style lang="scss" scoped>
 .container {
-    /* width: 100%; */
+    width: 75%;
     margin: 0 auto;
 }
 </style>

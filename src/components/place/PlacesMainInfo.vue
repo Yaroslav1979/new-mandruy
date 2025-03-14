@@ -15,7 +15,7 @@
 <script>
 import Rating from '../StarRating.vue'
     export default {
-        name: 'ApartmentsMainInfo',
+        name: 'PlacesMainInfo',
         components: {
             Rating,
         },

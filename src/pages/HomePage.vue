@@ -2,30 +2,27 @@
   <main class="homepage">
     <SectionWithHeaderSpacer>
       <AboutService />
-    </SectionWithHeaderSpacer>
-    <SectionWithHeaderSpacer>
-      <SocialNet />
-    </SectionWithHeaderSpacer>
-
+    </SectionWithHeaderSpacer>    
+      <SocialNet />  
     <SectionWithHeaderSpacer>
       <Container>
-        <ApartmentFilterForm class="apartments-filter" @submit="filter" />
+        <PlacesFilterForm class="apartments-filter" @submit="filter" />
       </Container>
-      <Container>
-        <p v-if="!filteredApartments.length">Нічого не знайдено</p>
-        <ApartmentsList v-else :items="filteredApartments">
+      <!-- <Container> -->
+        <p v-if="!filteredPlaces.length">Нічого не знайдено</p>
+        <PlacesList v-else :items="filteredPlaces">
           <template v-slot:apartment="{ apartment }">
-            <ApartmentsItem
+            <PlacesItem
               :key="apartment.id"
               :id="apartment.id"
               :descr="apartment.descr"
               :rating="apartment.rating"
               :imgSrc="apartment.imgUrl"
-              :price="apartment.price"
+              :title="apartment.title"
             />
           </template>
-        </ApartmentsList>
-      </Container>
+        </PlacesList>
+      <!-- </Container> -->
     </SectionWithHeaderSpacer>
     <ActiveMap />
 
@@ -45,10 +42,10 @@
 <script>
 import AboutService from "../components/shared/AboutService.vue";
 import SocialNet from "../components/shared/SocialNet.vue";
-import ApartmentsList from "../components/apartment/ApartmentsList.vue";
-import ApartmentsItem from "../components/apartment/ApartmentsItem.vue";
+import PlacesList from "../components/place/PlacesList.vue";
+import PlacesItem from "../components/place/PlacesItem.vue";
 import categories from "../components/categories/categories.js";
-import ApartmentFilterForm from "../components/apartment/ApartmentFilterForm.vue";
+import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
 import Container from "../components/shared/Container.vue";
 import { getApartmentsList } from "../services/apartments.service";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.vue";
@@ -62,10 +59,10 @@ export default {
   components: {
     AboutService,
     SocialNet,
-    ApartmentsList,
-    ApartmentsItem,    
+    PlacesList,
+    PlacesItem,    
     AddPlaceForm,
-    ApartmentFilterForm,
+    PlacesFilterForm,
     Container,
     SectionWithHeaderSpacer,
     ActiveMap,    
@@ -76,7 +73,7 @@ export default {
   data() {
     return {
       text: "",
-      apartments: [],
+      places: [],
       categories: categories || [],
       filters: {
         city: "",
@@ -85,14 +82,14 @@ export default {
     };
   },
   computed: {
-    filteredApartments() {
-      return this.filterByPrice(this.filterByCityName(this.apartments));
+    filteredPlaces() {
+      return this.filterByPrice(this.filterByCityName(this.places));
     },
   },
   async created() {
     try {
       const { data } = await getApartmentsList();
-      this.apartments = data;
+      this.places = data;
     } catch (error) {
       console.error(error);
     }
@@ -103,19 +100,19 @@ export default {
       if (price !== undefined) this.filters.price = price;
     },
 
-    filterByCityName(apartments) {
-      if (!this.filters.city) return apartments;
-      return apartments.filter(
-        (apartment) =>
-          apartment.location?.city &&
-          apartment.location.city === this.filters.city
+    filterByCityName(places) {
+      if (!this.filters.city) return places;
+      return places.filter(
+        (place) =>
+          place.location?.city &&
+          place.location.city === this.filters.city
       );
     },
 
-    filterByPrice(apartments) {
-      if (!this.filters.price) return apartments;
-      return apartments.filter(
-        (apartment) => apartment.price && apartment.price >= this.filters.price
+    filterByPrice(places) {
+      if (!this.filters.price) return places;
+      return places.filter(
+        (place) => place.price && place.price >= this.filters.price
       );
     },
   },

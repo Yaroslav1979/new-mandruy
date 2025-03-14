@@ -65,7 +65,8 @@ export default {
   width: 100%;
   height: 100%;
   flex-shrink: 0;
-  background: #f5f4f4; 
+  background: #f5f4f4;
+  padding: 100px 0; 
 }
 .about-service__title {
   color: #000;

@@ -5,16 +5,17 @@
       v-model="price"
       placeholder="Введіть назву місця"
       errorMessage="Не повинно бути пустим"
-      :rules="rules"
+      :rules="rules"     
     />
     
     <SubmitButon @click="handleSubmit"  
-      type="submit">
+      type="submit"
+      class="search-btn">
       <img src="../../assets/png/iconSearch.png" alt="" class="search-icon">
     </SubmitButon>
     </div>
 
-    <div class="forms__select">
+    <div class="form__select">
       <CustomSelect :items="categoryOptions" v-model="category" class="form__select" />
       <CustomSelect :items="regions" v-model="region" class="form__select" />
       <CustomSelect :items="sort" v-model="sorts" class="form__select" />
@@ -104,28 +105,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/variables";
 .form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
 
   &__select {
-    margin-right: 30px;
-    width: 50px;
+display: flex;
+justify-content: space-around;   
   }
   &__submit {
     margin-left: 30px;
+   
   }
   &__wrapper {
     display: flex;
-    padding: 0 400px;
+    justify-content: center;
+    gap: 20px;
+    
   }
+}
+.search-btn {
+  border: 2px solid $main-color;
+  border-radius: 8px;
+  cursor: pointer;
 }
 .search-icon {
   display: flex;
   align-content: center;
-  width: 69px;
-  height: 69px;  
+  width: 54px;
+  height: 54px;  
   cursor: pointer;
+  /* border: 2px solid ; */
 }
 .forms__select {
   display: flex;

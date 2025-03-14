@@ -1,5 +1,5 @@
 <template>
-    <Container>
+    
     <!-- <router-link to="/"> --> 
     <div class="header">
       <div class="header-top">
@@ -37,17 +37,16 @@
         </div>
       </div>
     </div>   
-    <!-- </router-link> -->
-  </Container>
+    <!-- </router-link> -->  
 </template>
 
 <script>
-import Container from "../shared/Container.vue";
+// import Container from "../shared/Container.vue";
 import LogoType from "./LogoType";
 export default {
   name: "MainHeader",
   components: {
-    Container,
+    // Container,
     LogoType,
   },
 };
@@ -64,14 +63,12 @@ export default {
   width: 100%;
   height: 1080px;
 }
-
 .header-top {
   display: flex;
   justify-content: space-around;
   margin: 10px;
   padding: 16px 50px;
 }
-
 .header-top > span {
   display: flex;
   gap: 100px;
@@ -93,7 +90,6 @@ export default {
   border: 1px solid #fafafa;
   box-shadow: 0px 4px 99px 0px #454753;
 }
-
 .header-top__nav:hover {
   color: bisque;
   border: 2px solid bisque;
@@ -103,14 +99,12 @@ export default {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
-  /* font-family: e-Ukraine, sans-serif; */
   font-style: normal;
   width: 35%;
   gap: 40px;
   margin: 0px 324px;
   color: #fff;
 }
-
 .header__hero-title {
   display: inline-flex;
   justify-content: center;
@@ -119,21 +113,18 @@ export default {
   font-weight: 700;
   line-height: 18px;
 }
-
 .header__hero-text {
   color: #fff;
   font-size: 12px;
   font-weight: 400;
   line-height: 20px;
 }
-
 .header__hero-buttons {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 72px;
 }
-
 .header__hero-buttons--search {
   display: flex;
   padding: 12px 44px;

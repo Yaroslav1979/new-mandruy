@@ -3,15 +3,14 @@
         <div class="apartments-item__inner">
             <img :src="imgSrc" alt="" class="apartments-item__photo">
             <div class="apartments-item__content">
+                <h2 class="apartments-item__price"> 
+                    {{ title }}
+                </h2>
+                <br>
                 <p class="apartments-item__description"> 
                     {{ descr }}
-                </p>
-                <div class="apartments-item__rating"> 
-                    <StarRating :rating="rating" />
-                </div>
-                <div class="apartments-item__price"> 
-                    UAH {{ price }}
-                </div>
+                </p>                
+               
                 <router-link 
                   :to="{name:'apartment', params: { id}, query: {name: 'Yarik'} }" 
                   class="apartments-item__link"
@@ -23,12 +22,12 @@
 
 <script>
 
-import StarRating from "../StarRating"
+// import StarRating from "../StarRating"
 
     export default {
-        name: 'ApartmentsItem',
+        name: 'PlacesItem',
         components: {
-            StarRating,
+            // StarRating,
         },
         props: {
             id: {
@@ -43,9 +42,9 @@ import StarRating from "../StarRating"
                 type: Number,
                 default: 0
             },
-            price: {
-                type: Number,
-                required: true
+            title: {
+                type: String,
+                default: ''
             },
             imgSrc: {
                 type: String,

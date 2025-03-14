@@ -43,6 +43,7 @@ export default {
 .social-container {
   display: flex;
   position: relative;
+  margin: 100px 0;
 }
 
 .social__bgd {

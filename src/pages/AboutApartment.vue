@@ -21,7 +21,7 @@
 import { getApartmentById } from "../services/apartments.service.js";
 import Container from "../components/shared/Container.vue";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
-import ApartmentsMainInfo from "../components/apartment/ApartmentsMainInfo.vue";
+import ApartmentsMainInfo from "../components/apartment/PlacesMainInfo.vue";
 import ApartmentOwner from "../components/apartment/ApartmentOwner.vue";
 import Reviews from "../components/reviews";
 import reviewsList from "../components/reviews/reviews.json";
