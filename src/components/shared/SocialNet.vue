@@ -1,5 +1,5 @@
 <template>
-  <section class="social-container" id="social">
+  <section class="social" id="social">
     <div class="social__bgd"></div>
     <img class="social__picture" src="../../assets/png/phone.png" alt="picture" srcset="" />
 
@@ -40,60 +40,56 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.social-container {
+@import "../../assets/scss/variables.scss";
+
+.social {
   display: flex;
   position: relative;
   margin: 100px 0;
+  &__bgd {
+    display: flex;
+    width: 100%;
+    height: 460px;
+    top: 0px;
+    flex-shrink: 0;
+    background-color: #000;
+    transform: skewY(3deg);
+    margin: 20px 0;
+  }
+
+  &-block {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 880px;
+    top: 160px;
+    width: 30%;
+
+      &__title {
+      color: #fff;
+      font-family: e-Ukraine, sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: normal;
+      margin-bottom: 20px;
+    }
+
+    &__text {
+      color: #bcbcbc;
+      font-family: e-Ukraine, sans-serif;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%;
+    }
+      &__icons {
+      display: flex;
+      margin-top: -20px;
+    }
+  }
 }
 
-.social__bgd {
-  display: flex;
-  width: 100%;
-  height: 460px;
-  top: 0px;
-  flex-shrink: 0;
-  background-color: #000;
-  transform: skewY(3deg);
-  margin: 20px 0;
-}
-
-.social-block {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  left: 880px;
-  top: 160px;
-  width: 30%;
-}
-
-.social-block__title {
-  color: #fff;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 28px;
-  font-weight: 700;
-  line-height: normal;
-  margin-bottom: 20px;
-}
-
-.social-block__text {
-  color: #bcbcbc;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 140%;
-}
-
-.social__picture:last-of-type {
-  position: absolute;
-  top: -80px;
-  left: 388px;
-  width: 384px;
-  height: 668px;
-  transform: rotate(-2.001eg);
-  flex-shrink: 0;
-}
-.social__picture {
+  .social__picture {
   position: absolute;
   top: -68px;
   left: 400px;
@@ -101,11 +97,17 @@ export default {
   height: 668px;
   transform: rotate(-2.001eg);
   flex-shrink: 0;
-}
 
-.social-block__icons {
-  display: flex;
-  margin-top: -20px;
+
+  &:last-of-type {
+    position: absolute;
+    top: -80px;
+    left: 388px;
+    width: 384px;
+    height: 668px;
+    transform: rotate(-2.001eg);
+    flex-shrink: 0;
+  }
 }
 
 .box-icon {
@@ -124,12 +126,4 @@ export default {
   height: 200px;
 }
 
-.social-in {
-  display: flex;
-  position: absolute;
-  top: 87px;
-  left: 110px;
-  width: 20px;
-  height: 20px;
-}
 </style>

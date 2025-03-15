@@ -1,6 +1,6 @@
 <template>
   <section class="about-service">
-    <h2 class="about-service__title" id="service">ПРО СЕРВІС</h2>
+    <h2 class="section__title" id="service">ПРО СЕРВІС</h2>
 
     <div class="about-service__cont">
       <a href="#{{id}}" class="about-service__link">
@@ -56,6 +56,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/variables.scss";
+
+.section__title {
+  color: #000;
+  text-align: center;
+  font-family: e-Ukraine, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 18px;
+  text-transform: uppercase;
+  margin-bottom: 52px;
+}
+
 .about-service {
   position: relative;
   display: flex;
@@ -67,38 +80,30 @@ export default {
   flex-shrink: 0;
   background: #f5f4f4;
   padding: 100px 0; 
-}
-.about-service__title {
-  color: #000;
-  text-align: center;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 18px;
-  text-transform: uppercase;
-  margin-bottom: 52px;
-}
-.about-service__cont {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  width: 75%;
-  gap: 100px;
-}
-.about-service__empty {
-  display: flex;
-  position: absolute;
-  background-color: white;
-  width: 260px;
-  height: 292px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0px 4px 150px 0px rgba(130, 130, 130, 0.2);
-  top: 32px;
-}
 
-.about-service__link {
+
+  &__cont {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 75%;
+    gap: 100px;
+  }
+
+  &__empty {
+    display: flex;
+    position: absolute;
+    background-color: white;
+    width: 260px;
+    height: 292px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0px 4px 150px 0px rgba(130, 130, 130, 0.2);
+    top: 32px;
+  }
+
+&__link {
   display: flex;
   position: relative;
   flex-direction: column;
@@ -107,25 +112,26 @@ export default {
   cursor: pointer;
   text-decoration: none;
 }
-.about-service__link:hover .about-service__empty {
+
+&__link:hover &__empty {
   border: 2px solid #6b75ff;
   opacity: 80%;
 }
-.about-service__link:hover .about-img {
+&__link:hover &__img {
   width: 148px;
   height: 124px;
 }
 
-.about-service__link:hover .about-slogan {
+&__link:hover &__slogan {
   /* opacity: 70%; */
   font-size: 17px;
 }
-.about-service__link:hover .about-descr {
+&__link:hover &__descr {
   /* opacity: 70%; */
   font-size: 13px;
 }
 
-.about-service__img {
+&__img {
   display: flex;
   margin-bottom: 48px;
   width: 132px;
@@ -133,7 +139,7 @@ export default {
   z-index: 1;
 }
 
-.about-service__slogan {
+&__slogan {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -146,7 +152,7 @@ export default {
   z-index: 1;
 }
 
-.about-service__descr {
+&__descr {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -158,5 +164,6 @@ export default {
   font-weight: 400;
   line-height: 18px;
   z-index: 1;
+}
 }
 </style>

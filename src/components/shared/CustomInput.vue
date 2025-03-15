@@ -119,9 +119,9 @@ export default {
   background-color: white;
   border-radius: 8px;
   border: 2px solid $main-color;
-  width: 1012px;
-  height: 68px;
-  font-size: 26px;
+  width: 100%;
+  height: 54px;
+  font-size: 18px;
   padding: 0 20px;
 
     &::placeholder {

@@ -50,13 +50,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* button {
-    cursor: pointer;
-} */
+
 .btn:hover {
     cursor: pointer;
-    border: 2px solid #555;
-    /* padding: 8px 15px;  */
+    /* border: 2px solid #555; */
+   opacity: 80%;
+   
 
     &--outlined {
         background: none;

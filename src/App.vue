@@ -37,8 +37,7 @@ export default {
 
 <style lang="scss" scoped>
 #app {
-  margin: 0px;
-  
+  margin: 0px;  
   max-width: 1920px;
   font-family: e-Ukraine, sans-serif;
   /* -webkit-font-smoothing: antialiased;

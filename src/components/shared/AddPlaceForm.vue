@@ -3,53 +3,48 @@
     <h2 class="add-place__title">Додати місце</h2>
 
     <form class="add-place__form" @submit.prevent="handleSubmit">
-<div class="add-place__form-wrapper">
-      <div
-        class='upload-container'
-        onclick="document.getElementById('file-upload').click();"
-      >
-        <img
-          src='../../assets/png/emptyPhoto.png'
-          alt='Місце для фотографії'
-        />
-        <label for='file-upload' class='upload-text'>Обрати
-          фото...</label>
-        <input
-          type='file'
-          id='file-upload'
-          accept='image/*'
-        />
-      </div>
+      <div class="add-place__form-wrapper">
+        <div
+          class="upload"
+          onclick="document.getElementById('file-upload').click();"
+        >
+          <img
+            src="../../assets/png/emptyPhoto.png"
+            alt="Місце для фотографії"
+          />
+          <label for="file-upload" class="upload-label">Обрати фото...</label>
+          <input type="file" id="file-upload" accept="image/*" />
+        </div>
 
-      <div class="category">
-        <CustomInput
-          v-model="title"
-          class="add-name"
-          placeholder="Введіть назву місця"
-          errorMessage="Не повинно бути пустим"
-          :rules="rules"
-        />
+        <div class="category">
+          <CustomInput
+            v-model="title"
+            class="add-title"
+            placeholder="Введіть назву місця"
+            errorMessage="Не повинно бути пустим"
+            :rules="rules"
+          />
 
-        <CategoriesList :items="categories" >
-          <template v-slot:categories="{ categories: categories }">
-            <CategoryItem
-              :key="categories.id"
-              :id="categories.id"
-              :title="categories.title"
-              :svgUrl="categories.svgUrl"              
-            />         
-          </template>
-        </CategoriesList>
-      
-        <CustomInput
-          v-model="coordinate"
-          class="add-coord"
-          placeholder="Введіть координати місця"
-          errorMessage="Не повинно бути пустим"
-          :rules="rules"
-        />
+          <CategoriesList :items="categories">
+            <template v-slot:categories="{ categories: categories }">
+              <CategoryItem
+                :key="categories.id"
+                :id="categories.id"
+                :title="categories.title"
+                :svgUrl="categories.svgUrl"
+              />
+            </template>
+          </CategoriesList>
+
+          <CustomInput
+            v-model="coordinate"
+            class="add-coord"
+            placeholder="Введіть координати місця"
+            errorMessage="Не повинно бути пустим"
+            :rules="rules"
+          />
+        </div>
       </div>
-    </div>
 
       <CustomInput
         v-model="descr"
@@ -58,16 +53,24 @@
         errorMessage="Не повинно бути пустим"
         :rules="rules"
       />
-    <div class="add-place__buttons">
-      <SubmitButon @click="handleSubmit" type="submit" class="add-place__btn">
-        Надіслати
-        <img
-          src="../../assets/svg/IconMapArrow.svg"
-          alt=""
-          class="google-map-arrow"
-        />
-      </SubmitButon>
-    </div>
+      <div class="add-place__button">
+        <button class="add-place__button-trash">
+          <img
+            src="../../assets/svg/Icon-Trash.svg"
+            alt=""
+            class="icon-trash"
+          />
+        </button>
+
+        <SubmitButon @click="handleSubmit" type="submit" class="add-place__btn">
+          Надіслати
+          <img
+            src="../../assets/svg/IconMapArrow.svg"
+            alt=""
+            class="icon-google-map__arrow"
+          />
+        </SubmitButon>
+      </div>
     </form>
   </div>
 </template>
@@ -124,15 +127,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/variables.scss";
+
+
 .add-place {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
+  align-items: center;
+  position: relative;
   margin: 100px 0;
   gap: 64px;
-}
 
-.add-place__title {
+
+&__title {
   color: #000;
   text-align: center;
   font-family: e-Ukraine, sans-serif;
@@ -143,59 +151,29 @@ export default {
   text-transform: uppercase;
 }
 
-.add-place__form {
+&__form {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  position: relative;
   /* justify-content: center; */
   align-items: center;
   padding: 50px 0;
-
-  &__select {
-    margin-right: 30px;
-    width: 50px;
-  }
-  &__submit {
-    margin-left: 30px;
-  }
-  &__wrapper {
-    display: flex;
-    padding: 0 400px;
-  }
 }
-.add-place__form-wrapper {
+&__form-wrapper {
   display: flex;
   flex-direction: row;
   gap: 20px;
 }
-/* .add-place__category {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  grid-template-rows: repeat(2, auto);  
-  gap: 10px;
-} */
-
-.add-coord {
-  width: 340px;
-  height: 48px;
-  padding: 0 20px;
-  border-radius: 5px;
-  border: 2px solid #e7e6ed;
-}
-
-.add-part-block {
+&__button {
   display: flex;
-  flex-direction: column;
-  gap: 36px;
+  gap: 4px;
+  position: absolute;
+  left: 81%;
+  top: 95%;
 }
 
-.add-place__buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: right;
-}
-
-.add-place__btn {
+&__btn {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -210,70 +188,27 @@ export default {
   font-size: 16px;
   font-weight: 500;
   line-height: 140%;
-  
 }
-.add-place__btn:hover {
+&__btn:hover {
   opacity: 80%;
 }
-.add-place {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
 }
 
-.add-title {
-  color: #000;
-  text-align: center;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 18px;
-  text-transform: uppercase;
-}
-
-.category {
-  display: flex;
-  flex-direction: row; 
-  flex-wrap: wrap;
-  max-width: 800px;  
-}
-
-.add-descr {
-  display: block;
-  width: 1200px;
-  height: 192px;
-  padding: 10px 40px;
-  border-radius: 5px;
-  border: 2px solid #e7e6ed;
-}
-
-.google-map-arrow {
-  /* display: flex; */
-  align-self: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  margin-left: 12px;
-  margin-top: 4px;
-}
-.upload-container {
-  background-color: #F5F4FA;
+.upload {
+  background-color: #f5f4fa;
   width: 400px;
   height: 312px;
-  border: 1px solid #F5F4FA;
+  border: 1px solid #f5f4fa;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
 
 /* Стилі для тексту "Обрати фото" */
-.upload-text {
+&-label {
   font-size: 16px;
-  color: #A3A3A3;
+  color: #a3a3a3;
   text-align: center;
   font-family: e-Ukraine, sans-serif;
   font-size: 16px;
@@ -282,9 +217,64 @@ export default {
   line-height: 18px;
   cursor: pointer;
 }
+}
 
 /* Приховуємо стандартний input для завантаження файлу */
 input[type="file"] {
   display: none;
 }
+
+.category {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
+.add-place__button-trash {
+position: relative;
+width: 48px;
+height: 48px;
+border-radius: 5px;
+border-color: #ff7878;
+background: #ff7878;
+}
+
+.icon-trash {
+width: 18px;
+height: 21px;
+position: absolute;
+left: 14px;
+top: 14px;
+}
+.add-place__button-trash:hover {
+background-color: red;
+border-color: red;
+opacity: 80%;
+}
+.icon-google-map__arrow {
+align-self: center;
+justify-content: center;
+width: 16px;
+height: 16px;
+margin-left: 12px;
+margin-top: 4px;
+}
+
+/* .add-descr {
+  display: block;
+  width: 1200px;
+  height: 192px;
+  padding: 10px 40px;
+  border-radius: 5px;
+  border: 2px solid #e7e6ed;
+} */
+/* .add-coord {
+  width: 340px;
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 5px;
+  border: 2px solid #e7e6ed;
+} */
+
 </style>
