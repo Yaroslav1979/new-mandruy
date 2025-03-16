@@ -1,14 +1,17 @@
 <template>
-  <main class="apartment-page">
+  <div class="head">
+  <HeaderAllPages />
+  </div>
+  <main class="place-page">
     <SectionWithHeaderSpacer>
       <Container>
-        <div v-if="apartment" class="apartment-page__content">
-          <ApartmentsMainInfo :apartment="apartment" />
-          <div class="apartment-page__additional-info">
-            <ApartmentOwner
-              :owner="apartment.owner"
-              class="apartment-page__owner"
-            />
+        <div v-if="place" class="place-page__content">
+          <PlaceMainInfo :place="place" />
+          <div class="place-page__additional-info">
+            <!-- <ApartmentOwner
+              :owner="place.owner"
+              class="place-page__owner"
+            /> -->
             <Reviews :reviews="reviewsList" />
           </div>
         </div>
@@ -18,26 +21,26 @@
 </template>
 
 <script>
-import { getApartmentById } from "../services/apartments.service.js";
+import { getPlaceById } from "../services/places.service.js";
 import Container from "../components/shared/Container.vue";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
-import ApartmentsMainInfo from "../components/place/PlacesMainInfo.vue";
-import ApartmentOwner from "../components/place/ApartmentOwner.vue";
+import PlaceMainInfo from "../components/place/PlaceMainInfo.vue";
+import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import Reviews from "../components/reviews";
 import reviewsList from "../components/reviews/reviews.json";
 
 export default {
-  name: "ApartmentPage",
+  name: "PlacePage",
   components: {
     Container,
-    ApartmentsMainInfo,
-    ApartmentOwner,
+    PlaceMainInfo,
+    HeaderAllPages,
     Reviews,
     SectionWithHeaderSpacer,
   },
   data() {
     return {
-      apartment: null,
+      place: null,
     };
   },
   computed: {
@@ -53,14 +56,14 @@ export default {
   async created() {
     try {
       const { id } = this.$route.params;
-      const { data } = await getApartmentById(id);
-      this.apartment = data;
+      const { data } = await getPlaceById(id);
+      this.place = data;
     } catch (error) {
       console.error(error);
     }
   },
   mounted() {
-    console.log(this.apartment);
+    console.log(this.place);
   },
   // {
   //     console.log(this.$route.params.id)
@@ -70,8 +73,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.apartment-page {
-  padding-bottom: 55px;
+
+.head {
+  background-color: black;
+}
+.place-page {
+ 
 
   &__content {
     display: flex;

@@ -1,6 +1,6 @@
 <template>
-  <div class="contacts">
-    <!-- <div class="contacts-block"> -->
+  <section class="contacts" id="contacts">
+   
     <div class="contacts__bgd"></div>
     <h3 class="contacts__title" id="contacts">Контакти</h3>
 
@@ -33,7 +33,7 @@
         @telegramnickname
       </a>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>

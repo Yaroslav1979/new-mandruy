@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section id="search" class="form-container">
   <h2 class="section__title" id="service">ПОШУК МІСЦЬ</h2>
   <form class="form" @submit.prevent="handleSubmit">
     <div class="form__wrapper">
@@ -140,7 +140,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/scss/variables";
-
+.form-container {
+  width: 75%;
+  margin: 0 auto;
+  font-family: e-Ukraine, sans-serif;
+}
 .form {
   display: flex;
   flex-direction: column;
@@ -173,12 +177,6 @@ export default {
 .search-input {
 border: none;
 }
-/* .search-btn {
-  border: 2px solid $main-color;
-  border-radius: 8px;
-  cursor: pointer;
-} */
-
 .search-icon {
   display: flex;
   align-content: center;
@@ -216,9 +214,9 @@ font-weight: 600;
   height: 32px;
   opacity: 40%;  
 }
-/* .form__select--item::placeholder {
+.form__select--item:first-child{
 color: #A9A9A9
-} */
+}
 </style>
 
 

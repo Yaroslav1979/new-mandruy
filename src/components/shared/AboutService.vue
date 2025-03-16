@@ -1,9 +1,9 @@
 <template>
-  <section class="about-service">
+  <section class="about-service" id="service">
     <h2 class="section__title" id="service">ПРО СЕРВІС</h2>
 
     <div class="about-service__cont">
-      <a href="#{{id}}" class="about-service__link">
+      <a href="#search" class="about-service__link">
         <span class="about-service__empty"></span>
         <img
           class="about-service__img"
@@ -17,7 +17,7 @@
         </p>
       </a>
 
-      <a href="#{{id}}" class="about-service__link">
+      <a href="#search" class="about-service__link">
         <span class="about-service__empty"></span>
         <img
           class="about-service__img"
@@ -31,7 +31,7 @@
         </p>
       </a>
 
-      <a href="#{{id}}" class="about-service__link">
+      <a href="#map" class="about-service__link">
         <span class="about-service__empty"></span>
         <img
           class="about-service__img"

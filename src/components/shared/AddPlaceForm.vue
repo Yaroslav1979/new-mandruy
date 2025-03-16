@@ -1,5 +1,5 @@
 <template>
-  <div class="add-place">
+  <section class="add-place" id="addplace">
     <h2 class="add-place__title">Додати місце</h2>
 
     <form class="add-place__form" @submit.prevent="handleSubmit">
@@ -72,7 +72,7 @@
         </SubmitButon>
       </div>
     </form>
-  </div>
+  </section>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="map" id="map">
+    <section class="map" id="map">
           <h3 class="map__title">Інтерактивна мапа</h3>
           <iframe class="map__googl-map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d111939.82082888731!2d25.89549818429925!3d50.34745209765328!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1suk!2sua!4v1694978416550!5m2!1suk!2sua" width="1300" height="620" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
            </iframe>
@@ -9,7 +9,7 @@
                 <span class="map__btn-arrow"></span>
               </a>             
             </div>    
-    </div>
+      </section>
 </template>
 
 <script>

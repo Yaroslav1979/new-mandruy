@@ -13,7 +13,7 @@
           {{ descr }}
         </p>
         <router-link
-          :to="{ name: 'apartment', params: { id }, query: { name: 'Yarik' } }"
+          :to="{ name: 'place', params: { id }, query: { name: 'Yarik' } }"
           class="places-item__link"
         ></router-link>
       </div>

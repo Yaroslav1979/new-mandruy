@@ -2,7 +2,7 @@
   <div id="app">
     <Notifications />  
     <div class="content"> 
-      <AppHeader />
+      <!-- <AppHeader /> -->
       <router-view />       
     </div>
     
@@ -14,7 +14,7 @@
 // import { useStore } from 'vuex';
 // import { computed, onMounted } from 'vue';
 import AppFooter from './components/shared/MainFooter';
-import AppHeader from './components/shared/MainHeader';
+// import AppHeader from './components/shared/MainHeader';
 import Notifications from './components/notifications';
 import { mapGetters } from 'vuex';
 
@@ -22,7 +22,7 @@ export default {
   name: 'App',
   components: {
     AppFooter,
-    AppHeader,
+    // AppHeader,
     Notifications
   }, 
   computed: {
@@ -35,7 +35,23 @@ export default {
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss">
+@font-face {
+  font-family: 'e-Ukraine';
+  src: url('@/assets/fonts/e-Ukraine-Regular.woff2') format('opentype');
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+/* e-Ukraine Bold */
+@font-face {
+  font-family: 'e-Ukraine';
+  src: url('@/assets/fonts/e-Ukraine-Bold.woff2') format('opentype');
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
+
+
 #app {
   margin: 0px;  
   max-width: 1920px;

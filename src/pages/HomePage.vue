@@ -1,55 +1,52 @@
 <template>
+  <AppHeader/>
   <main class="homepage">
+
     <SectionWithHeaderSpacer>
-      <AboutService />
-    </SectionWithHeaderSpacer>    
-      <SocialNet />  
+      <AboutService />      
+    </SectionWithHeaderSpacer> 
+
+      <SocialNet /> 
+
     <SectionWithHeaderSpacer>
-      <Container>
-        <PlacesFilterForm class="apartments-filter" @submit="filter" />
-      </Container>
-      <!-- <Container> -->
-        <p v-if="!filteredPlaces.length">Нічого не знайдено</p>
+        <PlacesFilterForm class="places-filter" @submit="filter" />
+           <p v-if="!filteredPlaces.length">Нічого не знайдено</p>
         <PlacesList v-else :items="filteredPlaces">
-          <template v-slot:apartment="{ apartment }">
+          <template v-slot:place="{ place }">
             <PlacesItem
-              :key="apartment.id"
-              :id="apartment.id"
-              :descr="apartment.descr"
-              :rating="apartment.rating"
-              :imgSrc="apartment.imgUrl"
-              :title="apartment.title"
+              :key="place.id"
+              :id="place.id"
+              :descr="place.descr"
+              :rating="place.rating"
+              :imgSrc="place.imgUrl"
+              :title="place.title"
             />
           </template>
-        </PlacesList>
-      <!-- </Container> -->
+        </PlacesList>    
     </SectionWithHeaderSpacer>
-    <ActiveMap />
 
-    <section>
-      
+    <ActiveMap />  
 
-  <AddPlaceForm :categories="categories" />
+    <AddPlaceForm :categories="categories" />
 
-
-    </section>
-    
     <MainQuastions />
+
     <ContactsUs />
+    
   </main>
 </template>
 
 <script>
+import AppHeader from '../components/shared/MainHeader';
 import AboutService from "../components/shared/AboutService.vue";
 import SocialNet from "../components/shared/SocialNet.vue";
 import PlacesList from "../components/place/PlacesList.vue";
 import PlacesItem from "../components/place/PlacesItem.vue";
 import categories from "../components/categories/categories.js";
 import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
-import Container from "../components/shared/Container.vue";
-import { getApartmentsList } from "../services/apartments.service";
+import { getPlacesList } from "../services/places.service";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.vue";
-import MainQuastions from "../components/shared/MainQuastions.vue";
+import MainQuastions from "../components/shared/questions/MainQuastions.vue";
 import ActiveMap from "../components/shared/ActiveMap.vue";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
 import ContactsUs from "../components/shared/ContactsUs.vue";
@@ -63,7 +60,7 @@ export default {
     PlacesItem,    
     AddPlaceForm,
     PlacesFilterForm,
-    Container,
+    AppHeader,
     SectionWithHeaderSpacer,
     ActiveMap,    
     MainQuastions,
@@ -88,7 +85,7 @@ export default {
   },
   async created() {
     try {
-      const { data } = await getApartmentsList();
+      const { data } = await getPlacesList();
       this.places = data;
     } catch (error) {
       console.error(error);
@@ -120,7 +117,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.apartments-filter {
+.places-filter {
   margin-bottom: 40px;
 }
 </style>

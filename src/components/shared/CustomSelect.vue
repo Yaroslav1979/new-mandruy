@@ -54,14 +54,16 @@
     padding: 8px 15px;
     cursor: pointer;
     display: inline-block;
+    font-family: e-Ukraine, sans-serif;
     min-width: 220px;
     border-radius: 8px;
     font-size: 14px;
-  }
+  }  
   
   /* Світліший колір лише для label */
   .placeholder-option {
     color: #A9A9A9 !important;
+    font-family: e-Ukraine, sans-serif;
   }
   </style>
   

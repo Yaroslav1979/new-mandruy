@@ -1,6 +1,6 @@
 <template>
   <button class="button-category">
-    <p class="categ-name">
+    <p class="categ-title">
       <img :src="svgUrl" alt="" class="icon-ctg" />
       <em>{{ title }}</em>
     </p>
@@ -29,7 +29,7 @@ export default {
   transition: filter 0.3s; 
 }
 
-.categ-name {
+.categ-title {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -47,12 +47,12 @@ export default {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.categ-name:hover {
+.categ-title:hover {
   background-color: #000;
   color: white;
 }
 
-.categ-name:hover .icon-ctg {
+.categ-title:hover .icon-ctg {
   filter: invert(1);
 }
 

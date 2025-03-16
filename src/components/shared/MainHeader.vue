@@ -1,16 +1,9 @@
 <template>
     
     <!-- <router-link to="/"> --> 
-    <div class="header">
-      <div class="header-top">
-        <LogoType />
-        <span>
-          <a href="#" class="header-top__nav">Про сервіс </a>
-          <a href="#" class="header-top__nav">Пошук місць </a>
-          <a href="#" class="header-top__nav">Додати місце </a>
-          <a href="#" class="header-top__nav">Контакти </a>
-        </span>
-      </div>
+    <div class="header">     
+
+      <HeaderAllPages />
 
       <div class="header__hero-block">
         <h1 class="header__hero-title">Вітаємо вас на «Мандруй»</h1>
@@ -23,9 +16,9 @@
           додання його в наш список.
         </p>
         <div class="header__hero-buttons">
-          <a href="#" class="header__hero-buttons--search"> Розпочати пошук</a>
+          <a href="#search" class="header__hero-buttons--search"> Розпочати пошук</a>
           <div>
-            <a href="#" class="header__hero-buttons--learn">
+            <a href="#questions" class="header__hero-buttons--learn">
               Дізнатися більше
               <img
                 src="../../assets/svg/arrow-more.svg"
@@ -42,12 +35,12 @@
 
 <script>
 // import Container from "../shared/Container.vue";
-import LogoType from "./LogoType";
+import HeaderAllPages from "./HeaderAllPages";
 export default {
   name: "MainHeader",
   components: {
     // Container,
-    LogoType,
+    HeaderAllPages,
   },
 };
 </script>
@@ -63,38 +56,7 @@ export default {
   width: 100%;
   height: 1080px;
 }
-.header-top {
-  display: flex;
-  justify-content: space-around;
-  margin: 10px;
-  padding: 16px 50px;
-}
-.header-top > span {
-  display: flex;
-  gap: 100px;
-  justify-content: center;
-}
-.header-top__nav {
-  color: #fff;
-  text-align: center;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 150%;
-  font-family: e-Ukraine, sans-serif;
-  text-decoration: none;
-  padding: 16px 0;
-  width: 140px;
-  height: 52px;
-  border-radius: 30px;
-  border: 1px solid #fafafa;
-  box-shadow: 0px 4px 99px 0px #454753;
-}
-.header-top__nav:hover {
-  color: bisque;
-  border: 2px solid bisque;
-  opacity: 80%;
-}
+
 .header__hero-block {
   display: inline-flex;
   flex-direction: column;

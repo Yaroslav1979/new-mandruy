@@ -2,8 +2,8 @@
     <Container>
         <slot name="title"></slot>
         <div class="places-list">
-            <template v-for="apartment in items">
-                <slot name="apartment" v-bind:apartment="apartment"></slot>
+            <template v-for="place in items">
+                <slot name="place" v-bind:place="place"></slot>
             </template>
         </div>
     </Container>
