@@ -62,6 +62,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   font-style: normal;
+  font-family: e-Ukraine, sans-serif;
   width: 35%;
   gap: 40px;
   margin: 0px 324px;

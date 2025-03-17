@@ -31,11 +31,7 @@
 .places-list {
   display: flex;
   flex-wrap: wrap;
-  margin-left: -15px;
-  margin-right: -15px;
-
-  /* &__item {
-    margin-bottom: 30px;
-  } */
+  max-height: 1200px;
+  overflow-y: auto;  
 }
 </style>

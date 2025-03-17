@@ -18,7 +18,7 @@
               :id="place.id"
               :descr="place.descr"
               :rating="place.rating"
-              :imgSrc="place.imgUrl"
+              :imgSrc="place.imgUrls"
               :title="place.title"
             />
           </template>

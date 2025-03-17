@@ -5,7 +5,21 @@
       <Rating :rating="place.rating" />
     </div>
     
-    <img :src="place.imgUrl" alt="Place photo" class="place-main-info__photo" />
+    <!-- Слайдер -->
+    <div class="slider-container">
+      <div class="slider" ref="slider">
+        <img
+          v-for="(img, index) in place.imgUrls"
+          :key="index"
+          :src="img"
+          alt="Place photo"
+          class="place-main-info__photo"
+        />
+      </div>
+      <button @click="prevSlide" class="slider-btn left">❮</button>
+      <button @click="nextSlide" class="slider-btn right">❯</button>
+    </div>
+    
     <p class="place-main-info__description">{{ place.descr }}</p>
     <p class="place-main-info__description">
       <strong>Місце розташування:</strong> {{ place.location.city }}, {{ place.location.region }}
@@ -51,6 +65,12 @@ export default {
     getCategoryTitle(categoryId) {
       const category = categories.find(cat => cat.id === categoryId);
       return category ? category.title : '';
+    },
+    nextSlide() {
+      this.$refs.slider.scrollBy({ left: 300, behavior: 'smooth' });
+    },
+    prevSlide() {
+      this.$refs.slider.scrollBy({ left: -300, behavior: 'smooth' });
     },
   },
 };
@@ -128,5 +148,46 @@ export default {
     margin-top: 20px;
     text-align: center;
   }
+  .slider-container {
+  position: relative;
+  overflow: hidden;
+  width: 600px;
+  margin-bottom: 20px;
+}
+
+.slider {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  width: 100%;
+}
+
+.place-main-info__photo {
+  max-width: 800px;
+  border-radius: 12px;
+  scroll-snap-align: start;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  z-index: 10;
+  border-radius: 50%;
+}
+
+.left {
+  left: 10px;
+}
+
+.right {
+  right: 10px;
+}
 }
 </style>

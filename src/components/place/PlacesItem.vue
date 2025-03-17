@@ -1,8 +1,8 @@
 <template>
-  <div class="places-item" :class="{ 'left-column': isLeftColumn, 'right-column': !isLeftColumn }">
+  <div class="places-item" >
     <div class="places-item__inner">
       <div class="places-item__photo-container">
-        <img :src="imgSrc" alt="" class="places-item__photo" />
+        <img :src="imgSrc[0]" alt="Place photo" class="place-item__photo" />
       </div>
       <div class="places-item__content">
         <h2 class="places-item__price">
@@ -28,7 +28,7 @@ export default {
     id: { type: String, required: true },
     descr: { type: String, default: "" },
     title: { type: String, default: "" },
-    imgSrc: { type: String, default: "" },
+    imgSrc: { type: Array, default: () => [] },
     index: { type: Number, required: true }, // Індекс для визначення колонки
   },
   computed: {
@@ -54,12 +54,16 @@ export default {
   &__photo-container {
     width: 100%;
     aspect-ratio: 5 / 3;
+    border-radius: 16px;
     overflow: hidden;
+    display: flex;
+  align-items: center;
+  justify-content: center;
   }  
 
   &__photo {
     width: 100%;
-    height: 100%;
+    /* height: auto; */
     object-fit: cover;
     border-radius: 16px;
   }
