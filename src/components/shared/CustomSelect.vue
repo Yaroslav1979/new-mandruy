@@ -1,3 +1,6 @@
+
+
+
 <template>
     <select
       v-bind="$attrs"
@@ -23,7 +26,7 @@
       modelValue: String,
       items: {
         type: Array,
-        required: true,
+        default: () => [], 
       },
     },
     computed: {

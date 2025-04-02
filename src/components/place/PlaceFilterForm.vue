@@ -1,57 +1,65 @@
 <template>
   <section id="search" class="form-container">
-  <h2 class="section__title" id="service">ПОШУК МІСЦЬ</h2>
-  <form class="form" @submit.prevent="handleSubmit">
-    <div class="form__wrapper">
-      <CustomInput
-        v-model="price"
-        placeholder="Введіть назву місця"
-        errorMessage="Не повинно бути пустим"
-        :rules="rules"
-        class="search-input"
-      />
+    <h2 class="section__title" id="service">ПОШУК МІСЦЬ</h2>
 
-      <SubmitButon @click="handleSubmit" type="submit" class="search-btn">
-        <img src="../../assets/png/iconSearch.png" alt="" class="search-icon" />
-      </SubmitButon>
-    </div>
+    <form class="form" @submit.prevent="handleSubmit">
 
-    <div class="form__select">
+      <div class="form__wrapper">
+
+        <CustomInput
+          v-model="title"
+          placeholder="Введіть назву місця"
+          errorMessage="Не повинно бути пустим"
+          class="search-input"
+        />
+        <SubmitButon 
+        @click="handleSubmit" 
+        type="submit" 
+        class="search-btn"
+        >
+          <img src="../../assets/png/iconSearch.png" alt="" class="search-icon" />
+        </SubmitButon>
+
+      </div>
+
+      <div class="form__select">
       <span>КАТЕГОРІЯ:</span>
       <CustomSelect
-        :items="categoryOptions"
-        v-model="category"
+        :items="categories"
+        v-model="categoryIds"
+        class="form__select--item"
+      />
+   
+        <span>ОБЛАСТЬ:</span>
+        <CustomSelect
+          :items="regions"
+          v-model="region"
+          class="form__select--item"
+        />
+
+        <span>СОРТУВАТИ ЗА:</span>
+      <CustomSelect
+        :items="sorts"
+        v-model="sort"
         class="form__select--item"
       />
 
-      <span>ОБЛАСТЬ:</span>
-      <CustomSelect
-        :items="regions"
-        v-model="region"
-        class="form__select--item"
-      />
-
-      <span>СОРТУВАТИ ЗА:</span>
-      <CustomSelect
-        :items="sort"
-        v-model="sorts"
-        class="form__select--item"
-      />
       <div class="form__toggle">
           <img src="../../assets/png/icon-grid-fill.png" alt="" class="form__toggle--grid">
           <img src="../../assets/png/icon-agenda.png" alt="" class="form__toggle--gallery">
                     </div>
-    </div>
-    
-  </form>
-</section>
+    </div>     
+
+    </form>
+
+  </section>
 </template>
 
 <script>
 import CustomInput from "../shared/CustomInput.vue";
 import CustomSelect from "../shared/CustomSelect.vue";
 import SubmitButon from "../mainButton.vue";
-import { isRequired, charLimit } from "../../utils/validationRules";
+import { isRequired } from '../../utils/validationRules';
 
 export default {
   name: "FilterForm",
@@ -62,17 +70,18 @@ export default {
   },
   data() {
     return {
-      
+      title: "",
       region: "",
-      category: "",
-      sorts: "",
+      categoryIds: "",
+      
     };
   },
   computed: {
     rules() {
-      return [isRequired, charLimit(10)];
-    },
-    categoryOptions() {
+            return [isRequired]
+        },
+
+    categories() {
       return [
         { value: "", label: "Обрати", isLabel: true },
         "Табір",
@@ -81,9 +90,11 @@ export default {
         "Пам’ятка",
         "Музей",
         "Водойма",
-        "Доступно для транспорту",
-      ].map(this.formatItem);
+        "Автомобіль",
+      ];
+      // .map(this.formatItem);
     },
+
     regions() {
       return [
         { value: "", label: "Обрати", isLabel: true },
@@ -112,31 +123,38 @@ export default {
         "Чернівецька область",
         "Чернігівська область",
         "Крим автономна республіка",
-      ].map(this.formatItem);
+      ];
+      // .map(this.formatItem);
     },
-    sort() {
+    sorts() {
       return [
-        { value: "", label: "Спосіб виводу", isLabel: true },
-        "назвою",
-        "датою",
-      ].map(this.formatItem);
+        { value: "", label: "Спосіб показу", isLabel: true },
+        "за назвою",
+        "за датою",
+      ]
     },
+    
   },
+
   methods: {
+    
     handleSubmit() {
-      console.log("Форма відправлена", this.city, this.price);
       this.$emit("submit", {
-        city: this.city,
-        price: this.price,
+        title: this.title,
+        region: this.region,
+        categoryIds: this.categoryIds ? [this.categoryIds] : [],
       });
     },
-    formatItem(item, index) {
-      if (typeof item === "object") return item;
-      return { value: item, label: item, isLabel: index === 0 };
-    },
+
+    // formatItem(item, index) {
+    //   return typeof item === "object"
+    //     ? item
+    //     : { value: item, label: item, isLabel: index === 0 };
+    // },
   },
 };
 </script>
+
 
 <style lang="scss" scoped>
 @import "../../assets/scss/variables";

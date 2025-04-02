@@ -8,10 +8,6 @@
         <div v-if="place" class="place-page__content">
           <PlaceMainInfo :place="place" />
           <div class="place-page__additional-info">
-            <!-- <ApartmentOwner
-              :owner="place.owner"
-              class="place-page__owner"
-            /> -->
             <Reviews :reviews="reviewsList" />
           </div>
         </div>
@@ -77,18 +73,12 @@ export default {
 .head {
   background-color: black;
 }
-.place-page {
- 
+.place-page { 
 
   &__content {
     display: flex;
     align-items: flex-start;
-  }
-
-  /* &__owner {
-        min-width: 350px;
-        margin-left: 30px;
-        } */
+  } 
 
   &__additional-info {
     margin-left: 30px;

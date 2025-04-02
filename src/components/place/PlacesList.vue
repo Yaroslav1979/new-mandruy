@@ -14,9 +14,8 @@
 
     export default {
         name: 'PlacesList',
-        components: {
-           
-            Container
+        components: {           
+        Container
         },
         props: {
             items: {
