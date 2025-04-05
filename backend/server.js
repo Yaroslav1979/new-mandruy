@@ -1,41 +1,26 @@
 const express = require('express');
-const app = express();
-const fs = require('fs');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const placesRoutes = require('./routes/places');
 const path = require('path');
 
-// Для парсингу JSON тіла запитів
+const app = express();
+const PORT = 5000;
+
+app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/places', placesRoutes);
 
-// Роут для отримання всіх місць
-app.get('/api/places', (req, res) => {
-    fs.readFile(path.join(__dirname, 'data', 'places_data.json'), 'utf8', (err, data) => {
-        if (err) {
-            return res.status(500).json({ error: 'Не вдалося отримати дані.' });
-        }
-        res.json(JSON.parse(data));
+mongoose
+  .connect('mongodb://localhost:27017/tourism', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Підключено до MongoDB');
+    app.listen(PORT, () => {
+      console.log(`Сервер працює на http://localhost:${PORT}`);
     });
-});
-
-// Роут для додавання нового місця
-app.post('/api/places', (req, res) => {
-    const newPlace = req.body; // Отримуємо нове місце з тіла запиту
-    fs.readFile(path.join(__dirname, 'data', 'places_data.json'), 'utf8', (err, data) => {
-        if (err) {
-            return res.status(500).json({ error: 'Не вдалося прочитати дані.' });
-        }
-        const places = JSON.parse(data);
-        places.push(newPlace);
-        fs.writeFile(path.join(__dirname, 'data', 'places_data.json'), JSON.stringify(places, null, 4), (err) => {
-            if (err) {
-                return res.status(500).json({ error: 'Не вдалося зберегти дані.' });
-            }
-            res.status(201).json(newPlace);
-        });
-    });
-});
-
-// Налаштування сервера
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Сервер працює на порту ${PORT}`);
-});
+  })
+  .catch((err) => console.error(err));
