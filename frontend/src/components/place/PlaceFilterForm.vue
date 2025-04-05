@@ -40,7 +40,7 @@
         <span>СОРТУВАТИ ЗА:</span>
       <CustomSelect
         :items="sorts"
-        v-model="sort"
+        v-model="sortBy"
         class="form__select--item"
       />
 
@@ -73,7 +73,7 @@ export default {
       title: "",
       region: "",
       categoryIds: "",
-      
+      sortBy: '',      
     };
   },
   computed: {
@@ -127,31 +127,25 @@ export default {
       // .map(this.formatItem);
     },
     sorts() {
-      return [
-        { value: "", label: "Спосіб показу", isLabel: true },
-        "за назвою",
-        "за датою",
-      ]
-    },
+  return [
+    { value: "", label: "Сортування", isLabel: true },
+    { value: "title", label: "за назвою" },
+    { value: "date", label: "за датою" },
+  ];
+},
     
   },
 
-  methods: {
-    
+  methods: {    
     handleSubmit() {
       this.$emit("submit", {
         title: this.title,
         region: this.region,
         categoryIds: this.categoryIds ? [this.categoryIds] : [],
+        sortBy: this.sortBy,
       });
     },
-
-    // formatItem(item, index) {
-    //   return typeof item === "object"
-    //     ? item
-    //     : { value: item, label: item, isLabel: index === 0 };
-    // },
-  },
+    },
 };
 </script>
 

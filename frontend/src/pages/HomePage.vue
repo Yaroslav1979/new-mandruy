@@ -76,24 +76,27 @@ export default {
         title: "",
         region: "",
         categoryIds: [],
+        sortBy: "",
       },
     };
   },
   computed: {
     filteredPlaces() {
-      return this.filterByCategory(
-        this.filterByTitle(this.filterByRegionName(this.places))
-    )
+  let result = this.filterByRegionName(this.places);
+  result = this.filterByTitle(result);
+  result = this.filterByCategory(result);
 
-      // return this.places.filter((place) => 
-      //   (!this.filters.title || place.title.toLowerCase().includes(this.filters.title.toLowerCase())) &&
-      //   (!this.filters.region || place.region === this.filters.region)
-      // );
-    },
+  if (this.filters.sortBy === "title") {
+    result = this.sortPlacesByTitle(result);
+  }
+
+  return result;
+},
   },
   async created() {
     try {
       const { data } = await getPlacesList();
+      console.log("Fetched places:", data);
       this.places = data;
     } catch (error) {
       console.error(error);
@@ -101,11 +104,12 @@ export default {
   },
 
   methods: {
-    filter({ region, title, categoryIds }) {
-      if (region !== undefined) this.filters.region = region;
-      if (title !== undefined) this.filters.title = title;
-      if (Array.isArray(categoryIds)) this.filters.categoryIds = categoryIds;
-    },
+    filter({ region, title, categoryIds, sortBy }) {
+  if (region !== undefined) this.filters.region = region;
+  if (title !== undefined) this.filters.title = title;
+  if (Array.isArray(categoryIds)) this.filters.categoryIds = categoryIds;
+  if (sortBy !== undefined) this.filters.sortBy = sortBy; // нове
+},
   
 
   filterByRegionName(places) {
@@ -130,7 +134,11 @@ export default {
         Array.isArray(place.categoryIds) &&
         place.categoryIds.some(cat => this.filters.categoryIds.includes(cat))
       );
-    }
+    },
+
+    sortPlacesByTitle(places) {
+     return [...places].sort((a, b) => a.title.localeCompare(b.title));
+  },
 
   },  
 };

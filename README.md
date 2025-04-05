@@ -1,24 +1,45 @@
 # my-vue-app
+# Мій проект
 
-## Project setup
-```
+Цей проект включає в себе фронтенд (Vue.js) та бекенд (Node.js + Express).
+
+## Структура проекту
+
+Проект складається з двох частин:
+1. **Фронтенд** — Папка `frontend/`, яка містить Vue.js додаток.
+2. **Бекенд** — Папка `backend/`, яка містить сервер на Node.js з Express.
+
+## Налаштування
+
+## Клонуйте цей репозиторій:
+
+   ```bash
+   git clone <URL-репозиторію>
+
+## Встановіть всі залежності:
+
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Запустіть сервер бекенду:
 
-### Compiles and minifies for production
-```
-npm run build
-```
+npm run start:backend
 
-### Lints and fixes files
-```
-npm run lint
-```
+# Запустіть фронтенд:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+npm run start:frontend
+
+## Розробка
+
+## Щоб запускати фронтенд та бекенд одночасно, використовуй наступні команди:
+
+
+npm run start
+
+
+## Залежності:
+
+##Фронтенд:
+ Vue.js
+
+##Бекенд: 
+Node.js, Express

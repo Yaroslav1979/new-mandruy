@@ -99,8 +99,7 @@ export default {
     return {
       title: "",
       coordinate: "",
-      descr: "",
-      // categories: categories || [],
+      descr: "",      
     };
   },
   computed: {
@@ -119,8 +118,7 @@ export default {
         coordinate: this.coordinate,
         descr: this.descr,
         categories: this.categories,
-      });
-      // Логіка для відправки даних
+      });      
     },
   },
 };
@@ -133,8 +131,7 @@ export default {
 .add-place {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  align-items: center;
+   align-items: center;
   position: relative;
   margin: 100px 0;
   gap: 64px;
@@ -156,7 +153,6 @@ export default {
   flex-direction: column;
   gap: 12px;
   position: relative;
-  /* justify-content: center; */
   align-items: center;
   padding: 50px 0;
 }
@@ -205,7 +201,6 @@ export default {
   justify-content: center;
   cursor: pointer;
 
-/* Стилі для тексту "Обрати фото" */
 &-label {
   font-size: 16px;
   color: #a3a3a3;
@@ -260,21 +255,5 @@ height: 16px;
 margin-left: 12px;
 margin-top: 4px;
 }
-
-/* .add-descr {
-  display: block;
-  width: 1200px;
-  height: 192px;
-  padding: 10px 40px;
-  border-radius: 5px;
-  border: 2px solid #e7e6ed;
-} */
-/* .add-coord {
-  width: 340px;
-  height: 48px;
-  padding: 0 20px;
-  border-radius: 5px;
-  border: 2px solid #e7e6ed;
-} */
 
 </style>

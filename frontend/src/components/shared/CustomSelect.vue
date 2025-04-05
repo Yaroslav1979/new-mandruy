@@ -1,6 +1,3 @@
-
-
-
 <template>
     <select
       v-bind="$attrs"
