@@ -1,8 +1,7 @@
 <template>
     <div class="wrapper-input">
         <input 
-            v-bind="$attrs" 
-            
+            v-bind="$attrs"             
             @blur="blurHandler"
             class="custom-input" 
             :class="!isValid && 'custom-input--error'"

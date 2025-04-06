@@ -1,5 +1,9 @@
 <template>
-  <button class="button-category">
+  <button
+   class="button-category"
+    @click="toggleCategory"
+    type="button"
+    :class="{ selected: isSelected }">
     <p class="categ-title">
       <img :src="svgUrl" alt="" class="icon-ctg" />
       <em>{{ title }}</em>
@@ -14,6 +18,12 @@ export default {
     id: { type: String, required: true },
     title: { type: String, default: "" },
     svgUrl: { type: String, default: "" },
+    isSelected: { type: Boolean, default: false },
+  },
+  methods: {
+    toggleCategory() {
+      this.$emit("toggle", this.id);
+    },
   },
 };
 </script>
@@ -26,7 +36,7 @@ export default {
 .icon-ctg {
   width: 19px;
   height: 20px;
-  transition: filter 0.3s; 
+  transition: filter 0.3s;
 }
 
 .categ-title {
@@ -47,7 +57,16 @@ export default {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.categ-title:hover {
+.selected .categ-title {
+  background-color: #000;
+  color: white;
+}
+
+.selected .icon-ctg {
+  filter: invert(1);
+}
+
+/* .categ-title:hover {
   background-color: #000;
   color: white;
 }
@@ -55,5 +74,10 @@ export default {
 .categ-title:hover .icon-ctg {
   filter: invert(1);
 }
+
+.categ-title.active {
+  background-color: #000;
+  color: white;
+} */
 
 </style>
