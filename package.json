@@ -1,18 +1,22 @@
 {
-    "name": "my-project",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-        "start": "npm run start --workspace frontend",
-        "start:backend": "node backend/server.js",
-        "start:frontend": "npm run serve --workspace frontend",
-        "install:all": "npm install --workspace frontend && npm install --workspace backend"
-    },
-    "workspaces": [
-        "frontend",
-        "backend"
-    ],
-    "devDependencies": {
-        "@vue/cli-plugin-babel": "^5.0.8"
-    }
+  "name": "my-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npm run start --workspace frontend",
+    "start:backend": "npm run start --workspace backend",
+    "start:frontend": "npm run serve --workspace frontend",
+    "install:all": "npm install --workspace frontend && npm install --workspace backend"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^5.0.8"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "mongodb": "6.15"
+  }
 }

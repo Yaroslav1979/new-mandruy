@@ -4,46 +4,50 @@
 
     <form class="add-place__form" @submit.prevent="handleSubmit">
       <div class="add-place__form-wrapper">
-        
+        <!-- Фото -->
         <div class="upload-cont">
-          
-          <div class="upload image-thumbnails" @click="triggerFileUpload" v-if="files.length === 0 || files.length < 10">
-            <label for="file-upload" class="upload-label" v-if="files.length < 10">Обрати фото...</label>
-           
-            <!-- <div class="image-thumbnails"> -->
-              <img
+          <div
+            class="upload image-thumbnails"
+            @click="triggerFileUpload"
+            v-if="files.length === 0 || files.length < 10"
+          >
+            <label
+              for="file-upload"
+              class="upload-label"
+              v-if="files.length < 10"
+              >Обрати фото...</label
+            >
+            <img
               src="../../assets/png/emptyPhoto.png"
               alt="Місце для фотографії"
               v-if="files.length === 0"
-              />
-            
-              <input
-                type="file"
-                id="file-upload"
-                accept="image/*"
-                multiple
-                @change="handleFileChange"
-                v-if="files.length < 11"
-              />
-            <!-- </div> -->
-  
-    <div
-      v-for="(file, index) in visibleThumbnails"
-      :key="index"
-      class="thumbnail-wrapper"
-    >
-      <img :src="file.preview" class="thumbnail" />
-      <button class="delete-btn" @click.stop="removeFile(index)">
-        ×
-      </button>
-    </div>
-    <div v-if="extraCount > 0" class="thumbnail-wrapper more-count">
-      +{{ extraCount }}
-    </div>
-  </div>
+            />
+            <input
+              type="file"
+              id="file-upload"
+              accept="image/*"
+              multiple
+              :key="fileInputKey"
+              @change="handleFileChange"
+              v-if="files.length < 11"
+            />
+            <div
+              v-for="(file, index) in visibleThumbnails"
+              :key="index"
+              class="thumbnail-wrapper"
+            >
+              <img :src="file.preview" class="thumbnail" />
+              <button class="delete-btn" @click.stop="removeFile(index)">
+                ×
+              </button>
+            </div>
+            <div v-if="extraCount > 0" class="thumbnail-wrapper more-count">
+              +{{ extraCount }}
+            </div>
+          </div>
+        </div>
 
-       
-
+        <!-- Текстові поля -->
         <div class="category">
           <CustomInput
             v-model="title"
@@ -51,8 +55,7 @@
             placeholder="Введіть назву місця"
             errorMessage="Не повинно бути пустим"
             :rules="rules"
-          />          
-
+          />
           <CustomInput
             v-model="coordinate"
             class="add"
@@ -60,7 +63,6 @@
             errorMessage="Не повинно бути пустим"
             :rules="rules"
           />
-
           <CustomInput
             v-model="region"
             class="add"
@@ -68,7 +70,6 @@
             errorMessage="Не повинно бути пустим"
             :rules="rules"
           />
-
           <CustomInput
             v-model="city"
             class="add"
@@ -76,34 +77,28 @@
             errorMessage="Не повинно бути пустим"
             :rules="rules"
           />
-        </div>    
-      </div>   
+        </div>
+      </div>
 
-        <CategoriesList :items="localCategories">
-            <template v-slot:categories="{ categories }">
-              <CategoryItem
-                :key="categories.id"
-                :id="categories.id"
-                :title="categories.title"
-                :svgUrl="categories.svgUrl"
-                :class="{ selected: isCategorySelected(categories) }" 
-                @click="toggleCategory(categories)"
-              />
-            </template>
-          </CategoriesList>       
+      <!-- Категорії -->
 
-      <div>      
-         <CustomTextArea
+      <CategoriesList v-model="categoryIds" :items="localCategories" />
+
+    
+
+      <!-- Опис + Кнопки -->
+      <div>
+        <CustomTextArea
           v-model="descr"
           class="add"
           placeholder="Введіть короткий опис"
           errorMessage="Не повинно бути пустим"
           :rules="rules"
-          rows="10"
+          :rows="10"
         />
 
         <div class="add-place__buttons">
-          <button class="add-place__button-trash">
+          <button type="button" class="add-place__button-trash">
             <img
               src="../../assets/svg/Icon-Trash.svg"
               alt=""
@@ -111,7 +106,11 @@
             />
           </button>
 
-          <SubmitButon @click="handleSubmit" type="submit" class="add-place__btn" :disabled="isLoading">
+          <SubmitButon
+            type="submit"
+            class="add-place__btn"
+            :disabled="isLoading"
+          >
             Надіслати
             <img
               src="../../assets/svg/IconMapArrow.svg"
@@ -119,9 +118,9 @@
               class="icon-google-map__arrow"
             />
           </SubmitButon>
+
           <CircleLoader v-if="isLoading" class="mt-4 mx-auto" />
         </div>
-      </div>
       </div>
     </form>
   </section>
@@ -132,7 +131,7 @@ import CircleLoader from "../loaders/CircleLoader.vue";
 import CustomInput from "./CustomInput.vue";
 import CustomTextArea from "./CustomTextArea.vue";
 import CategoriesList from "../categories/CategoriesList.vue";
-import CategoryItem from "../categories/CategoryItem.vue";
+// import CategoryItem from "../categories/CategoryItem.vue";
 import categories from "../categories/categories.js";
 import SubmitButon from "../mainButton.vue";
 
@@ -142,7 +141,7 @@ export default {
     CustomInput,
     CustomTextArea,
     CategoriesList,
-    CategoryItem,
+    // CategoryItem,
     SubmitButon,
     CircleLoader,
   },
@@ -150,88 +149,110 @@ export default {
     return {
       title: "",
       coordinate: "",
-      descr: "",
       region: "",
       city: "",
-      selectedCategories: [],  // масив вибраних категорій
+      descr: "",
       files: [],
+      categoryIds: [], // зберігаємо ID обраних категорій
+      localCategories: categories,
       isLoading: false,
+      rules: [],
+      fileInputKey: 0,
     };
   },
   computed: {
-    localCategories() {
-      return this.categories && this.categories.length ? this.categories : categories;
+    extraCount() {
+      return this.files.length > 4 ? this.files.length - 4 : 0;
     },
     visibleThumbnails() {
       return this.files.slice(0, 4);
     },
-    extraCount() {
-      return this.files.length > 4 ? this.files.length - 4 : 0;
-    },
   },
   methods: {
-    isCategorySelected(category) {
-      return this.selectedCategories.some((cat) => cat.id === category.id);
-    },
-
     triggerFileUpload() {
-      document.getElementById('file-upload').click();
+      document.getElementById("file-upload")?.click();
     },
     handleFileChange(event) {
       const selectedFiles = Array.from(event.target.files);
-      const total = this.files.length + selectedFiles.length;
-
-      if (total > 10) {
-        alert("Максимальна кількість зображень: 10");
-        return;
-      }
-
-      const filePreviews = selectedFiles.map(file => {
-        const preview = URL.createObjectURL(file);
-        return { file, preview };
+      selectedFiles.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.files.push({ file, preview: e.target.result });
+        };
+        reader.readAsDataURL(file);
       });
-
-      this.files.push(...filePreviews);
+      this.fileInputKey = Date.now();
     },
     removeFile(index) {
       this.files.splice(index, 1);
     },
+    // Функція для вибору категорій
+   
     async handleSubmit() {
-      if (!this.title || !this.coordinate || !this.descr || !this.region || !this.city) {
-        alert("Будь ласка, заповніть усі поля.");
+      if (
+        !this.title.trim() ||
+        !this.coordinate.trim() ||
+        !this.region.trim() ||
+        !this.city.trim() ||
+        !this.descr.trim()
+      ) {
+        alert("Будь ласка, заповніть усі текстові поля.");
+        return;
+      }
+      if (this.files.length === 0) {
+        alert("Будь ласка, додайте хоча б одне фото.");
         return;
       }
 
+      if (this.categoryIds.length === 0) {
+        alert("Будь ласка, виберіть хоча б одну категорію.");
+        return;
+      }
       this.isLoading = true;
 
-      const formData = new FormData();
-      formData.append("title", this.title);
-      formData.append("coordinate", this.coordinate);
-      formData.append("descr", this.descr);
-      formData.append("region", this.region);
-      formData.append("city", this.city);
-
-      this.selectedCategories.forEach(category =>
-        formData.append("categories[]", category.id)
-      );
-      this.files.forEach((item, index) =>
-        formData.append("images[]", item.file, `image_${index + 1}.jpg`)
-      );
-
+      const placeData = {
+        title: this.title,
+        coordinate: this.coordinate,
+        region: this.region,
+        city: this.city,
+        descr: this.descr,
+        categoryIds: this.categoryIds,
+        // інші дані, як файли — окремо
+      };
+      console.log("Готові дані до надсилання:", placeData);
       try {
-        const response = await fetch('/api/places', {
-          method: 'POST',
-          body: formData,
-        });
-        const data = await response.json();
-        alert('Місце успішно додано!');
-        console.log('Success:', data);
-      } catch (error) {
-        alert('Сталася помилка при додаванні місця.');
-        console.error('Error:', error);
-      } finally {
-        this.isLoading = false;
-      }
+    const formData = new FormData();
+    formData.append("title", this.title);
+    formData.append("coordinate", this.coordinate);
+    formData.append("region", this.region);
+    formData.append("city", this.city);
+    formData.append("descr", this.descr);
+    formData.append("categoryIds", JSON.stringify(this.categoryIds));
+
+    // Додаємо всі зображення
+    this.files.forEach(({ file }) => {
+      formData.append("images", file); // "images" — ключ для масиву файлів
+    });
+
+    const response = await fetch("http://localhost:3000/api/places", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Помилка при надсиланні даних");
+    }
+
+    const result = await response.json();
+    console.log("Успішно збережено:", result);
+
+    this.$emit("added", result);
+
+  } catch (error) {
+    alert("Помилка при збереженні місця: " + error.message);
+  } finally {
+    this.isLoading = false;
+  }
     },
   },
 };
@@ -271,7 +292,7 @@ export default {
     &-wrapper {
       /* display: flex; */
       gap: 12px;
-    }    
+    }
   }
 
   .add-place__btn {
@@ -295,13 +316,12 @@ export default {
   }
 
   .upload-cont {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  gap: 8px;
-  align-items: center;
- 
-}
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 8px;
+    align-items: center;
+  }
 
   .upload {
     /* position: relative; */
@@ -314,9 +334,8 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    
   }
-/* .upload>img {
+  /* .upload>img {
   position: absolute;  
 } */
 
@@ -335,23 +354,23 @@ export default {
   }
 
   .image-thumbnails {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);  /* 2 колонки */
-  /* grid-template-rows: repeat(2, 1fr); */
-  grid-gap: 8px;
-  margin-top: 10px;
-  max-width: 400px;
-  width: 100%;
-}
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 колонки */
+    /* grid-template-rows: repeat(2, 1fr); */
+    grid-gap: 8px;
+    margin-top: 10px;
+    max-width: 400px;
+    width: 100%;
+  }
 
-.thumbnail-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  overflow: hidden;
-  border: 1px solid #ccc;
-}
+  .thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+  }
 
   .thumbnail {
     width: 100%;
@@ -382,8 +401,6 @@ export default {
     font-size: 16px;
     font-weight: bold;
   }
-
-
 
   .add {
     font-family: e-Ukraine, sans-serif;

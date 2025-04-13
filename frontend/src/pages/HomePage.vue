@@ -16,8 +16,8 @@
       <PlacesList v-else :items="filteredPlaces">
         <template v-slot:place="{ place }">
           <PlacesItem
-            :key="place.id"
-            :id="place.id"
+            :key="place._id"
+            :id="place._id"
             :descr="place.descr"
             :rating="place.rating"
             :imgSrc="place.imgUrls"
@@ -29,7 +29,7 @@
 
     <ActiveMap />
 
-    <AddPlaceForm :categories="categories" />
+    <AddPlaceForm :categories="categories" @added="handleNewPlace"/>
 
     <MainQuastions />
 
@@ -45,13 +45,14 @@ import SocialNet from "../components/shared/SocialNet.vue";
 import PlacesList from "../components/place/PlacesList.vue";
 import PlacesItem from "../components/place/PlacesItem.vue";
 import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
-import { getPlacesList } from "../services/places.service";
+// import { getPlacesList } from "../services/places.service";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.vue";
 
 import MainQuastions from "../components/shared/questions/MainQuastions.vue";
 import ActiveMap from "../components/shared/ActiveMap.vue";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
 import ContactsUs from "../components/shared/ContactsUs.vue";
+import axios from "axios";
 
 export default {
   name: "App",
@@ -93,15 +94,23 @@ export default {
   return result;
 },
   },
+  // async created() {
+  //   try {
+  //     const { data } = await getPlacesList();
+  //     console.log("Fetched places:", data);
+  //     this.places = data;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // },
   async created() {
-    try {
-      const { data } = await getPlacesList();
-      console.log("Fetched places:", data);
-      this.places = data;
-    } catch (error) {
-      console.error(error);
-    }
-  },
+  try {
+    const response = await axios.get("http://localhost:3000/api/places");
+    this.places = response.data; // ВАЖЛИВО: тут лежить масив місць з бази (MongoDB Atlas)
+  } catch (error) {
+    console.error("Помилка при завантаженні місць:", error);
+  }
+},
 
   methods: {
     filter({ region, title, categoryIds, sortBy }) {
@@ -139,6 +148,10 @@ export default {
     sortPlacesByTitle(places) {
      return [...places].sort((a, b) => a.title.localeCompare(b.title));
   },
+
+  handleNewPlace(newPlace) {
+  this.places.unshift(newPlace); // або this.places.push(newPlace), якщо хочеш додати в кінець списку
+}
 
   },  
 };

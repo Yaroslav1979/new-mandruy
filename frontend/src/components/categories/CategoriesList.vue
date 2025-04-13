@@ -1,16 +1,15 @@
 <template>
-  <slot name="title"></slot>
   <div class="categories">
     <div class="categories__block">
-      <template v-for="category in items" :key="category.id">
-        <CategoryItem
-          :id="category.id"
-          :title="category.title"
-          :svgUrl="category.svgUrl"
-          :isSelected="selectedCategories.includes(category.id)"
-          @toggle="toggleCategory"
-        />
-      </template>
+      <CategoryItem
+        v-for="category in items"
+        :key="category.id"
+        :id="category.id"
+        :title="category.title"
+        :svgUrl="category.svgUrl"
+        :isSelected="modelValue.includes(category.id)"
+        @toggle="toggleCategory"
+      />
     </div>
   </div>
 </template>
@@ -19,7 +18,7 @@
 import CategoryItem from './CategoryItem.vue';
 
 export default {
-  name: 'CategoryList',
+  name: 'CategoriesList',
   components: {
     CategoryItem,
   },
@@ -28,22 +27,21 @@ export default {
       type: Array,
       default: () => [],
     },
-  },
-  data() {
-    return {
-      selectedCategories: [], // Масив для збереження вибраних категорій
-    };
+    modelValue: {
+      type: Array,
+      default: () => [],
+    },
   },
   methods: {
     toggleCategory(categoryId) {
-      // Додавання або видалення категорії зі списку вибраних
-      const index = this.selectedCategories.indexOf(categoryId);
+      const updated = [...this.modelValue];
+      const index = updated.indexOf(categoryId);
       if (index > -1) {
-        this.selectedCategories.splice(index, 1);
+        updated.splice(index, 1);
       } else {
-        this.selectedCategories.push(categoryId);
+        updated.push(categoryId);
       }
-      this.$emit('update:selectedCategories', this.selectedCategories); // Відправка вибраних категорій на батьківський компонент
+      this.$emit('update:modelValue', updated); // для v-model
     },
   },
 };

@@ -1,13 +1,14 @@
 <template>
     <div class="form-group">
-      <label :for="id">{{ label }}</label>
+      <!-- <label :for="id">{{ label }}</label> -->
       <textarea
         :id="id"       
         :rows="rows"
         :maxlength="maxlength"
         :placeholder="placeholder"
         :required="required"
-        :value="value"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
       ></textarea>
     </div>
   </template>
@@ -16,9 +17,9 @@
   export default {
     name: 'CustomTextarea',
     props: {
-      id: { type: String, required: true },
-      label: { type: String, required: true },
-      value: { type: String, required: true },
+      id: { type: String, required: false, default: '' },
+      // label: { type: String, required: false, default: ''},
+      modelValue: { type: String, required: true },
       rows: { type: Number, default: 15 },
       maxlength: { type: Number, default: 1000 },
       placeholder: { type: String, default: 'Введіть текст...' },
