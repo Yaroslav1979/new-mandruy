@@ -31,6 +31,7 @@
   display: flex;
   flex-wrap: wrap;
   max-height: 1200px;
-  overflow-y: auto;  
+  overflow-y: auto;
+  margin-top: 40px;
 }
 </style>
