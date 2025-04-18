@@ -1,17 +1,17 @@
 <template>
-  <article class="place-main-info">
+  <article class="place-main-info" v-if="place">
     <div class="place-main-info__heading">
       <h1 class="place-main-info__title">{{ place.title }}</h1>
-      <Rating :rating="place.rating" />
+      <Rating :rating="place.rating || 0" />
     </div>
-    
+
     <!-- Слайдер -->
-    <div class="slider-container">
+    <div class="slider-container" v-if="place.imgUrls && place.imgUrls.length">
       <div class="slider" ref="slider">
         <img
           v-for="(img, index) in place.imgUrls"
           :key="index"
-          :src="img"
+          :src="`http://localhost:3000${img}`"
           alt="Place photo"
           class="place-main-info__photo"
         />
@@ -19,23 +19,24 @@
       <button @click="prevSlide" class="slider-btn left">❮</button>
       <button @click="nextSlide" class="slider-btn right">❯</button>
     </div>
-    
+
     <p class="place-main-info__description">{{ place.descr }}</p>
     <p class="place-main-info__description">
-      <strong>Місце розташування:</strong> {{ place.location.city }}, {{ place.location.region }}
+      <strong>Місце розташування:</strong>
+      {{ place.location?.city }}, {{ place.location?.region }}
     </p>
     <p class="place-main-info__description">
-      <strong>Координати:</strong> {{ place.location.coordinate }}
+      <strong>Координати:</strong> {{ place.location?.coordinate }}
     </p>
 
     <!-- Відображення категорій -->
-    <div class="place-main-info__categories">
+    <div class="place-main-info__categories" v-if="place.categoryIds && place.categoryIds.length">
       <div
         v-for="categoryId in place.categoryIds"
         :key="categoryId"
         class="place-main-info__category"
       >
-        <img :src="getCategoryIcon(categoryId)" alt="Category icon" class="icon-ctg"  />
+        <img :src="getCategoryIcon(categoryId)" alt="Category icon" class="icon-ctg" />
         <span>{{ getCategoryTitle(categoryId) }}</span>
       </div>
     </div>
@@ -44,7 +45,7 @@
 
 <script>
 import Rating from '../StarRating.vue';
-import categories from '../categories/categories.js'; // Ваш масив categories
+import categories from '../categories/categories.js';
 
 export default {
   name: 'PlaceMainInfo',
@@ -75,6 +76,7 @@ export default {
   },
 };
 </script>
+
 
 <style lang="scss" scoped>
  @import '../../assets/scss/variables';

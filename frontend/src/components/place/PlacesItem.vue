@@ -18,9 +18,11 @@
           {{ descr }}
         </p>
         <router-link
-          :to="{ name: 'place', params: { id }, query: { name: 'Yarik' } }"
+          :to="{ name: 'PlacePage', params: { id }, query: { name: 'Yarik' } }"
           class="places-item__link"
-        ></router-link>
+        >
+        Переглянути детальніше
+      </router-link>
       </div>
     </div>
   </div>

@@ -83,20 +83,17 @@
       <!-- Категорії -->
 
       <CategoriesList v-model="categoryIds" :items="localCategories" />
-
-    
-
+  
       <!-- Опис + Кнопки -->
-      <div>
+      
         <CustomTextArea
           v-model="descr"
-          class="add"
           placeholder="Введіть короткий опис"
           errorMessage="Не повинно бути пустим"
           :rules="rules"
           :rows="10"
         />
-
+       
         <div class="add-place__buttons">
           <button type="button" class="add-place__button-trash">
             <img
@@ -114,13 +111,13 @@
             Надіслати
             <img
               src="../../assets/svg/IconMapArrow.svg"
-              alt=""
+              alt="=>"
               class="icon-google-map__arrow"
             />
           </SubmitButon>
 
           <CircleLoader v-if="isLoading" class="mt-4 mx-auto" />
-        </div>
+        
       </div>
     </form>
   </section>
@@ -265,10 +262,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
   font-family: e-Ukraine, sans-serif;
-  margin: 100px 0;
-  /* gap: 20px; */
+  margin: 100px 0; 
 
   &__title {
     color: #000;
@@ -285,14 +280,15 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    position: relative;
-    align-items: center;
+    align-items: stretch;
     padding: 50px 0;
 
     &-wrapper {
-      /* display: flex; */
+      display: flex;  
+      width: 100%;
+      justify-content: space-between;
       gap: 12px;
-    }
+    }            
   }
 
   .add-place__btn {
@@ -315,16 +311,53 @@ export default {
     opacity: 80%;
   }
 
+  .add-place__buttons {
+    display: flex;
+    justify-content: right;
+    gap: 8px;   
+  }
+
+  .add-place__button-trash {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 5px;
+    border-color: #ff7878;
+    background: #ff7878;
+  }
+
+  .icon-trash {
+    width: 18px;
+    height: 21px;
+    position: absolute;
+    left: 14px;
+    top: 14px;
+  }
+
+  .add-place__button-trash:hover {
+    background-color: red;
+    border-color: red;
+    opacity: 80%;
+  }
+
+  .icon-google-map__arrow {
+    align-self: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-left: 12px;
+    margin-top: 4px;
+  }
+
   .upload-cont {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     gap: 8px;
-    align-items: center;
+    align-items: center;    
   }
 
-  .upload {
-    /* position: relative; */
+  .upload {    
     background-color: #f5f4fa;
     width: 400px;
     height: 312px;
@@ -334,13 +367,9 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-  }
-  /* .upload>img {
-  position: absolute;  
-} */
-
-  .upload-label {
-    display: flex;
+    
+    &-label {
+      display: flex;
     justify-content: center;
     font-size: 16px;
     color: #a3a3a3;
@@ -351,12 +380,12 @@ export default {
     line-height: 18px;
     cursor: pointer;
     z-index: 1;
-  }
+    }
+  }  
 
   .image-thumbnails {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 колонки */
-    /* grid-template-rows: repeat(2, 1fr); */
     grid-gap: 8px;
     margin-top: 10px;
     max-width: 400px;
@@ -402,11 +431,6 @@ export default {
     font-weight: bold;
   }
 
-  .add {
-    font-family: e-Ukraine, sans-serif;
-    font-size: 14px;
-  }
-
   input[type="file"] {
     display: none;
   }
@@ -418,44 +442,6 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     max-width: 800px;
-  }
-
-  .add-place__buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: right;
-  }
-
-  .add-place__button-trash {
-    position: relative;
-    width: 48px;
-    height: 48px;
-    border-radius: 5px;
-    border-color: #ff7878;
-    background: #ff7878;
-  }
-
-  .icon-trash {
-    width: 18px;
-    height: 21px;
-    position: absolute;
-    left: 14px;
-    top: 14px;
-  }
-
-  .add-place__button-trash:hover {
-    background-color: red;
-    border-color: red;
-    opacity: 80%;
-  }
-
-  .icon-google-map__arrow {
-    align-self: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    margin-left: 12px;
-    margin-top: 4px;
   }
 
   /* Стилі для вибраної категорії */

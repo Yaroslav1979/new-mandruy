@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Імпортуємо компоненти для маршрутів
 import HomePage from './pages/HomePage.vue';
-import AboutPlace from './pages/AboutPlace.vue';
+import PlacePage from './pages/PlacePage.vue';
 import ErrorPage from './pages/ErrorPage.vue';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage'
@@ -15,8 +15,9 @@ const routes = [
   },
   {
     path: '/place/:id',
-    name: 'place',
-    component: AboutPlace,
+    name: 'PlacePage',
+    component: PlacePage,
+    props: true,
   },
   {
   path: '/login',

@@ -41,13 +41,10 @@
 import AppHeader from "../components/shared/MainHeader";
 import AboutService from "../components/shared/AboutService.vue";
 import SocialNet from "../components/shared/SocialNet.vue";
-
 import PlacesList from "../components/place/PlacesList.vue";
 import PlacesItem from "../components/place/PlacesItem.vue";
 import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
-// import { getPlacesList } from "../services/places.service";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.vue";
-
 import MainQuastions from "../components/shared/questions/MainQuastions.vue";
 import ActiveMap from "../components/shared/ActiveMap.vue";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
@@ -94,15 +91,6 @@ export default {
   return result;
 },
   },
-  // async created() {
-  //   try {
-  //     const { data } = await getPlacesList();
-  //     console.log("Fetched places:", data);
-  //     this.places = data;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // },
   async created() {
   try {
     const response = await axios.get("http://localhost:3000/api/places");

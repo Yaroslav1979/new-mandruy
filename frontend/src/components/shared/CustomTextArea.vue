@@ -30,7 +30,8 @@
   
   <style scoped>
   .form-group {
-    margin-bottom: 20px;
+    margin: 20px 0;
+    width: 100%;
   }
   
   textarea {
@@ -39,7 +40,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
-    font-family: Arial, sans-serif;
+    font-family: e-Ukraine, sans-serif;
     resize: vertical;
   }
   

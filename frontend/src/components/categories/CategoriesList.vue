@@ -53,15 +53,15 @@ export default {
   position: relative;
   flex-direction: column;
   align-items: center;
-  margin: 20px 0;
+  /* margin: 20px 0; */
 }
 
 .categories__block {
   display: flex;
   justify-content: left;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   gap: 12px;
   align-items: center;
-  padding: 50px 0;
+  /* padding: 8px 0; */
 }
 </style>
