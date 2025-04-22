@@ -7,48 +7,89 @@
                 <Rating :rating="totalRating" />
             </div>
         </div>
-        <ReviewsItem 
+        <ReviewItem 
             v-for="review in currentReviews" 
             :key="review.author" 
             :review="review" 
+            @review-added="$emit('review-added')"
         />
         <button @click="toggleReviews" class="reviews__show-more"> 
             {{ buttonText }}
-        </button>        
+        </button>
+        
+        <!-- Кнопка для виклику форми -->
+      <button class="leave-review-button" @click="showModal = true">
+        Залишити відгук
+      </button>
+  
+      <!-- Модальне вікно з формою -->
+      <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+        <div class="modal-content">
+          <!-- <AddReviewForm 
+          :placeId="_id" 
+          @review-added="handleAdded" 
+          @close="showModal = false" 
+          /> -->
+          <AddReviewForm 
+  v-if="placeId"
+  :placeId="placeId" 
+  @review-added="handleAdded" 
+  @close="showModal = false" 
+/>
+        </div>
+      </div>        
     </section>
 </template>
 
 <script>
-import ReviewsItem from './reviews-item'
+import AddReviewForm from "./AddReviewForm.vue"
+// import { getReviewsByPlaceId } from "../../services/reviews.service";
+import ReviewItem from './reviews-item/ReviewItem.vue'
 import Rating from '../StarRating'
 
 export default {
     name: 'ReviewsAll',
     components: {
-        ReviewsItem,
+        ReviewItem,
+        AddReviewForm,
         Rating,
     },
     props: {
         reviews: {
             type: Array,
             required: true
+        },
+        placeId: {
+            type: String,
+            required: true
         }
     },
     data() {
-        return {
-            reviewsLimit: 2, // Початково відображаємо тільки 2 відгуки
-        };
-    },
+  return {
+    localReviews: [], // локальна копія
+    reviewsLimit: 2,
+    showModal: false
+  };
+},
+watch: {
+  reviews: {
+    immediate: true,
+    handler(newVal) {
+      this.localReviews = [...newVal];
+    }
+  }
+},
     computed: {
-        totalRating() {
-            const total = this.reviews.reduce((acc, review) => acc + review.rating, 0);
-            return total / this.reviews.length;
-        },
+      totalRating() {
+  if (!this.localReviews.length) return 0;
+  const total = this.localReviews.reduce((acc, review) => acc + review.rating, 0);
+  return (total / this.localReviews.length).toFixed(1); // округлимо до 1 знаку
+},
         amountOfReviews() {
-            return this.reviews.length;
+            return this.localReviews.length;
         },
         currentReviews() {
-            return this.reviews.slice(0, this.reviewsLimit);
+            return this.localReviews.slice(0, this.reviewsLimit);
         },
         buttonText() {
             return this.reviewsLimit === this.reviews.length 
@@ -57,14 +98,25 @@ export default {
         }
     },
     methods: {
-        toggleReviews() {
-           if (this.reviewsLimit === this.reviews.length) {
-            this.reviewsLimit = 2
-            return
-           }
-           this.reviewsLimit = this.reviews.length             
-        }
+  toggleReviews() {
+    if (this.reviewsLimit === this.reviews.length) {
+      this.reviewsLimit = 2;
+      return;
     }
+
+    this.reviewsLimit = this.reviews.length;
+  },
+  handleAdded() {
+    // this.localReviews.unshift(newReview); // додати новий на початок
+    console.log('📢 Подія review-added прокинута вгору');
+  this.showModal = false;
+  this.$emit('review-added'); // кидаємо подію нагору
+}
+  // handleAdded(newReview) {
+  //   this.localReviews.unshift(newReview); // додати новий на початок
+  //   this.showModal = false;
+  // }
+}
 }
 </script>
 

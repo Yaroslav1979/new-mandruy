@@ -8,69 +8,80 @@
         <div v-if="place" class="place-page__content">
           <PlaceMainInfo :place="place" />
           <div class="place-page__additional-info">
-            <Reviews :reviews="reviewsList" />
-          </div>
+            <ReviewsAll
+            
+  :reviews="reviewsList"
+  :placeId="place._id"
+  @review-added="fetchReviews"
+  />
+        </div>
         </div>
         <div v-else class="place-page__loading">
           <p>Завантаження місця...</p>
         </div>
       </Container>
+      
     </SectionWithHeaderSpacer>
   </main>
 </template>
 
 <script>
 import { getPlaceById } from "../services/places.service.js";
+import { getReviewsByPlaceId } from "../services/reviews.service.js";
 import Container from "../components/shared/Container.vue";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
 import PlaceMainInfo from "../components/place/PlaceMainInfo.vue";
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
-import Reviews from "../components/reviews";
-import reviewsList from "../components/reviews/reviews.json";
+import ReviewsAll from "../components/reviews/index.vue";
+// import reviewsList from "../components/reviews/reviews.json";
 
 export default {
   name: "PlacePage",
   components: {
     Container,
     PlaceMainInfo,
-    HeaderAllPages,
-    Reviews,
+    HeaderAllPages,    
+    ReviewsAll,
     SectionWithHeaderSpacer,
   },
   data() {
     return {
       place: null,
+      reviewsList: [], // оголошено для відгуків
     };
   },
-  computed: {
-    reviewsList() {
-      return reviewsList;
-    },
-    // apartment() {
-    //   return apartments.find(
-    //     (apartment) => apartment.id === this.$route.params.id
-    //   );
-    // },
-  },
+ 
   async created() {
+  try {
+    console.log("🧭 Route params:", this.$route.params);
+    const { id } = this.$route.params;
+
+    // Отримання даних місця
+    const { data } = await getPlaceById(id);
+    console.log("Дані місця з бекенду:", data);
+    this.place = data;
+
+    // Окремо — отримання відгуків
+    const { data: reviewsData } = await getReviewsByPlaceId(id);
+    console.log("Відгуки з бекенду:", reviewsData);
+    this.reviewsList = reviewsData;
+
+  } catch (error) {
+    console.error("❌ Помилка при завантаженні даних:", error);
+  }
+},
+methods: {
+  async fetchReviews() {
     try {
-      console.log("🧭 Route params:", this.$route.params);
+      console.log("Подія review-added отримана!🔄 Оновлення відгуків...");
       const { id } = this.$route.params;
-      console.log("ID місця з маршруту:", id);
-      const { data } = await getPlaceById(id);
-      console.log("Дані з бекенду:", data);
-      this.place = data;
-    } catch (error) {
-      console.error(error);
+      const { data: reviewsData } = await getReviewsByPlaceId(id);
+      this.reviewsList = reviewsData;
+    } catch (err) {
+      console.error("❌ Помилка при оновленні відгуків:", err);
     }
-  },
-  mounted() {
-    console.log(this.place);
-  },
-  // {
-  //     console.log(this.$route.params.id)
-  //     console.log(this.$route.query.name)
-  // },
+  }
+}
 };
 </script>
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const { getPlaceById } = require('../controllers/placeController'); 
 const multer = require('multer');
 const Place = require('../models/Place');
+const Review = require('../models/Review');
 const path = require('path');
 const fs = require('fs');
 
@@ -96,20 +97,44 @@ router.get("/", async (req, res) => {
   }
 });
 //---------------------------------------------------------------------
+
+// створення відгуку по id:
+router.post('/:placeId/reviews', async (req, res) => {
+  try {
+    const { author, content, rating } = req.body;
+    const { placeId } = req.params;
+    console.log(req.params.placeId);  // Перевірка, чи правильно передається placeId
+    console.log(req.body);
+    console.log('Place ID:', placeId); // Лог для перевірки перед додаванням відгуку
+
+    // Перевіряємо чи місце існує
+    const place = await Place.findById(placeId);
+    if (!place) {
+      return res.status(404).json({ message: 'Місце не знайдено' });
+    }
+
+    const review = new Review({ author, content, rating, placeId });
+    await review.save();
+    res.status(201).json(review);
+  } catch (err) {
+    console.error('Error while saving review:', err); // Лог для детальної помилки
+    res.status(400).json({ message: 'Помилка при створенні відгуку' });
+  }
+});
+//-----------------------------------------------------------
+
+// отримання відгуку по id:
+
+router.get('/:placeId/reviews', async (req, res) => {
+  try {
+    const { placeId } = req.params;
+    const reviews = await Review.find({ placeId }).sort({ _id: -1 });
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+});
+//------------------------------------------------------
 // Отримання місця за id
-// router.get('/places/:id', async (req, res) => {
-//   console.log("🔍 Отримую місце з id:", req.params.id);
-//   try {
-//     const place = await Place.findById(req.params.id);
-//     if (!place) {
-//       console.log("⚠️ Місце не знайдено");
-//       return res.status(404).json({ error: 'Місце не знайдено' });
-//     }
-//     res.json(place);
-//   } catch (err) {
-//     console.error('❌ Помилка при отриманні місця за id:', err);
-//     res.status(500).json({ error: 'Помилка сервера' });
-//   }
-// });
 router.get('/:_id', getPlaceById);
 module.exports = router;
