@@ -6,7 +6,7 @@
     <SectionWithHeaderSpacer>
       <Container>
         <div v-if="place" class="place-page__content">
-          <PlaceMainInfo :place="place" />
+          <PlaceMainInfo :place="place" :rating="totalRating" />
           <div class="place-page__additional-info">
             <ReviewsAll
             
@@ -80,6 +80,13 @@ methods: {
     } catch (err) {
       console.error("❌ Помилка при оновленні відгуків:", err);
     }
+  }
+},
+computed: {
+  totalRating() {
+    if (!this.reviewsList.length) return 0;
+    const total = this.reviewsList.reduce((acc, review) => acc + review.rating, 0);
+    return (total / this.reviewsList.length).toFixed(1);
   }
 }
 };

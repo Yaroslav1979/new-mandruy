@@ -73,6 +73,7 @@
   .review-form {
     display: flex;
     flex-direction: column;
+   
     gap: 12px;
     margin-bottom: 24px;
   
@@ -84,6 +85,7 @@
       font-size: 14px;
       border: 1px solid #ccc;
       border-radius: 6px;
+      font-family: e-Ukraine, sans-serif;
     }
   
     &__textarea {
@@ -92,13 +94,14 @@
     }
   
     &__submit {
-      background-color: #007bff;
+      background-color: #000000;
       color: white;
       border: none;
       cursor: pointer;
   
       &:hover {
-        background-color: #0056b3;
+        /* background-color: #0056b3; */
+        opacity: 0.7;
       }
     }
   }

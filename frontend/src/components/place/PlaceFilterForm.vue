@@ -37,7 +37,7 @@
           class="form__select--item"
         />
 
-        <span>СОРТУВАТИ ЗА:</span>
+        <span>СОРТУВАТИ:</span>
       <CustomSelect
         :items="sorts"
         v-model="sortBy"
@@ -128,7 +128,7 @@ export default {
     },
     sorts() {
   return [
-    { value: "", label: "За замовчуванням", isLabel: true },
+    { value: "", label: "за замовчуванням", isLabel: true },
     { value: "title", label: "за назвою" },
     { value: "date", label: "за датою" },
   ];
