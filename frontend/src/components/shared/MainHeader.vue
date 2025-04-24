@@ -1,9 +1,7 @@
-<template>
-    
-    <!-- <router-link to="/"> --> 
+<template>       
     <div class="header">     
 
-      <HeaderAllPages />
+      <HeaderAllPages @openAddModal="$emit('openAddModal')" />
 
       <div class="header__hero-block">
         <h1 class="header__hero-title">Вітаємо вас на «Мандруй»</h1>
@@ -30,18 +28,16 @@
         </div>
       </div>
     </div>   
-    <!-- </router-link> -->  
-</template>
+  </template>
 
 <script>
-// import Container from "../shared/Container.vue";
 import HeaderAllPages from "./HeaderAllPages";
 export default {
   name: "MainHeader",
   components: {
-    // Container,
     HeaderAllPages,
   },
+  emits: ['openAddModal'],
 };
 </script>
 

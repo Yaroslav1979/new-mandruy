@@ -4,7 +4,8 @@
         <span>
           <a href="#service" class="header-top__nav">Про сервіс </a>
           <a href="#search" class="header-top__nav">Пошук місць </a>
-          <a href="#addplace" class="header-top__nav">Додати місце </a>
+          <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> 
+          <!-- <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> -->
           <a href="#contacts" class="header-top__nav">Контакти </a>
         </span>
     </div>
@@ -17,7 +18,8 @@
         name: 'HeaderAllPages',
         components: {
             LogoType
-        }
+        },
+        emits: ['openAddModal'],
     }
 </script>
 
@@ -50,6 +52,8 @@
   border-radius: 30px;
   border: 1px solid #fafafa;
   box-shadow: 0px 4px 99px 0px #454753;
+  background: transparent;
+  cursor: pointer;
 }
 .header-top__nav:hover {
   color: bisque;
