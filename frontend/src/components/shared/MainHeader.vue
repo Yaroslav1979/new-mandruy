@@ -14,7 +14,13 @@
           додання його в наш список.
         </p>
         <div class="header__hero-buttons">
-          <a href="#search" class="header__hero-buttons--search"> Розпочати пошук</a>
+          <!-- <a href="#search" class="header__hero-buttons--search"> Розпочати пошук</a> -->
+          <router-link
+          :to="{ name: 'SearchPlacePage', query: { name: 'Yarik' } }"
+         class="header__hero-buttons--search"
+        >
+        Розпочати пошук 
+        </router-link>
           <div>
             <a href="#questions" class="header__hero-buttons--learn">
               Дізнатися більше

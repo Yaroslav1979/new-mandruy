@@ -1,26 +1,35 @@
 <template>
-    <div class="header-top">
-        <LogoType />
-        <span>
-          <a href="#service" class="header-top__nav">Про сервіс </a>
-          <a href="#search" class="header-top__nav">Пошук місць </a>
-          <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> 
-          <!-- <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> -->
-          <a href="#contacts" class="header-top__nav">Контакти </a>
-        </span>
-    </div>
+  <div class="header-top">
+    <LogoType />
+    <span>
+      <a href="#service" class="header-top__nav">Про сервіс </a>
+
+      <router-link
+        :to="{ name: 'SearchPlacePage', query: { name: 'Yarik' } }"
+        class="header-top__nav"
+      >
+        Пошук місць
+      </router-link>
+
+      <button class="header-top__nav" @click="$emit('openAddModal')">
+        Додати місце
+      </button>
+      <!-- <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> -->
+      <a href="#contacts" class="header-top__nav">Контакти </a>
+    </span>
+  </div>
 </template>
 
 <script>
-    import LogoType from "./LogoType";
+import LogoType from "./LogoType";
 
-    export default {        
-        name: 'HeaderAllPages',
-        components: {
-            LogoType
-        },
-        emits: ['openAddModal'],
-    }
+export default {
+  name: "HeaderAllPages",
+  components: {
+    LogoType,
+  },
+  emits: ["openAddModal"],
+};
 </script>
 
 <style lang="scss" scoped>
