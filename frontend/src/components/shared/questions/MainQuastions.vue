@@ -39,7 +39,7 @@ export default {
   align-items: center;
   gap: 20px;
   padding: 40px 0;
-  background-color: #000;
+  background-color: #111;
 
   &__title {
     color: #fff;

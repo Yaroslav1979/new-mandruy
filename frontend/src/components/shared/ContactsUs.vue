@@ -44,7 +44,7 @@ export default {
 
 <style lang="scss" scoped>
 .contacts {
-  background-color: #000;
+  background-color: #111;
   display: flex;
   flex-direction: column;
   position: relative;

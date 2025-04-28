@@ -2,8 +2,17 @@
   <div class="header-top">
     <LogoType />
     <span>
-      <a href="#service" class="header-top__nav">Про сервіс </a>
 
+      <router-link
+        :to="{ name: 'home', query: { name: 'Yarik' } }"  
+        class="header-top__nav"      
+      >
+      Про сервіс
+      </router-link>
+      <!-- <a href="#service" class="header-top__nav">Про сервіс </a> -->
+
+      
+      
       <router-link
         :to="{ name: 'SearchPlacePage', query: { name: 'Yarik' } }"
         class="header-top__nav"
@@ -14,6 +23,13 @@
       <button class="header-top__nav" @click="$emit('openAddModal')">
         Додати місце
       </button>
+
+      <router-link
+        :to="{ name: 'MapPage', query: { name: 'Yarik' } }"
+        class="header-top__nav"
+      >
+        Мапа
+      </router-link>
       <!-- <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> -->
       <a href="#contacts" class="header-top__nav">Контакти </a>
     </span>

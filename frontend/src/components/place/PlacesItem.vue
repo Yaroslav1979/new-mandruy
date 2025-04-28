@@ -13,7 +13,7 @@
         />
       </div>
       <div class="places-item__content">
-        <h2 class="places-item__price">
+        <h2 class="places-item__title">
           {{ title }}
         </h2>
         <br />
@@ -108,7 +108,7 @@ export default {
     overflow: hidden;
   }
 
-  &__price {
+  &__title {
     font-size: 20px;
     font-weight: 600;
   }

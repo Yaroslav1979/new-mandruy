@@ -1,5 +1,10 @@
 <template>
-    <img  src="../../assets/svg/logo.svg" alt="logo" class="logo" />
+    <!-- <img  src="../../assets/svg/logo.svg" alt="logo" class="logo" /> -->
+    <router-link
+        :to="{ name: 'home', query: { name: 'Yarik' } }"        
+      >
+      <img  src="../../assets/svg/logo.svg" alt="logo" class="logo" />
+      </router-link>
 </template>
 
 <script>

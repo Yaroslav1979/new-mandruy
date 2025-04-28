@@ -184,7 +184,6 @@ strong {
   &__title {
     font-size: 20px;
     font-weight: 700;
-    text-transform: capitalize;
     margin-bottom: 20px;
     margin-right: 20px;
   }
@@ -206,8 +205,7 @@ strong {
   &__categories {
     display: flex;
     justify-content: left;
-    flex-wrap: wrap;
-    /* Додає перенесення на новий рядок */
+    flex-wrap: wrap; /* Додає перенесення на новий рядок */    
     gap: 12px;
     align-items: center;
     padding: 50px 0;
@@ -228,11 +226,7 @@ strong {
     font-weight: 500;
     line-height: 18px;
     background-color: white;
-    transition: background-color 0.3s, color 0.3s;
-    /* &:hover {
-      background-color: #000;
-      color: white;
-    } */
+    transition: background-color 0.3s, color 0.3s;   
   }
 
   &__photo {
@@ -241,14 +235,6 @@ strong {
     scroll-snap-align: start;
   }
 }
-
-/* .place-main-info__category:hover {
-  background-color: #000;
-  color: white;
-} */
-/* .place-main-info__category:hover .icon-ctg {
-  filter: invert(1);
-} */
 
 .place-main-info__category img {
   width: 24px;
@@ -282,7 +268,6 @@ strong {
     border-radius: 50%;
   }
 }
-
 .left {
   left: 10px;
 }

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 // Імпортуємо компоненти для маршрутів
 import HomePage from './pages/HomePage.vue';
 import PlacePage from './pages/PlacePage.vue';
+import MapPage from './pages/MapPage.vue';
 import SearchPlacePage from './pages/SearchPlacePage.vue';
 import ErrorPage from './pages/ErrorPage.vue';
 import LoginPage from './pages/LoginPage';
@@ -19,6 +20,11 @@ const routes = [
     name: 'SearchPlacePage',
     component: SearchPlacePage,
   },
+  {
+  path: '/map',
+  name: 'MapPage',
+  component: MapPage,
+},
   {
     path: '/place/:id',
     name: 'PlacePage',

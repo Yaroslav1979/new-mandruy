@@ -90,7 +90,7 @@ export default {
 }
 
 .toggle-answer {
-  background-color: black;
+  background-color: #111;
   border: none;
   display: flex;
   align-items: center; 

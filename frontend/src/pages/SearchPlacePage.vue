@@ -137,7 +137,7 @@ export default {
 
 <style lang="scss" scoped>
 .head {
-  background-color: black;
+  background-color: #111;
 }
 .place-page {
   &__content {

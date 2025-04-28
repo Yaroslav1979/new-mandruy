@@ -12,9 +12,9 @@
       <AboutService />
     </SectionWithHeaderSpacer>
 
-    <SocialNet />
+    <!-- <SocialNet /> -->
 
-    <ActiveMap />    
+    <!-- <ActiveMap />     -->
 
     <MainQuastions />
 
@@ -27,9 +27,9 @@ import MainHeader from "../components/shared/MainHeader";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
 import AboutService from "../components/shared/AboutService.vue";
-import SocialNet from "../components/shared/SocialNet.vue";
+// import SocialNet from "../components/shared/SocialNet.vue";
 import MainQuastions from "../components/shared/questions/MainQuastions.vue";
-import ActiveMap from "../components/shared/ActiveMap.vue";
+// import ActiveMap from "../components/shared/ActiveMap.vue";
 import ContactsUs from "../components/shared/ContactsUs.vue";
 
 export default {
@@ -38,9 +38,9 @@ export default {
     AddPlaceForm,
     AboutService,
     SectionWithHeaderSpacer,
-    SocialNet,   
+    // SocialNet,   
     MainHeader,    
-    ActiveMap,
+    // ActiveMap,
     MainQuastions,
     ContactsUs,
   },

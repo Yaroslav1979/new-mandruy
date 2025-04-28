@@ -52,7 +52,7 @@ export default {
     height: 460px;
     top: 0px;
     flex-shrink: 0;
-    background-color: #000;
+    background-color: #111;
     transform: skewY(3deg);
     margin: 20px 0;
   }

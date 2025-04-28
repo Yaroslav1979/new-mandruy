@@ -26,13 +26,13 @@
   flex-direction: column;
   justify-content: center;
   gap: 48px;
-  background-color: #000;
+  background-color: #aaa;
   padding: 48px 0;
 
   &__title {
     display: flex;
     justify-content: center;
-    color: #fff;
+    color: #000;
 
     font-family: e-Ukraine, sans-serif;
     text-align: center;
