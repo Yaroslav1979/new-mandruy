@@ -8,41 +8,32 @@
 </div>
 
   <main class="homepage">
-    <SectionWithHeaderSpacer>
+    <!-- <SectionWithHeaderSpacer> -->
       <AboutService />
-    </SectionWithHeaderSpacer>
-
-    <!-- <SocialNet /> -->
-
-    <!-- <ActiveMap />     -->
+    <!-- </SectionWithHeaderSpacer>    -->
 
     <MainQuastions />
 
-    <ContactsUs />
+    
   </main>
 </template>
 
 <script>
 import MainHeader from "../components/shared/MainHeader";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
-import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
+// import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
 import AboutService from "../components/shared/AboutService.vue";
-// import SocialNet from "../components/shared/SocialNet.vue";
 import MainQuastions from "../components/shared/questions/MainQuastions.vue";
-// import ActiveMap from "../components/shared/ActiveMap.vue";
-import ContactsUs from "../components/shared/ContactsUs.vue";
+
 
 export default {
   name: "App",
   components: {
     AddPlaceForm,
     AboutService,
-    SectionWithHeaderSpacer,
-    // SocialNet,   
-    MainHeader,    
-    // ActiveMap,
-    MainQuastions,
-    ContactsUs,
+    // SectionWithHeaderSpacer,     
+    MainHeader,       
+    MainQuastions,  
   },
   data() {
   return {

@@ -12,7 +12,7 @@
         функціоналу або роботи сайту, тоді напиши нам.
       </p>
 
-      <div class="social-block__icons">
+      <!-- <div class="social-block__icons">
         <div class="box-icon">
           <a href="">
             <img class="social-icon" src="../../assets/png/instagram.png" alt="" />
@@ -28,7 +28,7 @@
             <img class="social-icon" src="../../assets/png/Telegram.png" alt="" />
           </a>
         </div>
-      </div>
+      </div> -->
     </div>
 </section>
 </template>
@@ -49,10 +49,14 @@ export default {
   &__bgd {
     display: flex;
     width: 100%;
-    height: 460px;
+    height: 550px;
     top: 0px;
     flex-shrink: 0;
-    background-color: #111;
+    /* background-color: #111; */
+    background-image: url('../../../public/img/landscape.jpeg');
+     background-size: cover;        /* або contain */
+  background-repeat: no-repeat;
+  background-position: center;
     transform: skewY(3deg);
     margin: 20px 0;
   }
@@ -66,7 +70,7 @@ export default {
     width: 30%;
 
       &__title {
-      color: #fff;
+      color: #000;
       font-family: e-Ukraine, sans-serif;
       font-size: 28px;
       font-weight: 700;
@@ -75,7 +79,7 @@ export default {
     }
 
     &__text {
-      color: #bcbcbc;
+      color: #111;
       font-family: e-Ukraine, sans-serif;
       font-size: 14px;
       font-style: normal;

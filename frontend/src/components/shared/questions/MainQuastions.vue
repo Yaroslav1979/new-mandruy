@@ -39,10 +39,10 @@ export default {
   align-items: center;
   gap: 20px;
   padding: 40px 0;
-  background-color: #111;
+  background-color: #fff;
 
   &__title {
-    color: #fff;
+    color: #111;
     text-align: center;
     font-family: e-Ukraine, sans-serif;
     font-size: 24px;

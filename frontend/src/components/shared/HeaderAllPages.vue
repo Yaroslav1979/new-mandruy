@@ -31,7 +31,13 @@
         Мапа
       </router-link>
       <!-- <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> -->
-      <a href="#contacts" class="header-top__nav">Контакти </a>
+      <router-link
+        :to="{ name: 'ContactPage', query: { name: 'Yarik' } }"
+        class="header-top__nav"
+      >
+      Контакти
+      </router-link>
+      
     </span>
   </div>
 </template>

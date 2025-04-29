@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.vue';
 import PlacePage from './pages/PlacePage.vue';
 import MapPage from './pages/MapPage.vue';
 import SearchPlacePage from './pages/SearchPlacePage.vue';
+import ContactPage from './pages/ContactPage.vue';
 import ErrorPage from './pages/ErrorPage.vue';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage'
@@ -31,6 +32,11 @@ const routes = [
     component: PlacePage,
     props: true,
   },
+  {
+  path: '/contact',
+  name: 'ContactPage',
+  component: ContactPage,
+},
   {
   path: '/login',
   name: 'login-page',
