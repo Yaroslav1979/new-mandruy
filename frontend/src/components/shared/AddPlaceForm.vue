@@ -1,8 +1,9 @@
 <template>
   <section class="add-place" id="addplace">
     <h2 class="add-place__title">Додати місце</h2>
+    <SuccessMessageModal v-if="successMessageVisible" @close="closeModal" />
 
-    <form class="add-place__form" @submit.prevent="handleSubmit">
+    <form v-else class="add-place__form" @submit.prevent="handleSubmit">
       <div class="add-place__form-wrapper">
         <!-- Фото -->
         <div class="upload-cont">
@@ -128,7 +129,7 @@ import CircleLoader from "../loaders/CircleLoader.vue";
 import CustomInput from "./CustomInput.vue";
 import CustomTextArea from "./CustomTextArea.vue";
 import CategoriesList from "../categories/CategoriesList.vue";
-// import CategoryItem from "../categories/CategoryItem.vue";
+import SuccessMessageModal from "../SuccessMessageModal.vue";
 import categories from "../categories/categories.js";
 import SubmitButon from "../mainButton.vue";
 
@@ -138,7 +139,7 @@ export default {
     CustomInput,
     CustomTextArea,
     CategoriesList,
-    // CategoryItem,
+    SuccessMessageModal,
     SubmitButon,
     CircleLoader,
   },
@@ -155,6 +156,7 @@ export default {
       isLoading: false,
       rules: [],
       fileInputKey: 0,
+      successMessageVisible: false,
     };
   },
   computed: {
@@ -169,6 +171,7 @@ export default {
     triggerFileUpload() {
       document.getElementById("file-upload")?.click();
     },
+
     handleFileChange(event) {
       const selectedFiles = Array.from(event.target.files);
       selectedFiles.forEach((file) => {
@@ -180,9 +183,15 @@ export default {
       });
       this.fileInputKey = Date.now();
     },
+
     removeFile(index) {
       this.files.splice(index, 1);
     },
+
+    closeModal() {
+  this.$emit("close"); // Закриває модалку, наприклад у батьківському компоненті
+},
+
     // Функція для вибору категорій
    
     async handleSubmit() {
@@ -244,6 +253,7 @@ export default {
     console.log("Успішно збережено:", result);
 
     this.$emit("added", result);
+    this.successMessageVisible = true;
 
   } catch (error) {
     alert("Помилка при збереженні місця: " + error.message);

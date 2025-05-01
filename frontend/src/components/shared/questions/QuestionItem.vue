@@ -55,7 +55,7 @@ export default {
 
   width: 1096px;
   border-radius: 5px;
-  border: 2px solid #8c9ba5;
+  border: 2px solid #333639;
   padding: 16px 20px 16px 20px;
   cursor: pointer;
 }
@@ -97,7 +97,7 @@ export default {
 }
 
 .icon-openanswer {
-  color: #000;
+  color: #333639;
   font-size: 32px;
   font-style: normal;
   font-weight: 600;

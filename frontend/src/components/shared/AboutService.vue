@@ -1,7 +1,7 @@
 <template>
   <section class="about-service">
     <div class="about-service__wrapp"></div>
-    <h2 class="section__title">ПРО СЕРВІС</h2>
+    <h2 class="about-service__title">ПРО СЕРВІС</h2>
 
     <div class="about-service__cont">
       <a href="#search" class="about-service__link">
@@ -59,7 +59,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/variables.scss";
 
-.section__title {
+.about-service__title {
   color: #000;
   text-align: center;
   font-family: e-Ukraine, sans-serif;

@@ -71,7 +71,7 @@ export default {
 .header-top__nav {
   color: #fff;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 150%;

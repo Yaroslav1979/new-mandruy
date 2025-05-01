@@ -9,10 +9,20 @@
       class="modal-overlay"
       @click.self="isModalOpen = false"
     >
-      <div class="modal-content">
-        <AddPlaceForm @added="handleNewPlace" @close="isModalOpen = false" />
-      </div>
+    <div class="modal-content">
+      <template v-if="!isSuccess">
+        <AddPlaceForm @added="handleNewPlace" />
+      </template>
+
+      <template v-else>
+        <div class="success-message">
+          <p>Місце успішно додано!</p>
+          <button @click="closeModal">Добре</button>
+        </div>
+      </template>
     </div>
+    </div>
+
     <ContactsUs />
     
     <SocialNet />  
@@ -75,6 +85,21 @@ export default {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   max-height: 90vh;
+}
+.success-message {
+  text-align: center;
+  font-family: e-Ukraine, sans-serif;
+  font-size: 18px;
+}
+
+.success-message button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
 }
 
 

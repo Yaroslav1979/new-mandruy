@@ -33,7 +33,6 @@
     display: flex;
     justify-content: center;
     color: #000;
-
     font-family: e-Ukraine, sans-serif;
     text-align: center;
     font-size: 24px;
