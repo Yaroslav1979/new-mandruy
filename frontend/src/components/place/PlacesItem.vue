@@ -1,11 +1,19 @@
 <template>
-  <div class="places-item" >
+  <div class="places-item">
     <div class="places-item__inner">
       <div class="places-item__photo-container">
-        <img :src="imgSrc[0]" alt="Place photo" class="place-item__photo" />
+        <img
+          v-if="imgSrc.length"
+          :src="`http://localhost:3000/uploads/${imgSrc[0].replace(
+            /^.*[\\/]/,
+            ''
+          )}`"
+          alt="Place photo"
+          class="place-item__photo"
+        />
       </div>
       <div class="places-item__content">
-        <h2 class="places-item__price">
+        <h2 class="places-item__title">
           {{ title }}
         </h2>
         <br />
@@ -13,9 +21,10 @@
           {{ descr }}
         </p>
         <router-link
-          :to="{ name: 'place', params: { id }, query: { name: 'Yarik' } }"
+          :to="{ name: 'PlacePage', params: { id }, query: { name: 'Yarik' } }"
           class="places-item__link"
-        ></router-link>
+        >
+        </router-link>
       </div>
     </div>
   </div>
@@ -40,6 +49,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/variables.scss";
 .places-item {
   width: 50%; /* Два стовпчики */
   padding: 0 15px;
@@ -57,15 +67,17 @@ export default {
     border-radius: 16px;
     overflow: hidden;
     display: flex;
-  align-items: center;
-  justify-content: center;
-  }  
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+  }
 
   &__photo {
-    width: 100%;
-    /* height: auto; */
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
     border-radius: 16px;
+    display: block;
   }
 
   &__content {
@@ -96,7 +108,7 @@ export default {
     overflow: hidden;
   }
 
-  &__price {
+  &__title {
     font-size: 20px;
     font-weight: 600;
   }

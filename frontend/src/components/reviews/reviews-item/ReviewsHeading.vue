@@ -10,7 +10,7 @@
 
 <script>
     import Rating from '../../StarRating.vue'
-    import Avatar from './ReviewsAvavtar.vue'
+    import Avatar from './ReviewsAvatar.vue'
     export default {
         name: 'ReviewsHeading',
         components: {

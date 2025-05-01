@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    <Notifications />  
-    <div class="content"> 
-      <!-- <AppHeader /> -->
+    <!-- <Notifications />   -->
+    <div class="content">   
       <router-view />       
     </div>
     
@@ -15,7 +14,7 @@
 // import { computed, onMounted } from 'vue';
 import AppFooter from './components/shared/MainFooter';
 // import AppHeader from './components/shared/MainHeader';
-import Notifications from './components/notifications';
+// import Notifications from './components/notifications';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -23,7 +22,7 @@ export default {
   components: {
     AppFooter,
     // AppHeader,
-    Notifications
+    // Notifications
   }, 
   computed: {
     ...mapGetters('auth', ['isLoggedIn'])

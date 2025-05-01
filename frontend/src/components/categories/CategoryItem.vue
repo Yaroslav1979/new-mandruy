@@ -1,9 +1,10 @@
 <template>
   <button
-   class="button-category"
+    class="button-category"
     @click="toggleCategory"
     type="button"
-    :class="{ selected: isSelected }">
+    :class="{ selected: isSelected }"
+  >
     <p class="categ-title">
       <img :src="svgUrl" alt="" class="icon-ctg" />
       <em>{{ title }}</em>
@@ -28,7 +29,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .button-category {
   background-color: white;
   border: none;
@@ -65,19 +66,4 @@ export default {
 .selected .icon-ctg {
   filter: invert(1);
 }
-
-/* .categ-title:hover {
-  background-color: #000;
-  color: white;
-}
-
-.categ-title:hover .icon-ctg {
-  filter: invert(1);
-}
-
-.categ-title.active {
-  background-color: #000;
-  color: white;
-} */
-
 </style>

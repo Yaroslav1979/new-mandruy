@@ -1,26 +1,34 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const placesRoutes = require('./routes/places');
-const path = require('path');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const connectToMongo = require("./db");
+const placesRoutes = require("./routes/places"); // імпорт маршрутів
+
 
 const app = express();
-const PORT = 5000;
-
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/api/places', placesRoutes);
 
-mongoose
-  .connect('mongodb://localhost:27017/tourism', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+// Використання маршрутів
+app.use("/api/places", placesRoutes);
+
+const fs = require("fs");
+const uploadDir = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Запуск сервера після підключення до MongoDB
+connectToMongo()
   .then(() => {
-    console.log('Підключено до MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Сервер працює на http://localhost:${PORT}`);
+    app.listen(3000, () => {
+      console.log("🚀 Сервер запущено на http://localhost:3000");
     });
   })
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.error("❌ Помилка підключення до MongoDB:", err);
+  });

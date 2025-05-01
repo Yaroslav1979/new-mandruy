@@ -37,7 +37,7 @@
           class="form__select--item"
         />
 
-        <span>СОРТУВАТИ ЗА:</span>
+        <span>СОРТУВАТИ:</span>
       <CustomSelect
         :items="sorts"
         v-model="sortBy"
@@ -83,7 +83,7 @@ export default {
 
     categories() {
       return [
-        { value: "", label: "Обрати", isLabel: true },
+        { value: "", label: "Без категорії", isLabel: true },
         "Табір",
         "Мандрівка",
         "Питна вода",
@@ -97,7 +97,7 @@ export default {
 
     regions() {
       return [
-        { value: "", label: "Обрати", isLabel: true },
+        { value: "", label: "Всі області", isLabel: true },
         "Вінницька область",
         "Волинська область",
         "Дніпропетровська область",
@@ -128,7 +128,7 @@ export default {
     },
     sorts() {
   return [
-    { value: "", label: "Сортування", isLabel: true },
+    { value: "", label: "за замовчуванням", isLabel: true },
     { value: "title", label: "за назвою" },
     { value: "date", label: "за датою" },
   ];

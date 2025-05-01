@@ -1,9 +1,7 @@
-<template>
-    
-    <!-- <router-link to="/"> --> 
+<template>       
     <div class="header">     
 
-      <HeaderAllPages />
+      <HeaderAllPages @openAddModal="$emit('openAddModal')" />
 
       <div class="header__hero-block">
         <h1 class="header__hero-title">Вітаємо вас на «Мандруй»</h1>
@@ -16,7 +14,13 @@
           додання його в наш список.
         </p>
         <div class="header__hero-buttons">
-          <a href="#search" class="header__hero-buttons--search"> Розпочати пошук</a>
+          <!-- <a href="#search" class="header__hero-buttons--search"> Розпочати пошук</a> -->
+          <router-link
+          :to="{ name: 'SearchPlacePage', query: { name: 'Yarik' } }"
+         class="header__hero-buttons--search"
+        >
+        Розпочати пошук 
+        </router-link>
           <div>
             <a href="#questions" class="header__hero-buttons--learn">
               Дізнатися більше
@@ -29,19 +33,18 @@
           </div>
         </div>
       </div>
+      
     </div>   
-    <!-- </router-link> -->  
-</template>
+  </template>
 
 <script>
-// import Container from "../shared/Container.vue";
 import HeaderAllPages from "./HeaderAllPages";
 export default {
   name: "MainHeader",
   components: {
-    // Container,
     HeaderAllPages,
   },
+  emits: ['openAddModal'],
 };
 </script>
 

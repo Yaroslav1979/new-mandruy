@@ -1,24 +1,57 @@
 <template>
-    <div class="header-top">
-        <LogoType />
-        <span>
-          <a href="#service" class="header-top__nav">Про сервіс </a>
-          <a href="#search" class="header-top__nav">Пошук місць </a>
-          <a href="#addplace" class="header-top__nav">Додати місце </a>
-          <a href="#contacts" class="header-top__nav">Контакти </a>
-        </span>
-    </div>
+  <div class="header-top">
+    <LogoType />
+    <span>
+
+      <router-link
+        :to="{ name: 'home', query: { name: 'Yarik' } }"  
+        class="header-top__nav"      
+      >
+      Про сервіс
+      </router-link>
+      <!-- <a href="#service" class="header-top__nav">Про сервіс </a> -->
+
+      
+      
+      <router-link
+        :to="{ name: 'SearchPlacePage', query: { name: 'Yarik' } }"
+        class="header-top__nav"
+      >
+        Пошук місць
+      </router-link>
+
+      <button class="header-top__nav" @click="$emit('openAddModal')">
+        Додати місце
+      </button>
+
+      <router-link
+        :to="{ name: 'MapPage', query: { name: 'Yarik' } }"
+        class="header-top__nav"
+      >
+        Мапа
+      </router-link>
+      <!-- <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> -->
+      <router-link
+        :to="{ name: 'ContactPage', query: { name: 'Yarik' } }"
+        class="header-top__nav"
+      >
+      Контакти
+      </router-link>
+      
+    </span>
+  </div>
 </template>
 
 <script>
-    import LogoType from "./LogoType";
+import LogoType from "./LogoType";
 
-    export default {        
-        name: 'HeaderAllPages',
-        components: {
-            LogoType
-        }
-    }
+export default {
+  name: "HeaderAllPages",
+  components: {
+    LogoType,
+  },
+  emits: ["openAddModal"],
+};
 </script>
 
 <style lang="scss" scoped>
@@ -38,7 +71,7 @@
 .header-top__nav {
   color: #fff;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 150%;
@@ -50,6 +83,8 @@
   border-radius: 30px;
   border: 1px solid #fafafa;
   box-shadow: 0px 4px 99px 0px #454753;
+  background: transparent;
+  cursor: pointer;
 }
 .header-top__nav:hover {
   color: bisque;

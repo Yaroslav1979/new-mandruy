@@ -24,17 +24,18 @@ npm install
 
 npm run start:backend
 
+# або 
+cd backend
+npm run start
+
 # Запустіть фронтенд:
 
 npm run start:frontend
+# або 
+cd frontend
+npm run serve
 
 ## Розробка
-
-## Щоб запускати фронтенд та бекенд одночасно, використовуй наступні команди:
-
-
-npm run start
-
 
 ## Залежності:
 

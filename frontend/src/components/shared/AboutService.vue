@@ -1,6 +1,7 @@
 <template>
-  <section class="about-service" id="service">
-    <h2 class="section__title" id="service">ПРО СЕРВІС</h2>
+  <section class="about-service">
+    <div class="about-service__wrapp"></div>
+    <h2 class="about-service__title">ПРО СЕРВІС</h2>
 
     <div class="about-service__cont">
       <a href="#search" class="about-service__link">
@@ -58,7 +59,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/variables.scss";
 
-.section__title {
+.about-service__title {
   color: #000;
   text-align: center;
   font-family: e-Ukraine, sans-serif;
@@ -74,12 +75,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  width: 100%;
-  height: 100%;
+  gap: 40px;
+  /* width: 100%;
+  height: 100%; */
   flex-shrink: 0;
-  background: #f5f4f4;
-  padding: 100px 0; 
+  /* background: #f5f4f4; */
+  /* padding: 100px 0;  */
 
 
   &__cont {

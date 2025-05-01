@@ -1,155 +1,105 @@
 <template>
-  <AppHeader />
+  <MainHeader @openAddModal="isModalOpen = true" />
+
+  <!-- МОДАЛКА -->
+  <div
+    v-if="isModalOpen"
+    class="modal-overlay"
+    @click.self="isModalOpen = false"
+  >
+    <div class="modal-content">
+      <template v-if="!isSuccess">
+        <AddPlaceForm @added="handleNewPlace" />
+      </template>
+
+      <template v-else>
+        <div class="success-message">
+          <p>Місце успішно додано!</p>
+          <button @click="closeModal">Добре</button>
+        </div>
+      </template>
+    </div>
+  </div>
+
   <main class="homepage">
-    <SectionWithHeaderSpacer>
-      <AboutService />
-    </SectionWithHeaderSpacer>
-
-    <SocialNet />
-
-    <SectionWithHeaderSpacer>
-
-      <PlacesFilterForm class="places-filter" @submit="filter" />
-
-      <p v-if="!filteredPlaces.length">Нічого не знайдено</p>
-
-      <PlacesList v-else :items="filteredPlaces">
-        <template v-slot:place="{ place }">
-          <PlacesItem
-            :key="place.id"
-            :id="place.id"
-            :descr="place.descr"
-            :rating="place.rating"
-            :imgSrc="place.imgUrls"
-            :title="place.title"
-          />
-        </template>
-      </PlacesList>
-    </SectionWithHeaderSpacer>
-
-    <ActiveMap />
-
-    <AddPlaceForm :categories="categories" />
-
+    <AboutService />
     <MainQuastions />
-
-    <ContactsUs />
   </main>
 </template>
 
 <script>
-import AppHeader from "../components/shared/MainHeader";
-import AboutService from "../components/shared/AboutService.vue";
-import SocialNet from "../components/shared/SocialNet.vue";
-
-import PlacesList from "../components/place/PlacesList.vue";
-import PlacesItem from "../components/place/PlacesItem.vue";
-import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
-import { getPlacesList } from "../services/places.service";
-import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.vue";
-
-import MainQuastions from "../components/shared/questions/MainQuastions.vue";
-import ActiveMap from "../components/shared/ActiveMap.vue";
+import MainHeader from "../components/shared/MainHeader";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
-import ContactsUs from "../components/shared/ContactsUs.vue";
+import AboutService from "../components/shared/AboutService.vue";
+import MainQuastions from "../components/shared/questions/MainQuastions.vue";
 
 export default {
-  name: "App",
+  name: "HomePage",
   components: {
-    AboutService,
-    SocialNet,
-    PlacesList,
-    PlacesItem,
+    MainHeader,
     AddPlaceForm,
-    PlacesFilterForm,
-    AppHeader,
-    SectionWithHeaderSpacer,
-    ActiveMap,
+    AboutService,
     MainQuastions,
-    ContactsUs,
   },
-
   data() {
     return {
-      places: [],
-      filters: {
-        title: "",
-        region: "",
-        categoryIds: [],
-        sortBy: "",
-      },
+      isModalOpen: false,
+      isSuccess: false, // <-- нове поле
     };
   },
-  computed: {
-    filteredPlaces() {
-  let result = this.filterByRegionName(this.places);
-  result = this.filterByTitle(result);
-  result = this.filterByCategory(result);
-
-  if (this.filters.sortBy === "title") {
-    result = this.sortPlacesByTitle(result);
-  }
-
-  return result;
-},
-  },
-  async created() {
-    try {
-      const { data } = await getPlacesList();
-      console.log("Fetched places:", data);
-      this.places = data;
-    } catch (error) {
-      console.error(error);
-    }
-  },
-
   methods: {
-    filter({ region, title, categoryIds, sortBy }) {
-  if (region !== undefined) this.filters.region = region;
-  if (title !== undefined) this.filters.title = title;
-  if (Array.isArray(categoryIds)) this.filters.categoryIds = categoryIds;
-  if (sortBy !== undefined) this.filters.sortBy = sortBy; // нове
-},
-  
-
-  filterByRegionName(places) {
-      if (!this.filters.region) return places;
-      return places.filter(
-        (place) =>
-          place.location?.region &&
-          place.location.region === this.filters.region
-      );
-  },
-
-  filterByTitle(places) {
-      if (!this.filters.title) return places;
-      return places.filter(
-        (place) => place.title.toLowerCase().includes(this.filters.title.toLowerCase())
-      );
+    handleNewPlace() {
+      this.isSuccess = true;
     },
-
-    filterByCategory(places) {
-      if (!this.filters.categoryIds.length) return places;
-      return places.filter(place => 
-        Array.isArray(place.categoryIds) &&
-        place.categoryIds.some(cat => this.filters.categoryIds.includes(cat))
-      );
+    closeModal() {
+      this.isModalOpen = false;
+      this.isSuccess = false;
     },
-
-    sortPlacesByTitle(places) {
-     return [...places].sort((a, b) => a.title.localeCompare(b.title));
   },
-
-  },  
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 
-.homepage {
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 1300px;
   width: 100%;
-  margin: 0 auto;
+  box-sizing: border-box;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.success-message {
+  text-align: center;
+  font-family: e-Ukraine, sans-serif;
+  font-size: 18px;
+}
+
+.success-message button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
 }
 </style>
-
-

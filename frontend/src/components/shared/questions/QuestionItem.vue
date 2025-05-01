@@ -55,7 +55,7 @@ export default {
 
   width: 1096px;
   border-radius: 5px;
-  border: 2px solid #8c9ba5;
+  border: 2px solid #333639;
   padding: 16px 20px 16px 20px;
   cursor: pointer;
 }
@@ -64,7 +64,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center; 
-  color: #fff;
+  color: #111;
   font-family: e-Ukraine, sans-serif;
   font-size: 16px;
   font-style: normal;
@@ -85,19 +85,19 @@ export default {
 .answer {
   margin-top: 10px;
   padding-left: 20px;
-  color: #fff;
+  color: #111;
   line-height: 1.5;
 }
 
 .toggle-answer {
-  background-color: black;
+  background-color: #fff;
   border: none;
   display: flex;
   align-items: center; 
 }
 
 .icon-openanswer {
-  color: #fff;
+  color: #333639;
   font-size: 32px;
   font-style: normal;
   font-weight: 600;

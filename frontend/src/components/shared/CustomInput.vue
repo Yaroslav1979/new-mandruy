@@ -118,18 +118,15 @@ export default {
   background-color: white;
   border-radius: 8px;
   border: 2px solid $main-color;
+  font-family: e-Ukraine, sans-serif;
   width: 100%;
   height: 54px;
-  font-size: 18px;
+  font-size: 16px;
   padding: 0 20px;
 
     &::placeholder {
         color: gray;
-    }
-
-    &--error {
-        border-color: rgba(255, 0, 0, 0.428);
-    }
+    } 
 
     &__error {
         position: absolute;
@@ -138,6 +135,7 @@ export default {
         width: 100%;
         font-size: 12px;
         color: red;
+        border-color: rgba(255, 0, 0, 0.428);    
         line-height: 1.3;
     }
 }

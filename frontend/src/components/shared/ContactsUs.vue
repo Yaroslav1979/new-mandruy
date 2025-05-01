@@ -44,19 +44,19 @@ export default {
 
 <style lang="scss" scoped>
 .contacts {
-  background-color: #000;
+  /* background-color: #111; */
   display: flex;
   flex-direction: column;
   position: relative;
   width: 100%;
-  height: 800px;
+  height: 200px;
 }
 
 .contacts__bgd {
   display: flex;
   position: absolute;
   background: #f5f4f4;
-  transform: skewY(-3deg);
+  transform: skewY(+3deg);
   top: 60px;
   bottom: 100px;
   height: 560px;
