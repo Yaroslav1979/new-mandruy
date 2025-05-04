@@ -1,6 +1,6 @@
 <template>
-  <section id="search" class="form-container">
-    <h2 class="section__title" id="service">ПОШУК МІСЦЬ</h2>
+  <section class="form-container">
+    <h2 class="section__title" >ПОШУК МІСЦЬ</h2>
 
     <form class="form" @submit.prevent="handleSubmit">
 

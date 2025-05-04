@@ -57,9 +57,6 @@
     }
     &--outlined {
     background: url('/src/assets/Star_rating-empty.svg') center no-repeat;
-   
-    }
+   }
 }
-
-
 </style>

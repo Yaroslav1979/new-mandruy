@@ -13,7 +13,7 @@
 <style lang="scss" scoped>
 
 .section-spacer {   
-    padding: 100px;    
+    padding: 50px;    
     background-color: #f5f4f4; 
 }
 </style>

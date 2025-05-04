@@ -8,19 +8,18 @@
       class="modal-overlay"
       @click.self="isModalOpen = false"
     >
-    <div class="modal-content">
-      <template v-if="!isSuccess">
-        <AddPlaceForm @added="handleNewPlace" />
-      </template>
+      <div class="modal-content">
+        <template v-if="!isSuccess">
+          <AddPlaceForm @added="handleNewPlace" />
+        </template>
 
-      <template v-else>
-        <div class="success-message">
-          <p>Місце успішно додано!</p>
-          <button @click="closeModal">Добре</button>
-        </div>
-      </template>
-    </div>
-      
+        <template v-else>
+          <div class="success-message">
+            <p>Місце успішно додано!</p>
+            <button @click="closeModal">Добре</button>
+          </div>
+        </template>
+      </div>
     </div>
     <SectionWithHeaderSpacer>
       <PlacesFilterForm class="places-filter" @submit="filter" />
@@ -33,7 +32,7 @@
             :key="place._id"
             :id="place._id"
             :descr="place.descr"
-            :rating="place.rating"
+            :rating="place.rating"  
             :imgSrc="place.imgUrls"
             :title="place.title"
           />
@@ -50,12 +49,12 @@ import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import PlacesList from "../components/place/PlacesList.vue";
 import PlacesItem from "../components/place/PlacesItem.vue";
 import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
+// import { calculateAverageRating } from "../utils/calculateAverageRating.js";
 import axios from "axios";
 
 export default {
-  name: "PlacePage",
+  name: "SearchPlacePage",
   components: {
-    // Container
     HeaderAllPages,
     SectionWithHeaderSpacer,
     AddPlaceForm,
@@ -66,7 +65,7 @@ export default {
   data() {
     return {
       places: [],
-      isModalOpen: false, // ДЛЯ МОДАЛКИ
+      isModalOpen: false,
       filters: {
         title: "",
         region: "",
@@ -90,19 +89,50 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get("http://localhost:3000/api/places");
-      this.places = response.data; // ВАЖЛИВО: тут лежить масив місць з бази (MongoDB Atlas)
+      const placesResponse = await axios.get("http://localhost:3000/api/places");
+      const places = placesResponse.data;
+
+      // Вже використовується рейтинг, що приходить з сервера
+      this.places = places;
     } catch (error) {
       console.error("Помилка при завантаженні місць:", error);
     }
   },
+
+//   async created() {
+//   try {
+//     const placesResponse = await axios.get("http://localhost:3000/api/places");
+//     const places = placesResponse.data;
+
+//     // Отримуємо відгуки для кожного місця
+//     const placesWithRatings = await Promise.all(
+//       places.map(async (place) => {
+//         try {
+//           const reviewsRes = await axios.get(`http://localhost:3000/api/reviews/place/${place._id}`);
+//           const reviews = reviewsRes.data;
+//           const totalRating = calculateAverageRating(reviews);
+
+//           // Повертаємо об'єкт місця з доданим рейтингом
+//           return { ...place, totalRating };
+//         } catch (err) {
+//           console.error(`Помилка при завантаженні відгуків для місця ${place._id}:`, err);
+//           return { ...place, totalRating: 0 };  // У разі помилки ставимо рейтинг 0
+//         }
+//       })
+//     );
+
+//     this.places = placesWithRatings;  // Оновлюємо список місць з рейтингами
+//   } catch (error) {
+//     console.error("Помилка при завантаженні місць:", error);
+//   }
+// },
 
   methods: {
     filter({ region, title, categoryIds, sortBy }) {
       if (region !== undefined) this.filters.region = region;
       if (title !== undefined) this.filters.title = title;
       if (Array.isArray(categoryIds)) this.filters.categoryIds = categoryIds;
-      if (sortBy !== undefined) this.filters.sortBy = sortBy; // нове
+      if (sortBy !== undefined) this.filters.sortBy = sortBy;
     },
 
     filterByRegionName(places) {
@@ -142,6 +172,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style lang="scss" scoped>
 .head {

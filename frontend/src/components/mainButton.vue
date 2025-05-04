@@ -50,6 +50,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.btn {
+    border: none;
+    background-color: transparent;
+}
 
 .btn:hover {
     cursor: pointer;

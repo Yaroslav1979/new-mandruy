@@ -12,39 +12,61 @@
           class="place-item__photo"
         />
       </div>
-      <div class="places-item__content">
-        <h2 class="places-item__title">
+      <h2 class="places-item__title">
           {{ title }}
         </h2>
         <br />
+      <div class="places-item__content">
+        
+        
         <p class="places-item__description">
           {{ descr }}
         </p>
+
+        <br />
+        
+        <Rating :rating="rating" />
+
         <router-link
           :to="{ name: 'PlacePage', params: { id }, query: { name: 'Yarik' } }"
           class="places-item__link"
         >
         </router-link>
       </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import Rating from "../StarRating.vue";
 export default {
   name: "PlacesItem",
+  components: {
+    Rating,
+  },
   props: {
-    id: { type: String, required: true },
-    descr: { type: String, default: "" },
-    title: { type: String, default: "" },
-    imgSrc: { type: Array, default: () => [] },
-    index: { type: Number, required: true }, // Індекс для визначення колонки
-  },
-  computed: {
-    isLeftColumn() {
-      return this.index % 2 === 0; // Ліва колонка (парні індекси)
+    id: { 
+      type: String,
+       required: true 
+      },
+    descr: { 
+      type: String, 
+      default: "" 
     },
-  },
+    title: { 
+      type: String, 
+      default: "" 
+    },
+    imgSrc: { 
+      type: Array, 
+      default: () => [] 
+    },
+    rating: {
+      type: Number,
+      default: 0,
+    },   
+  },  
 };
 </script>
 
@@ -86,7 +108,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 20px;
+    padding: 40px;
     border-radius: 16px;
     opacity: 0;
     transition: opacity 0.4s;
@@ -103,14 +125,25 @@ export default {
   }
 
   &__description {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
+    margin-top: 50px;
     max-height: calc(1em * 1.4 * 3);
     overflow: hidden;
   }
 
   &__title {
+    position: absolute;
+    color: #fff;
+    background-color: rgba(68, 68, 68, 0.5);   
+    display: inline-block;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    padding: 10px 20px;
+    left: 40px;
+    top: 20px;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
+    font-style: italic;
+    z-index: 10;
   }
 
   &__link {

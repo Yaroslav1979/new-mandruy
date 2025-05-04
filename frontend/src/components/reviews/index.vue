@@ -7,8 +7,8 @@
         <div>Підсумковий рейтинг: <Rating :rating="totalRating" /></div>
       </div>
       <!-- Кнопка для виклику форми -->
-     <button class="leave-review-button" @click="showModal = true">
-      Залишити відгук
+     <button class="leave-review-button" @click="toggleModal">
+      {{ showModal ? "Приховати" : "Залишити відгук" }}
     </button>
     </div>
      
@@ -100,19 +100,15 @@ export default {
         this.reviewsLimit = 2;
         return;
       }
-
       this.reviewsLimit = this.reviews.length;
     },
-    handleAdded() {
-      // this.localReviews.unshift(newReview); // додати новий на початок
-      console.log("📢 Подія review-added прокинута вгору");
+    toggleModal() {
+  this.showModal = !this.showModal;
+},
+    handleAdded() {     
       this.showModal = false;
       this.$emit("review-added"); // кидаємо подію нагору
-    },
-    // handleAdded(newReview) {
-    //   this.localReviews.unshift(newReview); // додати новий на початок
-    //   this.showModal = false;
-    // }
+    },    
   },
 };
 </script>
