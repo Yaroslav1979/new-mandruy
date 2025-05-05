@@ -37,7 +37,23 @@
       >
       Контакти
       </router-link>
+
+      <div class="header-top__block">
+        <router-link
+        :to="{ name: 'registration-page', query: { name: 'Yarik' } }"
+        class="header-top__block-login"      >
       
+      Реєстрація
+      </router-link>
+        /
+      <router-link
+        :to="{ name: 'login-page', query: { name: 'Yarik' } }"
+        class="header-top__block-login"
+      >
+      Вхід
+      </router-link>
+      </div>   
+
     </span>
   </div>
 </template>
@@ -59,15 +75,17 @@ export default {
 
 .header-top {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   /* margin: 10px; */
   padding: 16px 50px;
 }
+
 .header-top > span {
   display: flex;
   gap: 100px;
   justify-content: center;
 }
+
 .header-top__nav {
   color: #fff;
   text-align: center;
@@ -85,10 +103,33 @@ export default {
   box-shadow: 0px 4px 99px 0px #454753;
   background: transparent;
   cursor: pointer;
-}
-.header-top__nav:hover {
+
+&:hover {
   color: bisque;
   border: 2px solid bisque;
   opacity: 80%;
+}
+}
+
+.header-top__block {
+  display: flex;
+  gap: 16px;
+ align-items: center;
+color: #fafafa;
+
+&-login {
+  color: #fafafa;
+  font-family: e-Ukraine, sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+
+  &:hover {
+    color: bisque;
+  /* border: 2px solid bisque; */
+  opacity: 80%;
+  }
+}
+
 }
 </style>

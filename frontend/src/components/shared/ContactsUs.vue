@@ -2,7 +2,7 @@
   <section class="contacts" id="contacts">
    
     <div class="contacts__bgd"></div>
-    <h3 class="contacts__title" id="contacts">Контакти</h3>
+    <h3 class="contacts__title">Контакти</h3>
 
     <div class="contacts-cont">
       <a href="https://ourwebsite.com" class="contacts__link-block">
