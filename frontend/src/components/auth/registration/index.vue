@@ -37,7 +37,7 @@
         :rules="confirmPassword"
         class="registration__input"
       />
-      <Button type="submit" class="registration__btn" :loading="loading">Увійти</Button>
+      <Button type="submit" class="registration__btn" :loading="loading">Зареєструватися</Button>
     </Form>
   </AuthContainer>
 </template>
@@ -151,22 +151,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../../assets/scss/variables";
 .registration {
+  font-family: e-Ukraine, sans-serif;
   &__form {
     display: flex;
     flex-direction: column;
+    gap: 16px;
   }
 
   &__title {
+    
     text-align: center;
   }
 
   &__input {
+   
     margin-bottom: 20px;
     width: 100%;
   }
 
   &__btn {
+    border: 2px solid $main-color;
+    font-family: e-Ukraine, sans-serif;
+    background-color: #6b76ff;
+    color: white;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 12px;
     margin-top: 15px;
     width: 100%;
   }
