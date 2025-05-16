@@ -1,107 +1,99 @@
 <template>
     <div class="wrapper-input">
-        <input 
-            v-bind="$attrs"             
-            @blur="blurHandler"
-            class="custom-input" 
-            :class="!isValid && 'custom-input--error'"
-            :value="modelValue"
-            @input="updateValue"
-        />
-        <!-- <img src="../../assets/png/iconSearch.png" alt="" class="search-icon"> -->
-        <span v-if="!isValid" class="custom-input__error">{{ error }}</span>
+      <input 
+        v-bind="$attrs"             
+        @blur="blurHandler"
+        class="custom-input" 
+        :class="!isValid && 'custom-input--error'"
+        :value="modelValue"
+        @input="updateValue"
+      />
+      <span v-if="!isValid" class="custom-input__error">{{ error }}</span>
     </div>
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  export default {
     name: "CustomInput",
     data() {
-        return {
-            isValid: true,
-            error: '',
-            isFirstInput: true,
-        };
+      return {
+        isValid: true,
+        error: '',
+        isFirstInput: true,
+      };
     },
     inject: {
-        form: {
-            default: null
-        }
+      form: { default: null }
     },
     inheritAttrs: false,
     props: {
-        modelValue: String, // Додаємо підтримку v-model
-        errorMessage: {
-            type: String,
-            default: '',
-        },
-        rules: {
-            type: Array,
-            default: () => [],
-        }
+      modelValue: String,
+      errorMessage: {
+        type: String,
+        default: '',
+      },
+      rules: {
+        type: Array,
+        default: () => [],
+      }
     },
     watch: {
-    modelValue(value) {  
-        if (!value && this.isFirstInput) return; // Не запускаємо валідацію при першому вводі або очищенні
+      modelValue(value) {
+        if (!value && this.isFirstInput) return;
         if (!value) {
-            this.isValid = true;
-            this.error = '';
-            return;
+          this.isValid = true;
+          this.error = '';
+          return;
         }
-        this.validate(value);
-    }
-},
+        this.validate(); // викликаємо без аргументів
+      }
+    },
     mounted() {
-        if  (!this.form) return
-
-        this.form.registerInput(this)
+      if (this.form) this.form.registerInput(this);
     },
     beforeUnmount() {
-        if  (!this.form) return
-
-        this.form.unRegisterInput(this)
+      if (this.form) this.form.unRegisterInput(this);
     },
     methods: {
-        updateValue(event) {
-            this.$emit("update:modelValue", event.target.value);
-        },
-        validate(value) {
-            this.isValid = true;
-            this.error = '';
-            for (const rule of this.rules) {
-                const result = rule(value);
-                
-                if (typeof result === 'object') {
-                    if (!result.hasPassed) {
-                        this.isValid = false;
-                        this.error = result.message || this.errorMessage;
-                        return;
-                    }
-                } else if (!result) {
-                    this.isValid = false;
-                    this.error = this.errorMessage;
-                    return;
-                }
-            }           
-        },
-        blurHandler() {
-            if (this.isFirstInput) {
-                this.validate();
+      updateValue(event) {
+        this.$emit("update:modelValue", event.target.value);
+      },
+      validate(value = this.modelValue) {  // <- дефолтне значення
+        this.isValid = true;
+        this.error = '';
+  
+        for (const rule of this.rules) {
+          const result = rule(value);
+          if (typeof result === 'object') {
+            if (!result.hasPassed) {
+              this.isValid = false;
+              this.error = result.message || this.errorMessage;
+              return false; // <- важливо
             }
-             this.isFirstInput = false
-        },
-        reset() {
-    this.isFirstInput = true;
-    this.isValid = true;
-    this.error = '';
-    
-    // Очищаємо модельне значення
-    this.$emit('update:modelValue', '');
-}
-
+          } else if (!result) {
+            this.isValid = false;
+            this.error = this.errorMessage;
+            return false; // <- важливо
+          }
+        }
+  
+        return true; // <- важливо
+      },
+      blurHandler() {
+        if (this.isFirstInput) {
+          this.validate();
+        }
+        this.isFirstInput = false;
+      },
+      reset() {
+        this.isFirstInput = true;
+        this.isValid = true;
+        this.error = '';
+        this.$emit('update:modelValue', '');
+      }
     }
-};
-</script>
+  };
+  </script>
 
 <style lang="scss" scoped>
 @import "../../assets/scss/variables";

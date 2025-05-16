@@ -3,14 +3,14 @@ import authModule from  './modules/auth';
 import createPersistedState from 'vuex-persistedstate'
 
 const dataState = createPersistedState( {
-    path: ['auth.token']
+    paths: ['auth.token']
 })
 
 const store = createStore({  // Використовуємо createStore
     modules: {
         auth: authModule,
     },
-    plagins: [dataState],
+    plugins: [dataState],
 });
 
 export default store

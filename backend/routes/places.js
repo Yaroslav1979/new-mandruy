@@ -146,4 +146,6 @@ router.get("/:placeId/reviews", async (req, res) => {
 //------------------------------------------------------
 // Отримання місця за id
 router.get("/:_id", getPlaceById);
+
+
 module.exports = router;

@@ -11,6 +11,8 @@ app.use(router);
 app.use(Notifications);
 app.use(store); // Реєструємо store
 
+store.dispatch('auth/fetchUser'); // ✨ Отримуємо юзера по токену
+
 app.mount('#app');
 
 

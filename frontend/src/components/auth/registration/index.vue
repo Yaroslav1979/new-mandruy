@@ -33,27 +33,38 @@
         placeholder="Повторіть пароль"
         autocomplete="current-password"
         type="password"
-        name="password"
+        name="confirmPassword"
         :rules="confirmPassword"
         class="registration__input"
       />
-      <Button type="submit" class="registration__btn" :loading="loading">Зареєструватися</Button>
+      <Button 
+              type="submit" 
+              class="registration__btn"   
+              :loading="loading" 
+              :disabled="loading"
+              >
+        Зареєструватися
+      </Button>
     </Form>
   </AuthContainer>
+  <SuccessModal v-if="showSuccessModal" @close="handleSuccessModalClose" />
 </template>
 
 <script>
+// import axios  from "../../../utils/axios";
 import Form from "../../shared/form";
 import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
+import SuccessModal from '../../SuccessModal.vue'
 // import { registerUser } from '../../../services/auth.service'
 import {
   emailValidation,
   passwordValidation,
   isRequired,
 } from "../../../utils/validationRules";
+
 export default {
   name: "RegistrationForm",
   components: {
@@ -62,9 +73,12 @@ export default {
     Button,
     AuthContainer,
     MainTitle,
+    SuccessModal,
   },
+
   data() {
     return {
+      showSuccessModal: false,
       loading: false,
       formData: {
         name: '',
@@ -102,34 +116,35 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      const { form } = this.$refs
-        const isFormValid = form.validate();
-        const { name, password, email } = this.formData;
+      if (this.loading) return; 
+      const { form } = this.$refs;
+      const isFormValid = form.validate();
+      if (!isFormValid) return;
 
-        if (isFormValid) {
-            try {
-                this.loading = true;              
-                
+      try {
+        this.loading = true;
+        const { name, email, password } = this.formData;
 
-               await this.$store.dispatch('auth/registration', { name, password, email });
-               
-                
-                console.log(this.$store.state)
-
-                this.$router.push({name: 'home'})
-                // Очищуємо всі поля
-                form.reset();
-            } catch (error) {               
-                this.$notify({
-                  type: 'error',
-                  title: 'Відбулася помилка',
-                  text: error.message,
-                });
-            } finally {
-              this.loading = false
-            }
-        }
+        await this.$store.dispatch('auth/registration', { name, email, password });
+         this.showSuccessModal = true;
+         this.$router.push({ name: "home" });
+        form.reset();
+      } catch (error) {
+        this.$notify({
+          type: 'error',
+          title: 'Помилка',
+          text: error.response?.data?.message || error.message,
+        });
+      } finally {
+        this.loading = false;
+      }
     },
+    handleSuccessModalClose() {
+      this.showSuccessModal = false;
+      this.$router.push({ name: 'account' });
+    },
+     
+    
     resetForm() {
         this.formData.name = '';
         this.formData.email = '';
