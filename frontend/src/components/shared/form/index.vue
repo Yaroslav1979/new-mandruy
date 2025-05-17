@@ -27,7 +27,7 @@ export default {
       this.inputs.push(input);
     },
     unRegisterInput(input) {
-      this.inputs = this.inputs.filter((item) => item !== input); // Виправлено
+      this.inputs = this.inputs.filter((item) => item !== input); 
     },
     //-----------------------------------------------------
 //     async validate() {

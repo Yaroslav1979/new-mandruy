@@ -8,8 +8,7 @@
       >
         Про сервіс
       </router-link>
-      <!-- <a href="#service" class="header-top__nav">Про сервіс </a> -->
-
+      
       <router-link
         :to="{ name: 'SearchPlacePage', query: { name: 'Yarik' } }"
         class="header-top__nav"
@@ -17,17 +16,13 @@
         Пошук місць
       </router-link>
 
-      <button class="header-top__nav" @click="$emit('openAddModal')">
-        Додати місце
-      </button>
-
       <router-link
         :to="{ name: 'MapPage', query: { name: 'Yarik' } }"
         class="header-top__nav"
       >
         Мапа
       </router-link>
-      <!-- <button class="header-top__nav" @click="$emit('openAddModal')">Додати місце</button> -->
+      
       <router-link
         :to="{ name: 'ContactPage', query: { name: 'Yarik' } }"
         class="header-top__nav"
@@ -36,6 +31,11 @@
       </router-link>
 
       <div v-if="isAuthenticated" class="header-top__wrapper">
+        <button class="header-top__logout" @click="$emit('openAddModal')">
+        Додати місце
+      </button>
+      <br/>  
+      
         <div class="header-top__user">
           <div class="header-top__avatar-circle">{{ userInitial }}</div>
 
@@ -50,6 +50,8 @@
       
 
       <div v-else class="header-top__block">
+
+
         <router-link
           :to="{ name: 'registration-page', query: { name: 'Yarik' } }"
           class="header-top__block-login"
@@ -63,6 +65,7 @@
         >
           Вхід
         </router-link>
+        
       </div>
       
     </span>
@@ -106,6 +109,7 @@ export default {
 .header-top {
   display: flex;
   justify-content: space-between;
+  /* gap: 50px; */
   /* margin: 10px; */
   padding: 16px 50px;
 
@@ -159,7 +163,7 @@ export default {
 
 .header-top > span {
   display: flex;
-  gap: 100px;
+  gap: 5em;
   justify-content: center;
 }
 .header-top__wrapper {
@@ -204,4 +208,5 @@ gap: 16px;
       opacity: 80%;
     }
   }
+  
 </style>

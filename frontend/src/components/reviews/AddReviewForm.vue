@@ -1,4 +1,5 @@
 <template>
+  <div v-if="isAuthenticated" >
     <form @submit.prevent="submitReview" class="review-form">
       <input
         type="text"
@@ -21,6 +22,11 @@
       </div>
       <button type="submit" class="review-form__submit">Надіслати</button>
     </form>
+     </div>
+     <div v-else >
+    Зареєструйтеся щоб залишати відгуки
+     </div>
+
   </template>
   
   <script>
@@ -41,6 +47,11 @@
         rating: 5,
       };
     },
+     computed: {    
+    isAuthenticated() {
+      return !!this.$store.state.auth.token;
+    },  
+  },
     methods: {
       async submitReview() {
     try {

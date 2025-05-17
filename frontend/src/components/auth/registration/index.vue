@@ -1,7 +1,9 @@
-<template>
+<template>  
+
   <AuthContainer class="registration">
     <MainTitle class="registration__title">Реєстрація</MainTitle>
-    <Form ref="form" class="registration__form" @submit.prevent="handleSubmit">
+    
+    <Form ref="form" class="registration__form" @submit.prevent="handleSubmit" @close="showLogin = false" >
       <CustomInput
         v-model="formData.name"
         placeholder="Ім'я"
@@ -46,19 +48,21 @@
         Зареєструватися
       </Button>
     </Form>
+    
   </AuthContainer>
+ 
   <SuccessModal v-if="showSuccessModal" @close="handleSuccessModalClose" />
 </template>
 
 <script>
-// import axios  from "../../../utils/axios";
+
 import Form from "../../shared/form";
 import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-import SuccessModal from '../../SuccessModal.vue'
-// import { registerUser } from '../../../services/auth.service'
+import SuccessModal from '../../SuccessModal.vue';
+
 import {
   emailValidation,
   passwordValidation,
@@ -74,10 +78,12 @@ export default {
     AuthContainer,
     MainTitle,
     SuccessModal,
+    
   },
 
   data() {
     return {
+      showLogin: true,
       showSuccessModal: false,
       loading: false,
       formData: {
@@ -142,8 +148,7 @@ export default {
     handleSuccessModalClose() {
       this.showSuccessModal = false;
       this.$router.push({ name: 'account' });
-    },
-     
+    },     
     
     resetForm() {
         this.formData.name = '';
