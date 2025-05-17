@@ -1,5 +1,5 @@
 <template>
-  <section class="add-place" id="addplace">
+  <section class="add-place">
     <h2 class="add-place__title">Додати місце</h2>
     <SuccessMessageModal v-if="successMessageVisible" @close="closeModal" />
 

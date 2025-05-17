@@ -1,13 +1,12 @@
 <template>
   <AuthContainer class="login">
-    <MainTitle class="login__title">Логін</MainTitle>
+    <MainTitle class="login__title">Вхід</MainTitle>
     <Form ref="form" class="login__form" @submit.prevent="handleSubmit">
       <CustomInput
         v-model="formData.email"
         placeholder="Ваш email"
         autocomplete="email"
         name="email"
-        
         :rules="emailRules"
         class="login__input"
       />
@@ -31,12 +30,12 @@ import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-// import { loginUser } from '../../../services/auth.service'
 import {
   emailValidation,
   passwordValidation,
   isRequired,
 } from "../../../utils/validationRules";
+
 export default {
   name: "LoginForm",
   components: {
@@ -72,47 +71,43 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      const { form } = this.$refs
+      const { form } = this.$refs;
+      // const isFormValid = await form.validate();
       const isFormValid = form.validate();
-      // const { email, password } = this.formData;
 
-      if (isFormValid) {
-            try {
-              this.loading = true;
-              await this.$store.dispatch('auth/login', this.formData);
+      if (!isFormValid || this.loading) return;
 
-                this.$router.push({name: 'home'})
+      try {
+        this.loading = true;
+console.log('Submitting login form', this.formData);
 
-                form.reset();
-              //   this.formData = { // Очистка полів після успішної реєстрації
-              // email: '',
-              // password: '',        
-              // };
-              //   console.log(data);
-            } catch (error) {
-              this.$notify({
-                  type: 'error',
-                  title: 'Відбулася помилка',
-                  text: error.message,
-                });
-                } finally {
-                  this.loading = false;
-                }
-            }
-        
+        await this.$store.dispatch("auth/login", this.formData); // 👈 Vuex login
+        this.$router.push({ name: "home" });
+
+        form.reset();
+      } catch (error) {
+        console.error("Login error", error);
+        this.$notify({
+          type: "error",
+          title: "Відбулася помилка",
+          text: error.response?.data?.message || error.message,
+        });
+      } finally {
+        this.loading = false;
+      }
     },
   },
-  // mounted() {
-  //     console.log(this.$refs.form)
-  // }
 };
 </script>
 
+
 <style lang="scss" scoped>
+@import "../../../assets/scss/variables";
 .login {
   &__form {
     display: flex;
     flex-direction: column;
+    gap: 16px;
   }
 
   &__title {
@@ -125,6 +120,13 @@ export default {
   }
 
   &__btn {
+    border: 2px solid $main-color;
+    font-family: e-Ukraine, sans-serif;
+    background-color: #6b76ff;
+    color: white;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 12px;
     margin-top: 15px;
     width: 100%;
   }

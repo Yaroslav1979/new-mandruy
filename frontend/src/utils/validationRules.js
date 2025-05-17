@@ -1,5 +1,5 @@
 export const isRequired = (val) => ({
-    hasPassed: !!val,
+    hasPassed: !!val && val.trim().length > 0,
     message: 'Будь-ласка, заповніть це поле',
   });
   

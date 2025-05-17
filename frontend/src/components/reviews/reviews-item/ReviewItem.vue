@@ -4,9 +4,7 @@
         :rating="review.rating"
         :author="review.author"
       />
-      <p class="reviews-item__content">{{ review.content }}</p>
-  
-      
+      <p class="reviews-item__content">{{ review.content }}</p>       
     </section>
   </template>
   
@@ -44,7 +42,7 @@
   .reviews-item {
     background: #fff;
     padding: 20px 22px;
-    line-height: 1.3;
+    line-height: 1.5;
     margin-bottom: 2px;
   
     &:last-child {
@@ -53,10 +51,12 @@
   
     &__content {
       display: -webkit-box;
+      display: box; 
       margin-top: 20px;
       overflow: hidden;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 5;
+      line-clamp: 5; 
     }
   }
   

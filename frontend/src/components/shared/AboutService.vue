@@ -67,7 +67,7 @@ export default {
   font-weight: 700;
   line-height: 18px;
   text-transform: uppercase;
-  margin-bottom: 52px;
+  margin-bottom: 28px;
 }
 
 .about-service {
@@ -75,12 +75,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  /* width: 100%;
-  height: 100%; */
-  flex-shrink: 0;
-  /* background: #f5f4f4; */
-  /* padding: 100px 0;  */
+  gap: 40px; 
+  flex-shrink: 0; 
+  padding: 20px 0; 
 
 
   &__cont {
@@ -118,10 +115,10 @@ export default {
   border: 2px solid #6b75ff;
   opacity: 80%;
 }
-&__link:hover &__img {
+/* &__link:hover &__img {
   width: 148px;
   height: 124px;
-}
+} */
 
 &__link:hover &__slogan {
   /* opacity: 70%; */

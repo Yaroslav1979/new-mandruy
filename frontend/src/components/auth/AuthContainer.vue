@@ -15,6 +15,6 @@
         padding: 30px;
         max-width: 410px;
         width: 100%;
-        background: #fff;
+        background: #efe7c0;
         }
 </style>

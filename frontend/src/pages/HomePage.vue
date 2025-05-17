@@ -22,7 +22,9 @@
   </div>
 
   <main class="homepage">
+    <SectionWithHeaderSpacer>
     <AboutService />
+    </SectionWithHeaderSpacer>
     <MainQuastions />
   </main>
 </template>
@@ -31,6 +33,7 @@
 import MainHeader from "../components/shared/MainHeader";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
 import AboutService from "../components/shared/AboutService.vue";
+import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
 import MainQuastions from "../components/shared/questions/MainQuastions.vue";
 
 export default {
@@ -40,6 +43,7 @@ export default {
     AddPlaceForm,
     AboutService,
     MainQuastions,
+    SectionWithHeaderSpacer,
   },
   data() {
     return {

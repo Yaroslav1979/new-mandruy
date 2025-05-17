@@ -1,32 +1,31 @@
 <template>
   <div class="head">
     <HeaderAllPages @openAddModal="isModalOpen = true" />
-   
   </div>
- 
+
   <main class="place-page">
     <div
       v-if="isModalOpen"
       class="modal-overlay"
       @click.self="isModalOpen = false"
     >
-    <div class="modal-content">
-      <template v-if="!isSuccess">
-        <AddPlaceForm @added="handleNewPlace" />
-      </template>
+      <div class="modal-content">
+        <template v-if="!isSuccess">
+          <AddPlaceForm @added="handleNewPlace" />
+        </template>
 
-      <template v-else>
-        <div class="success-message">
-          <p>Місце успішно додано!</p>
-          <button @click="closeModal">Добре</button>
-        </div>
-      </template>
-    </div>
+        <template v-else>
+          <div class="success-message">
+            <p>Місце успішно додано!</p>
+            <button @click="closeModal">Добре</button>
+          </div>
+        </template>
+      </div>
     </div>
     <SectionWithHeaderSpacer>
       <Container>
         <div v-if="place" class="place-page__content">
-          <PlaceMainInfo :place="place" :rating="totalRating" />
+          <PlaceMainInfo :place="place" :rating="place.rating" />
           <div class="place-page__additional-info">
             <ReviewsAll
               :reviews="reviewsList"
@@ -40,7 +39,6 @@
         </div>
       </Container>
     </SectionWithHeaderSpacer>
-    
   </main>
 </template>
 
@@ -53,10 +51,9 @@ import PlaceMainInfo from "../components/place/PlaceMainInfo.vue";
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import ReviewsAll from "../components/reviews/index.vue";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
-// import reviewsList from "../components/reviews/reviews.json";
 
 export default {
-  name: "PlacePage",  
+  name: "PlacePage",
   components: {
     Container,
     PlaceMainInfo,
@@ -72,7 +69,6 @@ export default {
       isModalOpen: false, // ДЛЯ МОДАЛКИ
     };
   },
-
   async created() {
     try {
       console.log("🧭 Route params:", this.$route.params);
@@ -103,16 +99,6 @@ export default {
       }
     },
   },
-  computed: {
-    totalRating() {
-      if (!this.reviewsList.length) return 0;
-      const total = this.reviewsList.reduce(
-        (acc, review) => acc + review.rating,
-        0
-      );
-      return (total / this.reviewsList.length).toFixed(1);
-    },
-  },
 };
 </script>
 
@@ -133,46 +119,45 @@ export default {
     flex-shrink: 1;
   }
   .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  padding: 1rem;
-  box-sizing: border-box;
-}
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
 
-.modal-content {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 16px;
-  max-width: 1300px;
-  width: 100%;
-  box-sizing: border-box;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  overflow-y: auto;
-  max-height: 90vh;
-}
-.success-message {
-  text-align: center;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 18px;
-}
+  .modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 1300px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    max-height: 90vh;
+  }
+  .success-message {
+    text-align: center;
+    font-family: e-Ukraine, sans-serif;
+    font-size: 18px;
+  }
 
-.success-message button {
-  margin-top: 20px;
-  padding: 12px 24px;
-  background-color: black;
-  color: white;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
-
+  .success-message button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
 }
 </style>
