@@ -1,5 +1,5 @@
 <template>       
-    <div class="header">     
+    <div class="header" :style="headerStyle">     
 
       <HeaderAllPages @openAddModal="$emit('openAddModal')" />
 
@@ -32,19 +32,42 @@
             </a>
           </div>
         </div>
-      </div>
-      
+      </div>      
     </div>   
   </template>
 
 <script>
 import HeaderAllPages from "./HeaderAllPages";
+import backgrounds from "../../utils/backgrounds.js"; 
 export default {
   name: "MainHeader",
   components: {
     HeaderAllPages,
   },
   emits: ['openAddModal'],
+  data() {
+    return {
+      bgIndex: 0,              // поточне зображення
+      timerId: null,
+    };
+  },
+  computed: {
+    headerStyle() {
+      return {
+        backgroundImage: `url(${backgrounds[this.bgIndex]})`,
+      };
+    },
+  },
+
+  mounted() {  
+    this.timerId = setInterval(() => {
+      this.bgIndex = (this.bgIndex + 1) % backgrounds.length;
+    }, 60_000);
+  },
+
+  beforeUnmount() {
+    clearInterval(this.timerId);
+  },
 };
 </script>
 
@@ -55,9 +78,13 @@ export default {
   flex-direction: column;
   align-content: center;
   gap: 324px;
-  background: url(../../assets/synevir.jpg);
   width: 100%;
   height: 1080px;
+  /* можна додати властивості позиціонування фонів,
+     які НЕ змінюються від картинки до картинки */
+  background-size: cover;
+  background-position: center;
+  transition: background-image 1s ease-in-out; // плавне згасання
 }
 
 .header__hero-block {
@@ -66,10 +93,14 @@ export default {
   align-items: flex-start;
   font-style: normal;
   font-family: e-Ukraine, sans-serif;
-  width: 35%;
+  width: 40%;
   gap: 40px;
   margin: 0px 324px;
-  color: #fff;
+  color: #fafafa;
+  background: #212126;
+  opacity: 0.7;
+  padding: 40px;
+  border-radius: 10px;
 }
 .header__hero-title {
   display: inline-flex;
@@ -80,10 +111,10 @@ export default {
   line-height: 18px;
 }
 .header__hero-text {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 20px;
+  color: #fafafa;  
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 25px;
 }
 .header__hero-buttons {
   display: flex;

@@ -5,6 +5,11 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  isEmailConfirmed: { type: Boolean, default: false },
+  emailConfirmToken: String, // SHA‑256 хеш
+  emailConfirmExpires: Date,
+  resetPasswordToken: String,
+resetPasswordExpires: Date,
 });
 
 // Хешування пароля перед збереженням в базі

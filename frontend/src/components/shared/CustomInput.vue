@@ -39,7 +39,7 @@
     },
     watch: {
       modelValue(value) {
-        if (!value && this.isFirstInput) return;
+        // if (this.isFirstInput) return;
         if (!value) {
           this.isValid = true;
           this.error = '';

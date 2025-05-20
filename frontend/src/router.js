@@ -8,7 +8,9 @@ import SearchPlacePage from './pages/SearchPlacePage.vue';
 import ContactPage from './pages/ContactPage.vue';
 import ErrorPage from './pages/ErrorPage.vue';
 import LoginPage from './pages/LoginPage';
-import RegistrationPage from './pages/RegistrationPage'
+import RegistrationPage from './pages/RegistrationPage';
+import RecoveryPasswordPage from './pages/RecoveryPasswordPage';
+import ConfirmEmailPage from './pages/ConfirmEmailPage';
 
 const routes = [
   {
@@ -37,16 +39,30 @@ const routes = [
   name: 'ContactPage',
   component: ContactPage,
 },
+
+{
+  path: '/registration',
+  name: 'registration-page',
+  component: RegistrationPage,
+},
   {
   path: '/login',
   name: 'login-page',
   component: LoginPage,
 },
 {
-  path: '/registration',
-  name: 'registration-page',
-  component: RegistrationPage,
+  path: '/reset-password/:token',
+  name: 'recovery-password-page',
+  component: RecoveryPasswordPage,
+   props: true,
 },
+ {
+    path: '/confirm-email',
+    name: 'confirm-email-page',
+    component: ConfirmEmailPage,
+    props: true,
+  },
+
   {
     path: '/:pathMatch(.*)*', // Новий формат для Vue 3
     name: 'error-page',
@@ -57,6 +73,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  // Якщо переходимо на сторінку реєстрації або логіну
+  if (['registration-page', 'login-page'].includes(to.name)) {
+    localStorage.setItem('preRegistrationRoute', from.fullPath);
+  }
+  next();
 });
 
 export default router;
