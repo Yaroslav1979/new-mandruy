@@ -1,67 +1,75 @@
-<template>  
-
+<template>
   <AuthContainer class="registration">
     <MainTitle class="registration__title">Реєстрація</MainTitle>
-    
-    <Form ref="form" class="registration__form" @submit.prevent="handleSubmit" @close="showLogin = false" >
+
+    <Form
+      ref="form"
+      class="registration__form"
+      @submit.prevent="handleSubmit"
+    >
+      <!-- Ім’я -->
       <CustomInput
         v-model="formData.name"
+        name="name"
         placeholder="Ім'я"
         autocomplete="username"
-        name="name"
         :rules="nameRules"
         class="registration__input"
       />
-     
+
+      <!-- Email -->
       <CustomInput
         v-model="formData.email"
+        name="email"
         placeholder="Ваш email"
         autocomplete="email"
-        name="email"
         :rules="emailRules"
         class="registration__input"
       />
+
+      <!-- Пароль -->
       <CustomInput
         v-model="formData.password"
-        placeholder="Ваш пароль"
-        autocomplete="current-password"
-        type="password"
         name="password"
+        type="password"
+        placeholder="Ваш пароль"
+        autocomplete="new-password"
         :rules="passwordRules"
         class="registration__input"
       />
+
+      <!-- Підтвердження пароля -->
       <CustomInput
         v-model="formData.confirmPassword"
-        placeholder="Повторіть пароль"
-        autocomplete="current-password"
-        type="password"
         name="confirmPassword"
-        :rules="confirmPassword"
+        type="password"
+        placeholder="Повторіть пароль"
+        autocomplete="new-password"
+        :rules="confirmPasswordRules"
         class="registration__input"
       />
-      <Button 
-              type="submit" 
-              class="registration__btn"   
-              :loading="loading" 
-              :disabled="loading"
-              >
+
+      <Button
+        type="submit"
+        class="registration__btn"
+        :loading="loading"
+        :disabled="loading"
+      >
         Зареєструватися
       </Button>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     </Form>
-    
   </AuthContainer>
- 
-  <SuccessModal v-if="showSuccessModal" @close="handleSuccessModalClose" />
 </template>
-
 <script>
+
 
 import Form from "../../shared/form";
 import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-import SuccessModal from '../../SuccessModal.vue';
+// import SuccessModal from '../../SuccessModal.vue';
 
 import {
   emailValidation,
@@ -70,105 +78,137 @@ import {
 } from "../../../utils/validationRules";
 
 export default {
-  name: "RegistrationForm",
+  name: 'RegistrationForm',
+
   components: {
     Form,
     CustomInput,
     Button,
     AuthContainer,
     MainTitle,
-    SuccessModal,
-    
   },
 
   data() {
     return {
-      showLogin: true,
-      showSuccessModal: false,
       loading: false,
+      errorMessage: '',
       formData: {
         name: '',
         email: '',
-        password: '', 
-        confirmPassword: ''       
+        password: '',
+        confirmPassword: '',
       },
     };
   },
+
   computed: {
-    rules() {
-      return {
-        emailValidation,
-        passwordValidation,
-        isRequired,
-      };
-    },
-    nameRules() {
-      return [this.rules.isRequired];
-    },
-    emailRules() {
-      return [this.rules.isRequired, this.rules.emailValidation];
-    },
-    passwordRules() {
-      return [this.rules.isRequired, this.rules.passwordValidation];
-    },
-    confirmPassword() {
+    nameRules()             { return [isRequired]; },
+    emailRules()            { return [isRequired, emailValidation]; },
+    passwordRules()         { return [isRequired, passwordValidation]; },
+    confirmPasswordRules() {
       return [
         (val) => ({
-        hasPassed: val === this.formData.password,
-        message: 'Паролі не збігаються'
-      }),
-    ]
+          hasPassed: val === this.formData.password,
+          message:   'Паролі не збігаються',
+        }),
+      ];
     },
   },
+
   methods: {
     async handleSubmit() {
-      if (this.loading) return; 
-      const { form } = this.$refs;
-      const isFormValid = form.validate();
-      if (!isFormValid) return;
+  if (this.loading) return;
 
-      try {
-        this.loading = true;
-        const { name, email, password } = this.formData;
+  const isValid = this.$refs.form.validate();
+  if (!isValid) return;
 
-        await this.$store.dispatch('auth/registration', { name, email, password });
-         this.showSuccessModal = true;
-         this.$router.push({ name: "home" });
-        form.reset();
-      } catch (error) {
-        this.$notify({
-          type: 'error',
-          title: 'Помилка',
-          text: error.response?.data?.message || error.message,
-        });
-      } finally {
-        this.loading = false;
-      }
-    },
-    handleSuccessModalClose() {
-      this.showSuccessModal = false;
-      this.$router.push({ name: 'account' });
-    },     
-    
+  this.loading = true;
+  this.errorMessage = ''; // очищення перед запитом
+  const { name, email, password } = this.formData;
+
+  try {
+    await this.$store.dispatch('auth/registration', { name, email, password });
+
+    this.$router.push({
+      name: 'confirm-email-page',
+      query: { email },
+    });
+
+    this.resetForm();
+  } catch (e) {
+    if (e.response && e.response.status === 409) {
+      this.errorMessage = 'Користувач з таким email вже існує';
+    } else {
+      this.errorMessage = e.response?.data?.message || 'Сталася помилка при реєстрації';
+    }
+  } finally {
+    this.loading = false;
+  }
+},
     resetForm() {
-        this.formData.name = '';
-        this.formData.email = '';
-        this.formData.password = '';
-        this.formData.confirmPassword = '';
-
-        // Очищуємо валідацію у кожному input
-        this.$nextTick(() => {
-            Object.values(this.$refs).forEach((ref) => {
-                if (ref && typeof ref.reset === 'function') {
-                    ref.reset();
-                }
-            });
-        });
-      }
-    } 
+      this.formData = {
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      };
+      this.$nextTick(() =>
+        Object.values(this.$refs).forEach((r) => r?.reset?.())
+      );
+    },
+  },
 };
-
 </script>
+
+<!-- //   methods: {
+//     async handleSubmit() {
+//       if (this.loading) return; 
+//       const { form } = this.$refs;
+//       const isFormValid = form.validate();
+//       if (!isFormValid) return;
+
+//       try {
+//         this.loading = true;
+//         const { name, email, password } = this.formData;
+
+//         await this.$store.dispatch('auth/registration', { name, email, password });
+//          this.showSuccessModal = true;
+//          this.$router.push({ name: "home" });
+//         form.reset();
+//       } catch (error) {
+//         this.$notify({
+//           type: 'error',
+//           title: 'Помилка',
+//           text: error.response?.data?.message || error.message,
+//         });
+//       } finally {
+//         this.loading = false;
+//       }
+//     },
+//     handleSuccessModalClose() {
+//       this.showSuccessModal = false;
+//       this.$router.push({ name: 'account' });
+//     },     
+    
+//     resetForm() {
+//         this.formData.name = '';
+//         this.formData.email = '';
+//         this.formData.password = '';
+//         this.formData.confirmPassword = '';
+
+//         // Очищуємо валідацію у кожному input
+//         this.$nextTick(() => {
+//             Object.values(this.$refs).forEach((ref) => {
+//                 if (ref && typeof ref.reset === 'function') {
+//                     ref.reset();
+//                 }
+//             });
+//         });
+//       }
+//     } 
+// }; -->
+
+<!-- // </script> -->
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/variables";

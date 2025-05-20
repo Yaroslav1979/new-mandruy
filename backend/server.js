@@ -6,7 +6,6 @@ const connectToMongo = require("./db");
 const placesRoutes = require("./routes/places"); // імпорт маршрутів
 const authRoutes = require('./routes/auth');
 
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -14,6 +13,7 @@ app.use(express.json());
 // Використання маршрутів
 app.use("/api/places", placesRoutes);
 app.use('/api/users', authRoutes);
+app.use('/api/auth', authRoutes);
 
 const fs = require("fs");
 const uploadDir = path.join(__dirname, "uploads");

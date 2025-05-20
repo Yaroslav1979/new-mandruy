@@ -1,33 +1,31 @@
 <template>
-  <AuthContainer class="login">
-    <MainTitle class="login__title">Вхід</MainTitle>
+  <AuthContainer>
+    <MainTitle class="login__title">Встановити новий пароль</MainTitle>
+
     <Form ref="form" class="login__form" @submit.prevent="handleSubmit">
       <CustomInput
-        v-model="formData.email"
-        placeholder="Ваш email"
-        autocomplete="email"
-        name="email"
-        :rules="emailRules"
-        class="login__input"
-      />
-      <CustomInput
         v-model="formData.password"
-        placeholder="Ваш пароль"
-        autocomplete="current-password"
+        placeholder="Новий пароль"
         type="password"
         name="password"
         :rules="passwordRules"
         class="login__input"
       />
-      <Button type="submit" class="login__btn" :loading="loading">Увійти</Button>
-      <RouterLink
-      class="login__forgot"
-      :to="{ name: 'recovery-password-page', params: { token: 'init' } }"
-    >
-      Забули пароль?
-    </RouterLink>
+      <CustomInput
+        v-model="formData.confirmPassword"
+        placeholder="Повторіть пароль"
+        type="password"
+        name="confirmPassword"
+        :rules="confirmPassword"
+        class="login__input"
+      />
+      <Button type="submit" 
+      class="login__btn" 
+      :loading="loading"
+      >
+      Змінити пароль
+    </Button>
 
-      
     </Form>
   </AuthContainer>
 </template>
@@ -38,67 +36,71 @@ import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
+// import SuccessModal from '../../SuccessModal.vue';
 import {
-  emailValidation,
   passwordValidation,
   isRequired,
 } from "../../../utils/validationRules";
 
 export default {
-  name: "LoginForm",
+  name: "RecoveryPasswordForm",
   components: {
     Form,
     CustomInput,
     Button,
     AuthContainer,
     MainTitle,
+    // SuccessModal,
+    
+  },
+  props: {
+    token: { type: String, required: true }, // приходить із маршруту
   },
   data() {
     return {
       loading: false,
       formData: {
-        email: "",
         password: "",
+        confirmPassword: "",
       },
     };
   },
   computed: {
-    rules() {
+     rules() {
       return {
-        emailValidation,
+        
         passwordValidation,
         isRequired,
       };
     },
-    emailRules() {
-      return [this.rules.isRequired, this.rules.emailValidation];
-    },
     passwordRules() {
       return [this.rules.isRequired, this.rules.passwordValidation];
+    },
+    confirmPassword() {
+      return [
+        (val) => ({
+        hasPassed: val === this.formData.password,
+        message: 'Паролі не збігаються'
+      }),
+      ];
     },
   },
   methods: {
     async handleSubmit() {
       const { form } = this.$refs;
-      // const isFormValid = await form.validate();
-      const isFormValid = form.validate();
-
-      if (!isFormValid || this.loading) return;
+      if (!form.validate() || this.loading) return;
 
       try {
         this.loading = true;
-console.log('Submitting login form', this.formData);
-
-        await this.$store.dispatch("auth/login", this.formData); // 👈 Vuex login
-        this.$router.push({ name: "home" });
-
-        form.reset();
-      } catch (error) {
-        console.error("Login error", error);
+        await this.$axios.post(`/reset-password/${this.token}`, {
+          password: this.formData.password,
+        });
+        this.$notify({ type: "success", text: "Пароль змінено" });
+        this.$router.push({ name: "login" });
+      } catch (e) {
         this.$notify({
           type: "error",
-          title: "Відбулася помилка",
-          text: error.response?.data?.message || error.message,
+          text: e.response?.data?.message || e.message,
         });
       } finally {
         this.loading = false;
@@ -107,7 +109,6 @@ console.log('Submitting login form', this.formData);
   },
 };
 </script>
-
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/variables";

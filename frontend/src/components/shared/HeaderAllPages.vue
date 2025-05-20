@@ -87,6 +87,7 @@ export default {
       return this.$store.state.auth.user;
     },
     isAuthenticated() {
+      
       return !!this.$store.state.auth.token;
     },
     userInitial() {
@@ -112,6 +113,8 @@ export default {
   /* gap: 50px; */
   /* margin: 10px; */
   padding: 16px 50px;
+   background: #212126;
+  opacity: 0.7;
 
   &__nav {
      color: #fff;
