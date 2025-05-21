@@ -102,9 +102,9 @@ export default {
   },
 
   computed: {
-    nameRules()             { return [isRequired]; },
-    emailRules()            { return [isRequired, emailValidation]; },
-    passwordRules()         { return [isRequired, passwordValidation]; },
+    nameRules() { return [isRequired]; },
+    emailRules() { return [isRequired, emailValidation]; },
+    passwordRules() { return [isRequired, passwordValidation]; },
     confirmPasswordRules() {
       return [
         (val) => ({
@@ -159,56 +159,6 @@ export default {
   },
 };
 </script>
-
-<!-- //   methods: {
-//     async handleSubmit() {
-//       if (this.loading) return; 
-//       const { form } = this.$refs;
-//       const isFormValid = form.validate();
-//       if (!isFormValid) return;
-
-//       try {
-//         this.loading = true;
-//         const { name, email, password } = this.formData;
-
-//         await this.$store.dispatch('auth/registration', { name, email, password });
-//          this.showSuccessModal = true;
-//          this.$router.push({ name: "home" });
-//         form.reset();
-//       } catch (error) {
-//         this.$notify({
-//           type: 'error',
-//           title: 'Помилка',
-//           text: error.response?.data?.message || error.message,
-//         });
-//       } finally {
-//         this.loading = false;
-//       }
-//     },
-//     handleSuccessModalClose() {
-//       this.showSuccessModal = false;
-//       this.$router.push({ name: 'account' });
-//     },     
-    
-//     resetForm() {
-//         this.formData.name = '';
-//         this.formData.email = '';
-//         this.formData.password = '';
-//         this.formData.confirmPassword = '';
-
-//         // Очищуємо валідацію у кожному input
-//         this.$nextTick(() => {
-//             Object.values(this.$refs).forEach((ref) => {
-//                 if (ref && typeof ref.reset === 'function') {
-//                     ref.reset();
-//                 }
-//             });
-//         });
-//       }
-//     } 
-// }; -->
-
-<!-- // </script> -->
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/variables";

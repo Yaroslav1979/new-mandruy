@@ -1,32 +1,50 @@
 <template>
   <AuthContainer>
-    <MainTitle class="login__title">Встановити новий пароль</MainTitle>
+    <MainTitle class="login__title">
+      {{ stage === 'email' ? 'Вкажіть ваш email' : 'Зміна пароля' }}
+    </MainTitle>
 
     <Form ref="form" class="login__form" @submit.prevent="handleSubmit">
-      <CustomInput
-        v-model="formData.password"
-        placeholder="Новий пароль"
-        type="password"
-        name="password"
-        :rules="passwordRules"
-        class="login__input"
-      />
-      <CustomInput
-        v-model="formData.confirmPassword"
-        placeholder="Повторіть пароль"
-        type="password"
-        name="confirmPassword"
-        :rules="confirmPassword"
-        class="login__input"
-      />
-      <Button type="submit" 
-      class="login__btn" 
-      :loading="loading"
-      >
-      Змінити пароль
-    </Button>
+      <template v-if="stage === 'email'">
+        <CustomInput
+          v-model="formData.email"
+          name="email"
+          placeholder="Ваш email"
+          autocomplete="email"
+          :rules="emailRules"
+          class="registration__input"
+        />
+        <p>*На вашу електронну пошту буде надіслано лист з кодом для відновлення пароля</p>
+      </template>
 
+      <template v-else>
+        <CustomInput
+          v-model="formData.code"
+          name="code"
+          placeholder="Код з email або посилання"
+          :rules="requiredRule"
+          class="registration__input"
+        />
+        <CustomInput
+          v-model="formData.newPassword"
+          name="newPassword"
+          type="password"
+          placeholder="Новий пароль"
+          :rules="passwordRule"
+          class="registration__input"
+        />
+      </template>
+
+      <Button type="submit" class="login__btn" :loading="loading">
+        {{ stage === 'email' ? 'Надіслати' : 'Змінити пароль' }}
+      </Button>
     </Form>
+
+    <SuccessModal
+      v-if="showSuccess"
+      :message="'Пароль успішно змінений!'"
+      @close="goToAccount"
+    />
   </AuthContainer>
 </template>
 
@@ -36,11 +54,13 @@ import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-// import SuccessModal from '../../SuccessModal.vue';
+import SuccessModal from '../../SuccessModal.vue';
 import {
-  passwordValidation,
   isRequired,
+  emailValidation,
+  passwordValidation
 } from "../../../utils/validationRules";
+import { mapActions } from "vuex";
 
 export default {
   name: "RecoveryPasswordForm",
@@ -50,61 +70,58 @@ export default {
     Button,
     AuthContainer,
     MainTitle,
-    // SuccessModal,
-    
-  },
-  props: {
-    token: { type: String, required: true }, // приходить із маршруту
+    SuccessModal,
   },
   data() {
     return {
+      stage: "email", // "email" або "reset"
       loading: false,
       formData: {
-        password: "",
-        confirmPassword: "",
+        email: "",
+        code: "", // код з email
+        newPassword: "",
       },
+      showSuccess: false,
+      emailRules: [isRequired, emailValidation],
+      requiredRule: [isRequired],
+      passwordRule: [isRequired, passwordValidation],
     };
   },
-  computed: {
-     rules() {
-      return {
-        
-        passwordValidation,
-        isRequired,
-      };
-    },
-    passwordRules() {
-      return [this.rules.isRequired, this.rules.passwordValidation];
-    },
-    confirmPassword() {
-      return [
-        (val) => ({
-        hasPassed: val === this.formData.password,
-        message: 'Паролі не збігаються'
-      }),
-      ];
-    },
-  },
   methods: {
-    async handleSubmit() {
-      const { form } = this.$refs;
-      if (!form.validate() || this.loading) return;
+    ...mapActions("auth", ["requestPasswordReset", "resetPassword", "login"]),
 
-      try {
-        this.loading = true;
-        await this.$axios.post(`/reset-password/${this.token}`, {
-          password: this.formData.password,
-        });
-        this.$notify({ type: "success", text: "Пароль змінено" });
-        this.$router.push({ name: "login" });
-      } catch (e) {
-        this.$notify({
-          type: "error",
-          text: e.response?.data?.message || e.message,
-        });
-      } finally {
-        this.loading = false;
-      }
+    async handleSubmit() {
+  if (this.loading) return;
+  this.loading = true;
+  try {
+    if (this.stage === "email") {
+      await this.requestPasswordReset({ email: this.formData.email });
+      this.stage = "reset";
+    } else {
+      const token = this.formData.code.trim();
+
+      await this.resetPassword({
+        token,
+        password: this.formData.newPassword,
+      });
+
+      await this.login({
+        email: this.formData.email,
+        password: this.formData.newPassword,
+      });
+
+      this.showSuccess = true;
+    }
+  } catch (err) {
+    console.error("Помилка відновлення пароля:", err);
+    alert(err.response?.data?.message || "Сталася помилка");
+  } finally {
+    this.loading = false;
+  }
+},
+
+    goToAccount() {
+      this.$router.push("/"); // Змініть маршрут за потреби
     },
   },
 };

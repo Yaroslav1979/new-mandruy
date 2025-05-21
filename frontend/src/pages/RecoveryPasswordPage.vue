@@ -22,6 +22,7 @@ import AuthSection from '@/components/auth/AuthSection.vue';
 export default {
   name: 'RecoveryPasswordPage',
   components: { HeaderAllPages, AuthSection, RecoveryPassword },
+  props: ['token'],
   methods: {
     goHome() {
       this.$router.push({ name: 'home' });
