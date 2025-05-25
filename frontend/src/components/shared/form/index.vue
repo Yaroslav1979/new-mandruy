@@ -29,22 +29,14 @@ export default {
     unRegisterInput(input) {
       this.inputs = this.inputs.filter((item) => item !== input); 
     },
-    //-----------------------------------------------------
-//     async validate() {
-//   let isValid = true;
-//   for (const input of this.inputs) {
-//     const valid = await input.validate(); // якщо validate async
-//     if (!valid) isValid = false;
-//   }
-//   return isValid;
-// },
+
     validate() {
       return this.inputs.reduce((isValid, input) => {
         const isInputValid = input.validate(); // Викликаємо метод `validate()`
         return isValid && isInputValid;
       }, true);
     },
-    //------------------------------------------------
+ 
     reset() {
       this.inputs.forEach((input) => input.reset()); // Викликаємо `reset()`
     },

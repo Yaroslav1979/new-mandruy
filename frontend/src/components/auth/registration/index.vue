@@ -8,16 +8,19 @@
       @submit.prevent="handleSubmit"
     >
       <!-- Ім’я -->
+       <div> 
       <CustomInput
         v-model="formData.name"
         name="name"
-        placeholder="Ім'я"
+        placeholder="Ваше ім'я/нік"
         autocomplete="username"
         :rules="nameRules"
         class="registration__input"
       />
-
-      <!-- Email -->
+      <p class="registration__input--note">* максимальна довжина імені/ніка 20 символів</p>
+      </div>
+      
+    <!-- Email -->
       <CustomInput
         v-model="formData.email"
         name="email"
@@ -51,7 +54,7 @@
 
       <Button
         type="submit"
-        class="registration__btn"
+        class="registration__btn "
         :loading="loading"
         :disabled="loading"
       >
@@ -75,6 +78,7 @@ import {
   emailValidation,
   passwordValidation,
   isRequired,
+  charLimit
 } from "../../../utils/validationRules";
 
 export default {
@@ -87,6 +91,7 @@ export default {
     AuthContainer,
     MainTitle,
   },
+  
 
   data() {
     return {
@@ -102,9 +107,9 @@ export default {
   },
 
   computed: {
-    nameRules()             { return [isRequired]; },
-    emailRules()            { return [isRequired, emailValidation]; },
-    passwordRules()         { return [isRequired, passwordValidation]; },
+    nameRules() { return [isRequired, charLimit(20)]; },
+    emailRules() { return [isRequired, emailValidation]; },
+    passwordRules() { return [isRequired, passwordValidation]; },
     confirmPasswordRules() {
       return [
         (val) => ({
@@ -160,56 +165,6 @@ export default {
 };
 </script>
 
-<!-- //   methods: {
-//     async handleSubmit() {
-//       if (this.loading) return; 
-//       const { form } = this.$refs;
-//       const isFormValid = form.validate();
-//       if (!isFormValid) return;
-
-//       try {
-//         this.loading = true;
-//         const { name, email, password } = this.formData;
-
-//         await this.$store.dispatch('auth/registration', { name, email, password });
-//          this.showSuccessModal = true;
-//          this.$router.push({ name: "home" });
-//         form.reset();
-//       } catch (error) {
-//         this.$notify({
-//           type: 'error',
-//           title: 'Помилка',
-//           text: error.response?.data?.message || error.message,
-//         });
-//       } finally {
-//         this.loading = false;
-//       }
-//     },
-//     handleSuccessModalClose() {
-//       this.showSuccessModal = false;
-//       this.$router.push({ name: 'account' });
-//     },     
-    
-//     resetForm() {
-//         this.formData.name = '';
-//         this.formData.email = '';
-//         this.formData.password = '';
-//         this.formData.confirmPassword = '';
-
-//         // Очищуємо валідацію у кожному input
-//         this.$nextTick(() => {
-//             Object.values(this.$refs).forEach((ref) => {
-//                 if (ref && typeof ref.reset === 'function') {
-//                     ref.reset();
-//                 }
-//             });
-//         });
-//       }
-//     } 
-// }; -->
-
-<!-- // </script> -->
-
 <style lang="scss" scoped>
 @import "../../../assets/scss/variables";
 .registration {
@@ -229,6 +184,10 @@ export default {
    
     margin-bottom: 20px;
     width: 100%;
+    &--note {
+      color: red;
+      font-size: 12px;
+    }
   }
 
   &__btn {

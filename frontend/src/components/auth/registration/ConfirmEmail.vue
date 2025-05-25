@@ -32,6 +32,7 @@
   <SuccessModal
     v-if="showSuccessModal"
     @close="handleSuccessModalClose"
+    :message="'Вітаємо! Реєстрація успішна!'"
   />
 </template>
 
@@ -157,4 +158,5 @@ if (!returnRoute.startsWith('/')) {
     width: 100%;
   }
 }
+
 </style>

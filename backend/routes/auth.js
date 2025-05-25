@@ -1,7 +1,7 @@
 const express = require("express");
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.js");
+const User = require("../models/User.js");
 
 const router = express.Router();
 
@@ -17,6 +17,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+const bcrypt = require('bcryptjs');
+const { verifyToken } = require('../middleware/auth.js');
 // const path = require("path");
 
 //-----------------------------------------------------------------
@@ -81,27 +83,6 @@ router.post('/register', async (req, res) => {
 
 //------------------------------------------------
 
-//Підтвердження пошти
-// router.get('/confirm-email/:token', async (req, res) => {
-//   const tokenHash = crypto.createHash('sha256').update(req.params.token).digest('hex');
-
-//   const user = await User.findOne({
-//     emailConfirmToken: tokenHash,
-//     emailConfirmExpires: { $gt: Date.now() },
-//   });
-
-//   if (!user) return res.status(400).json({ message: 'Токен недійсний або протермінований' });
-
-//   user.isEmailConfirmed = true;
-//   user.emailConfirmToken = undefined;
-//   user.emailConfirmExpires = undefined;
-//   await user.save();
-
-//   // можна одразу видати JWT
-//   const jwtToken = jwt.sign({ id: user._id }, 'secretKey', { expiresIn: '1h' });
-//   res.json({ message: 'Email підтверджено', token: jwtToken });
-// });
-
 router.post('/confirm-email', async (req, res) => {
   const { email, code } = req.body;              // code = 3 символи
 
@@ -153,7 +134,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Невірний email або пароль" });
     }
 
-    const token = jwt.sign({ id: user._id }, "secretKey", { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "1h" });
 
     res.json({
       token,
@@ -170,39 +151,140 @@ router.post("/login", async (req, res) => {
 });
 //-------------------------------------------------------------
 router.post('/forgot-password', async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(200).json({ message: 'Якщо email існує, лист надіслано' });
+  try {
+    const user = await User.findOne({ email: req.body.email });
 
-  const rawToken = crypto.randomBytes(32).toString('hex');
-  user.resetPasswordToken = crypto.createHash('sha256').update(rawToken).digest('hex');
-  user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 год
-  await user.save();
+    // Завжди відповідаємо однаково
+    if (!user) {
+      return res.status(200).json({ message: 'Якщо email існує, лист надіслано' });
+    }
 
-  const resetURL = `${process.env.CLIENT_URL}/reset-password/${rawToken}`;
-  await sendEmail({
-    to: user.email,
-    subject: 'Відновлення пароля',
-    html: `<p>Натисніть <a href="${resetURL}">посилання</a>, щоб встановити новий пароль.</p>`,
-  });
+    // Генеруємо код (rawToken)
+    const rawToken = Math.floor(1000 + Math.random() * 9000).toString();
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
 
-  res.json({ message: 'Перевірте пошту для подальших інструкцій' });
+    user.resetPasswordToken = tokenHash;
+    user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 година
+    await user.save();
+
+    // Формуємо лист
+    const mailOptions = {
+      from: `"Мандруй" <${process.env.EMAIL_USERNAME}>`,
+      to: user.email,
+      subject: 'Код для відновлення пароля',
+      html: `
+        <p>Ваш код для відновлення пароля: <b>${rawToken}</b></p>
+        <p>Цей код дійсний протягом 1 години.</p>
+      `,
+    };
+
+    // Надсилаємо лист
+    await transporter.sendMail(mailOptions);
+
+    res.json({ message: 'Перевірте пошту — код надіслано' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Помилка сервера при відновленні пароля' });
+  }
 });
+
 //-------------------------------------------------------
 router.post('/reset-password/:token', async (req, res) => {
-  const tokenHash = crypto.createHash('sha256').update(req.params.token).digest('hex');
+  try {
+    const rawToken = req.params.token.trim();
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
 
-  const user = await User.findOne({
-    resetPasswordToken: tokenHash,
-    resetPasswordExpires: { $gt: Date.now() },
-  });
-  if (!user) return res.status(400).json({ message: 'Токен недійсний або протермінований' });
+    const user = await User.findOne({
+      resetPasswordToken: tokenHash,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
 
-  user.password = req.body.password; // bcrypt pre‑save hook
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpires = undefined;
-  await user.save();
+    if (!user) {
+      return res.status(400).json({ message: 'Код недійсний або протермінований' });
+    }
 
-  res.json({ message: 'Пароль змінено. Увійдіть з новим паролем.' });
+    // Зберігаємо новий пароль
+    user.password = req.body.password; // bcrypt hash через pre-save hook
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ message: 'Пароль успішно змінено' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Помилка сервера при зміні пароля' });
+  }
+});
+//-------------------------------------------------------------
+
+
+router.patch('/change-name', verifyToken, async (req, res) => {
+  const { name: newName } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id); // req.user.id з middleware
+    if (!user)
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+
+     const existingName = await User.findOne({ name: newName });
+    if (existingName)
+      return res.status(409).json({ message: 'Такe ім`я вже використовується' });
+
+    user.name = newName;
+    user.isNameConfirmed = false;
+    await user.save();
+
+    res.json({
+      message: 'Ім`я змінено',
+      user: {
+        id: user._id,        
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Щось пішло не так' });
+  }
+});
+//---------------------------------------------------------------------
+
+router.patch('/change-password', verifyToken, async (req, res) => {
+  const { password, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+
+    const isValidPassword = await user.comparePassword(password);
+    if (!isValidPassword)
+      return res.status(400).json({ message: 'Неправильний поточний пароль' });
+
+    user.password = newPassword; // bcrypt автоматично захешує через pre-save hook
+    await user.save();
+
+    res.json({ message: 'Пароль успішно змінено' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+});
+
+// Отримати поточного користувача
+router.get('/me', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user)
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+
+    res.json({ user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
 });
 
 
