@@ -1,7 +1,7 @@
 const express = require("express");
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.js");
+const User = require("../models/User.js");
 
 const router = express.Router();
 
@@ -17,6 +17,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+const bcrypt = require('bcryptjs');
+const { verifyToken } = require('../middleware/auth.js');
 // const path = require("path");
 
 //-----------------------------------------------------------------
@@ -213,6 +215,75 @@ router.post('/reset-password/:token', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Помилка сервера при зміні пароля' });
+  }
+});
+//-------------------------------------------------------------
+
+
+router.patch('/change-name', verifyToken, async (req, res) => {
+  const { name: newName } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id); // req.user.id з middleware
+    if (!user)
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+
+     const existingName = await User.findOne({ name: newName });
+    if (existingName)
+      return res.status(409).json({ message: 'Такe ім`я вже використовується' });
+
+    user.name = newName;
+    user.isNameConfirmed = false;
+    await user.save();
+
+    res.json({
+      message: 'Ім`я змінено',
+      user: {
+        id: user._id,        
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Щось пішло не так' });
+  }
+});
+//---------------------------------------------------------------------
+
+router.patch('/change-password', verifyToken, async (req, res) => {
+  const { password, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+
+    const isValidPassword = await user.comparePassword(password);
+    if (!isValidPassword)
+      return res.status(400).json({ message: 'Неправильний поточний пароль' });
+
+    user.password = newPassword; // bcrypt автоматично захешує через pre-save hook
+    await user.save();
+
+    res.json({ message: 'Пароль успішно змінено' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+});
+
+// Отримати поточного користувача
+router.get('/me', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user)
+      return res.status(404).json({ message: 'Користувача не знайдено' });
+
+    res.json({ user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Помилка сервера' });
   }
 });
 

@@ -15,3 +15,9 @@ export const requestPasswordReset = (payload) =>
 
 export const resetPassword = ({ token, password }) =>
   axios.post(`/auth/reset-password/${token}`, { password });
+
+export const changeName = (payload) =>
+  axios.patch('/users/change-name', payload);
+
+export const changePassword = (payload) =>
+  axios.patch('/users/change-password', payload);

@@ -20,12 +20,15 @@
         class="login__input"
       />
       <Button type="submit" class="login__btn" :loading="loading">Увійти</Button>
-      <RouterLink
-      class="login__forgot"
+      <span> 
+        Забули пароль?
+      <RouterLink      
       :to="{ name: 'recovery-password-page', params: { token: 'init' } }"
     >
-      Забули пароль?
+      <span class="login__btn--fogot">Відновити </span> 
     </RouterLink>
+      </span>
+      
 
       
     </Form>
@@ -137,10 +140,12 @@ console.log('Submitting login form', this.formData);
     border-radius: 12px;
     margin-top: 15px;
     width: 100%;
-
-    &--fogot {
-      font-family: e-Ukraine, sans-serif;
-    }
+   
   }
 }
+.login__btn--fogot {  
+      text-decoration: none;
+      color: #111;
+    }
+
 </style>

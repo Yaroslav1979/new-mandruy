@@ -4,6 +4,8 @@ import {
   confirmEmail,
   requestPasswordReset,
   resetPassword,
+  changeName,
+  changePassword,
 } from "../../services/auth.service";
 import axios from "../../utils/axios";
 
@@ -99,6 +101,28 @@ export default {
       console.error('Помилка при скиданні пароля:', error);
       throw error;
     }
+  },
+
+  changeName: async ({ commit }, payload) => {
+  try {
+    const { data } = await changeName(payload);
+    commit("setUserData", data.user);
+    return data;
+  } catch (error) {
+    console.error("Помилка при зміні імені:", error);
+    throw error;
   }
+},
+
+changePassword: async (_, payload) => {
+  try {
+    const { data } = await changePassword(payload);
+    return data;
+  } catch (error) {
+    console.error("Помилка при зміні пароля:", error);
+    throw error;
+  }
+},
+  
   },
 };

@@ -8,16 +8,19 @@
       @submit.prevent="handleSubmit"
     >
       <!-- Ім’я -->
+       <div> 
       <CustomInput
         v-model="formData.name"
         name="name"
-        placeholder="Ім'я"
+        placeholder="Ваше ім'я/нік"
         autocomplete="username"
         :rules="nameRules"
         class="registration__input"
       />
-
-      <!-- Email -->
+      <p class="registration__input--note">* максимальна довжина імені/ніка 20 символів</p>
+      </div>
+      
+    <!-- Email -->
       <CustomInput
         v-model="formData.email"
         name="email"
@@ -51,7 +54,7 @@
 
       <Button
         type="submit"
-        class="registration__btn"
+        class="registration__btn "
         :loading="loading"
         :disabled="loading"
       >
@@ -75,6 +78,7 @@ import {
   emailValidation,
   passwordValidation,
   isRequired,
+  charLimit
 } from "../../../utils/validationRules";
 
 export default {
@@ -87,6 +91,7 @@ export default {
     AuthContainer,
     MainTitle,
   },
+  
 
   data() {
     return {
@@ -102,7 +107,7 @@ export default {
   },
 
   computed: {
-    nameRules() { return [isRequired]; },
+    nameRules() { return [isRequired, charLimit(20)]; },
     emailRules() { return [isRequired, emailValidation]; },
     passwordRules() { return [isRequired, passwordValidation]; },
     confirmPasswordRules() {
@@ -179,6 +184,10 @@ export default {
    
     margin-bottom: 20px;
     width: 100%;
+    &--note {
+      color: red;
+      font-size: 12px;
+    }
   }
 
   &__btn {
