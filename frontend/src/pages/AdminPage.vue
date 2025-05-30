@@ -3,30 +3,10 @@
     <HeaderAllPages @openAddModal="isModalOpen = true" />
   </div>
   <main class="place-page">
-    <div
-      v-if="isModalOpen"
-      class="modal-overlay"
-      @click.self="isModalOpen = false"
-    >
-      <div class="modal-content">
-        <template v-if="!isSuccess">
-          <AddPlaceForm @added="handleNewPlace" />
-        </template>
+   
+    <SectionWithHeaderSpacer>     
 
-        <template v-else>
-          <div class="success-message">
-            <p>Місце успішно додано!</p>
-            <button @click="closeModal">Добре</button>
-          </div>
-        </template>
-      </div>
-    </div>
-    <SectionWithHeaderSpacer>
-      <PlacesFilterForm class="places-filter" @submit="filter" />
-
-      <p v-if="!filteredPlaces.length">Нічого не знайдено</p>
-
-      <PlacesList v-else :items="filteredPlaces">
+      <PlacesList :items="newPlaces">
         <template v-slot:place="{ place }">
           <PlacesItem
             :key="place._id"
@@ -36,30 +16,35 @@
             :imgSrc="place.imgUrls"
             :title="place.title"
           />
+          <Button @click="approvePlace(place._id)">
+        Опублікувати 
+      </Button>
+      <Button @click="deletePlace(place._id)">
+        Видалити 
+      </Button>
         </template>
       </PlacesList>
+      
     </SectionWithHeaderSpacer>
   </main>
 </template>
 
 <script>
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
-import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
+import Button from "../components/mainButton.vue";
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import PlacesList from "../components/place/PlacesList.vue";
 import PlacesItem from "../components/place/PlacesItem.vue";
-import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
 import axios from "axios";
 
 export default {
-  name: "SearchPlacePage",
+  name: "AdminPage",
   components: {
     HeaderAllPages,
     SectionWithHeaderSpacer,
-    AddPlaceForm,
+    Button,
     PlacesList,
-    PlacesItem,
-    PlacesFilterForm,
+    PlacesItem,    
   },
   data() {
     return {
@@ -74,69 +59,47 @@ export default {
     };
   },
   computed: {
-    filteredPlaces() {
-      let result = this.filterByRegionName(this.places);
-      result = this.filterByTitle(result);
-      result = this.filterByCategory(result);
-
-      if (this.filters.sortBy === "title") {
-        result = this.sortPlacesByTitle(result);
-      }
+    newPlaces() {
+      let result = this.places;     
 
       return result;
     },
   },
   async created() {
     try {
-      const placesResponse = await axios.get("http://localhost:3000/api/places/approved");
-      const places = placesResponse.data;
+      const placesResponse = await axios.get("http://localhost:3000/api/places");
+       const places = placesResponse.data;
 
       // Вже використовується рейтинг, що приходить з сервера
       this.places = places;
+
     } catch (error) {
       console.error("Помилка при завантаженні місць:", error);
     }
   },
 
-  methods: {
-    filter({ region, title, categoryIds, sortBy }) {
-      if (region !== undefined) this.filters.region = region;
-      if (title !== undefined) this.filters.title = title;
-      if (Array.isArray(categoryIds)) this.filters.categoryIds = categoryIds;
-      if (sortBy !== undefined) this.filters.sortBy = sortBy;
-    },
+  methods: {   
+    async approvePlace(placeId) {
+    try {
+      await axios.patch(`http://localhost:3000/api/places/${placeId}`, {
+        isApproved: true,
+      });
 
-    filterByRegionName(places) {
-      if (!this.filters.region) return places;
-      return places.filter(
-        (place) =>
-          place.location?.region &&
-          place.location.region === this.filters.region
-      );
-    },
+      // Видаляємо з поточного списку
+      this.places = this.places.filter(p => p._id !== placeId);
+    } catch (error) {
+      console.error("Помилка при підтвердженні місця:", error);
+    }
+  },
 
-    filterByTitle(places) {
-      if (!this.filters.title) return places;
-      return places.filter((place) =>
-        place.title.toLowerCase().includes(this.filters.title.toLowerCase())
-      );
-    },
-
-    filterByCategory(places) {
-      if (!this.filters.categoryIds.length) return places;
-      return places.filter(
-        (place) =>
-          Array.isArray(place.categoryIds) &&
-          place.categoryIds.some((cat) =>
-            this.filters.categoryIds.includes(cat)
-          )
-      );
-    },
-
-    sortPlacesByTitle(places) {
-      return [...places].sort((a, b) => a.title.localeCompare(b.title));
-    },
-
+  async deletePlace(placeId) {
+    try {
+      await axios.delete(`http://localhost:3000/api/places/${placeId}`);
+      this.places = this.places.filter(p => p._id !== placeId);
+    } catch (error) {
+      console.error("Помилка при видаленні місця:", error);
+    }
+  },
     handleNewPlace(newPlace) {
       this.places.unshift(newPlace); // або this.places.push(newPlace), якщо хочеш додати в кінець списку
     },

@@ -3,28 +3,28 @@
     <LogoType />
     <span>
       <router-link
-        :to="{ name: 'home', query: { name: 'Yarik' } }"
+        :to="{ name: 'home'}"
         class="header-top__nav"
       >
         Про сервіс
       </router-link>
 
       <router-link
-        :to="{ name: 'SearchPlacePage', query: { name: 'Yarik' } }"
+        :to="{ name: 'SearchPlacePage'}"
         class="header-top__nav"
       >
         Пошук місць
       </router-link>
 
       <router-link
-        :to="{ name: 'MapPage', query: { name: 'Yarik' } }"
+        :to="{ name: 'MapPage'}"
         class="header-top__nav"
       >
         Мапа
       </router-link>
 
       <router-link
-        :to="{ name: 'ContactPage', query: { name: 'Yarik' } }"
+        :to="{ name: 'ContactPage'}"
         class="header-top__nav"
       >
         Контакти
@@ -62,14 +62,14 @@
 
       <div v-else class="header-top__block">
         <router-link
-          :to="{ name: 'registration-page', query: { name: 'Yarik' } }"
+          :to="{ name: 'registration-page' }"
           class="header-top__block-login"
         >
           Реєстрація
         </router-link>
         /
         <router-link
-          :to="{ name: 'login-page', query: { name: 'Yarik' } }"
+          :to="{ name: 'login-page'}"
           class="header-top__block-login"
         >
           Вхід
