@@ -7,7 +7,7 @@
     <SectionWithHeaderSpacer>     
 
       <PlacesList :items="newPlaces">
-        <template v-slot:place="{ place }">
+        <template v-slot:place="{ place }" >
           <PlacesItem
             :key="place._id"
             :id="place._id"
@@ -16,13 +16,19 @@
             :imgSrc="place.imgUrls"
             :title="place.title"
           />
-          <Button @click="approvePlace(place._id)">
+<div class="add-place__btns">
+<Button class="add-place__btn" @click="approvePlace(place._id)">
         Опублікувати 
       </Button>
-      <Button @click="deletePlace(place._id)">
+
+      <Button class="add-place__btn delete" @click="deletePlace(place._id)">
         Видалити 
       </Button>
+
+</div>
+      
         </template>
+        
       </PlacesList>
       
     </SectionWithHeaderSpacer>
@@ -110,47 +116,14 @@ export default {
 
 
 <style lang="scss" scoped>
+@import "../assets/scss/variables.scss";
+
 .head {
   background-color: #111;
-}
+} 
+
 .place-page {
-  &__content {
-    display: flex;
-    align-items: flex-start;
-  }
-
-  &__additional-info {
-    margin-left: 30px;
-    max-width: 350px;
-    flex-grow: 0;
-    flex-shrink: 1;
-  }
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
-
-  .modal-content {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 16px;
-    max-width: 1300px;
-    width: 100%;
-    box-sizing: border-box;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
-    max-height: 90vh;
-  }
+  
   .success-message {
   text-align: center;
   font-family: e-Ukraine, sans-serif;
@@ -166,5 +139,35 @@ export default {
   border: none;
   cursor: pointer;
 }
+}
+.add-place__btns {
+display: flex;
+flex-direction: column;
+justify-content: center;
+gap: 40px;
+margin-left: 200px;
+}
+.add-place__btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 186px;
+    height: 47px;
+    border-radius: 5px;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    font-family: e-Ukraine, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 140%;
+  
+  &__btn:hover {
+    opacity: 80%;
+  }
+}
+.delete {
+  background-color: #f42121;
 }
 </style>
