@@ -14,6 +14,7 @@
           :src="`http://localhost:3000${img}`"
           alt="Place photo"
           class="place-main-info__photo"
+          @dblclick="enterFullscreen((index - 1 + place.imgUrls.length) % place.imgUrls.length)"
         />
       </div>
       <button @click="prevSlide" class="slider-btn left">❮</button>
@@ -46,7 +47,18 @@
         />
         <span>{{ getCategoryTitle(categoryId) }}</span>
       </div>
-    </div>
+    </div><div v-if="isFullscreen" class="fullscreen-overlay" @click.self="exitFullscreen">
+  <div class="fullscreen-content">
+    <img
+      :src="`http://localhost:3000${place.imgUrls[fullscreenIndex]}`"
+      alt="Fullscreen photo"
+      class="fullscreen-image"
+    />
+    <button @click="prevFullscreen" class="slider-btn left">❮</button>
+    <button @click="nextFullscreen" class="slider-btn right">❯</button>
+    <button class="close-btn" @click="exitFullscreen">×</button>
+  </div>
+</div>
   </article>
 </template>
 
@@ -80,6 +92,8 @@ export default {
   data() {
     return {
       currentIndex: 1,
+      isFullscreen: false,
+      fullscreenIndex: 0,
     };
   },
   mounted() {
@@ -165,6 +179,29 @@ export default {
 
       requestAnimationFrame(check);
     },
+    enterFullscreen(index) {
+  this.fullscreenIndex = index;
+  this.isFullscreen = true;
+  document.body.style.overflow = 'hidden'; // блокує прокрутку
+},
+exitFullscreen() {
+  this.isFullscreen = false;
+  document.body.style.overflow = ''; // повертає прокрутку
+},
+nextFullscreen() {
+  if (this.fullscreenIndex < this.place.imgUrls.length - 1) {
+    this.fullscreenIndex++;
+  } else {
+    this.fullscreenIndex = 0;
+  }
+},
+prevFullscreen() {
+  if (this.fullscreenIndex > 0) {
+    this.fullscreenIndex--;
+  } else {
+    this.fullscreenIndex = this.place.imgUrls.length - 1;
+  }
+},
   },
 };
 </script>
@@ -274,5 +311,53 @@ strong {
 
 .right {
   right: 10px;
+}
+
+.fullscreen {
+  &-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+  }
+  &-content {
+    position: relative;
+    max-width: 100vw;
+    max-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &-image {
+    max-height: 100vh;
+    height: 100vh;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+}
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  width: 40px;
+  font-size: 30px;
+  color: white;
+  background: grey;
+  border-radius: 20px;
+  border: 1px solid white;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.fullscreen-overlay .slider-btn {
+  background: rgba(0, 0, 0, 0.6);
+  font-size: 24px;
 }
 </style>
