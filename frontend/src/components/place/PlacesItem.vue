@@ -13,27 +13,24 @@
         />
       </div>
       <h2 class="places-item__title">
-          {{ title }}
-        </h2>
-        <br />
+        {{ title }}
+      </h2>     
+
       <div class="places-item__content">
-        
-        
         <p class="places-item__description">
           {{ descr }}
         </p>
 
         <br />
-        
+
         <Rating :rating="rating" />
 
         <router-link
-          :to="{ name: 'PlacePage', params: { id }, query: { name: 'Yarik' } }"
+          :to="{ name: 'PlacePage', params: { id } }"
           class="places-item__link"
         >
         </router-link>
       </div>
-
     </div>
   </div>
 </template>
@@ -46,27 +43,27 @@ export default {
     Rating,
   },
   props: {
-    id: { 
+    id: {
       type: String,
-       required: true 
-      },
-    descr: { 
-      type: String, 
-      default: "" 
+      required: true,
     },
-    title: { 
-      type: String, 
-      default: "" 
+    descr: {
+      type: String,
+      default: "",
     },
-    imgSrc: { 
-      type: Array, 
-      default: () => [] 
+    title: {
+      type: String,
+      default: "",
+    },
+    imgSrc: {
+      type: Array,
+      default: () => [],
     },
     rating: {
       type: Number,
       default: 0,
-    },   
-  },  
+    },
+  },
 };
 </script>
 
@@ -134,7 +131,7 @@ export default {
   &__title {
     position: absolute;
     color: #fff;
-    background-color: rgba(68, 68, 68, 0.5);   
+    background-color: rgba(68, 68, 68, 0.5);
     display: inline-block;
     clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
     padding: 10px 20px;
@@ -143,7 +140,7 @@ export default {
     font-size: 20px;
     font-weight: 400;
     font-style: italic;
-    z-index: 10;
+    z-index: 1;
   }
 
   &__link {

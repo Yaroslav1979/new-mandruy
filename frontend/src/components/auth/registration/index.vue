@@ -72,7 +72,6 @@ import CustomInput from "../../shared/CustomInput";
 import Button from "../../mainButton";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-// import SuccessModal from '../../SuccessModal.vue';
 
 import {
   emailValidation,
@@ -185,7 +184,7 @@ export default {
     margin-bottom: 20px;
     width: 100%;
     &--note {
-      color: red;
+      color: #222;
       font-size: 12px;
     }
   }

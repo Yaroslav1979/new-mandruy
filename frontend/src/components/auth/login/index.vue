@@ -84,7 +84,8 @@ export default {
     async handleSubmit() {
       const { form } = this.$refs;
       // const isFormValid = await form.validate();
-      const isFormValid = form.validate();
+      // const isFormValid = form.validate();
+      const isFormValid = await form.validate?.() ?? true;
 
       if (!isFormValid || this.loading) return;
 
@@ -93,7 +94,12 @@ export default {
 console.log('Submitting login form', this.formData);
 
         await this.$store.dispatch("auth/login", this.formData); // 👈 Vuex login
-        this.$router.push({ name: "home" });
+       const role = this.$store.state.auth.user.role;
+if (role === 'admin') {
+  this.$router.push({ name: 'admin' }); // наприклад
+} else {
+  this.$router.push({ name: 'home' });
+}
 
         form.reset();
       } catch (error) {

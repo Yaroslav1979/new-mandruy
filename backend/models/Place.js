@@ -14,6 +14,10 @@ const placeSchema = new mongoose.Schema({
     city: { type: String, required: true },
     coordinate: { type: String, required: true },
   },
+  isApproved: {
+    type: Boolean,
+    default: false, // нові місця не підтверджені автоматично
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

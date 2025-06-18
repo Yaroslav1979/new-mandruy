@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
 import RecoveryPasswordPage from './pages/RecoveryPasswordPage';
 import ConfirmEmailPage from './pages/ConfirmEmailPage';
+import AdminPage from './pages/AdminPage.vue';
 
 const routes = [
   {
@@ -61,6 +62,12 @@ const routes = [
     name: 'confirm-email-page',
     component: ConfirmEmailPage,
     props: true,
+  },
+
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminPage,
   },
 
   {

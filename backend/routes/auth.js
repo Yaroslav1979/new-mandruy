@@ -21,7 +21,20 @@ const bcrypt = require('bcryptjs');
 const { verifyToken } = require('../middleware/auth.js');
 // const path = require("path");
 
+function requireAdmin(req, res, next) {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Доступ заборонено' });
+  }
+}
+
 //-----------------------------------------------------------------
+
+router.get('/admin', verifyToken, requireAdmin, (req, res) => {
+  res.json({ message: 'Це адмінська зона' });
+});
+//------------------------------------------------------------------
 
 router.post('/register', async (req, res) => {
   try {
@@ -107,7 +120,12 @@ router.post('/confirm-email', async (req, res) => {
   res.json({
     message: 'Email підтверджено',
     token:   jwtToken,
-    user: { id: user._id, name: user.name, email: user.email }
+    user: { 
+      id: user._id, 
+      name: user.name, 
+      email: user.email, 
+      role: user.role,
+    }
   });
 });
 
@@ -128,7 +146,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Підтвердіть e‑mail, перш ніж увійти" });
     }
 
-    const bcrypt = require("bcrypt");
+    // const bcrypt = require("bcrypt");
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Невірний email або пароль" });
@@ -142,6 +160,7 @@ router.post("/login", async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (err) {

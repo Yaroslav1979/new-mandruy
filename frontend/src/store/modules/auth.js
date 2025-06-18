@@ -82,47 +82,46 @@ export default {
         commit("logout");
       }
     },
-    
+
     async requestPasswordReset(_, payload) {
-    try {
-      const { data } = await requestPasswordReset(payload);
-      return data;
-    } catch (error) {
-      console.error('Помилка при запиті відновлення пароля:', error);
-      throw error;
-    }
-  },
+      try {
+        const { data } = await requestPasswordReset(payload);
+        return data;
+      } catch (error) {
+        console.error("Помилка при запиті відновлення пароля:", error);
+        throw error;
+      }
+    },
 
-  async resetPassword(_, payload) {
-    try {
-      const { data } = await resetPassword(payload);
-      return data;
-    } catch (error) {
-      console.error('Помилка при скиданні пароля:', error);
-      throw error;
-    }
-  },
+    async resetPassword(_, payload) {
+      try {
+        const { data } = await resetPassword(payload);
+        return data;
+      } catch (error) {
+        console.error("Помилка при скиданні пароля:", error);
+        throw error;
+      }
+    },
 
-  changeName: async ({ commit }, payload) => {
-  try {
-    const { data } = await changeName(payload);
-    commit("setUserData", data.user);
-    return data;
-  } catch (error) {
-    console.error("Помилка при зміні імені:", error);
-    throw error;
-  }
-},
+    changeName: async ({ commit }, payload) => {
+      try {
+        const { data } = await changeName(payload);
+        commit("setUserData", data.user);
+        return data;
+      } catch (error) {
+        console.error("Помилка при зміні імені:", error);
+        throw error;
+      }
+    },
 
-changePassword: async (_, payload) => {
-  try {
-    const { data } = await changePassword(payload);
-    return data;
-  } catch (error) {
-    console.error("Помилка при зміні пароля:", error);
-    throw error;
-  }
-},
-  
+    changePassword: async (_, payload) => {
+      try {
+        const { data } = await changePassword(payload);
+        return data;
+      } catch (error) {
+        console.error("Помилка при зміні пароля:", error);
+        throw error;
+      }
+    },
   },
 };

@@ -10,7 +10,12 @@ const userSchema = new mongoose.Schema({
   emailConfirmToken: String, // SHA‑256 хеш
   emailConfirmExpires: Date,
   resetPasswordToken: String,
-resetPasswordExpires: Date,
+  resetPasswordExpires: Date,
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  }
 });
 
 // Хешування пароля перед збереженням в базі

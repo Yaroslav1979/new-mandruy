@@ -77,6 +77,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
       categoryIds: Array.isArray(categoryIds)
         ? categoryIds
         : JSON.parse(categoryIds), // якщо надходить як рядок
+      isApproved: false,
     });
 
     await newPlace.save();
@@ -90,13 +91,24 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 // GET /api/places — отримати всі місця
 router.get("/", async (req, res) => {
   try {
-    const places = await Place.find().sort({ createdAt: -1 });
+    const places = await Place.find({ isApproved: false }).sort({ createdAt: -1 });
     res.json(places);
   } catch (err) {
     console.error("❌ Помилка при отриманні місць:", err);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });
+//--------------------------------------------------------------------
+
+router.get("/approved", async (req, res) => {
+  try {
+    const approvedPlaces = await Place.find({ isApproved: true }).sort({ createdAt: -1 });
+    res.json(approvedPlaces);
+  } catch (err) {
+    res.status(500).json({ message: "Помилка при отриманні місць" });
+  }
+});
+
 //---------------------------------------------------------------------
 
 // створення відгуку по id:
@@ -144,8 +156,39 @@ router.get("/:placeId/reviews", async (req, res) => {
   }
 });
 //------------------------------------------------------
+
 // Отримання місця за id
 router.get("/:_id", getPlaceById);
+
+//------------------------------------------------------
+
+router.patch("/:id", async (req, res) => {
+  try {
+    const placeId = req.params.id;
+    const updated = await Place.findByIdAndUpdate(placeId, req.body, { new: true });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: "Помилка при оновленні місця" });
+  }
+});
+//----------------------------------------------
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const placeId = req.params.id;
+    const deletedPlace = await Place.findByIdAndDelete(placeId);
+    if (!deletedPlace) {
+      return res.status(404).json({ message: "Місце не знайдено" });
+    }
+    res.json({ message: "Місце успішно видалено" });
+  } catch (err) {
+    console.error("❌ Помилка при видаленні місця:", err);
+    res.status(500).json({ message: "Помилка при видаленні місця" });
+  }
+});
+
+//---------------------------------------------------------------------
+
 
 
 module.exports = router;
