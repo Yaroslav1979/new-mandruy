@@ -18,7 +18,9 @@
         @click="togglePasswordVisibility"
       >
         <img
-          :src="currentType === 'password' ? hidePasswordIcon : showPasswordIcon"
+          :src="
+            currentType === 'password' ? hidePasswordIcon : showPasswordIcon
+          "
           alt="toggle password"
         />
       </button>
@@ -29,15 +31,15 @@
 </template>
 
 <script>
-import hidePasswordIcon from '../../assets/svg/hide.svg';
-import showPasswordIcon from '../../assets/svg/eye.svg';
+import hidePasswordIcon from "../../assets/svg/hide.svg";
+import showPasswordIcon from "../../assets/svg/eye.svg";
 
 export default {
   name: "CustomInput",
   data() {
     return {
       isValid: true,
-      error: '',
+      error: "",
       isFirstInput: true,
       showPassword: false,
       hidePasswordIcon,
@@ -46,36 +48,36 @@ export default {
   },
   computed: {
     currentType() {
-      if (this.$attrs.type === 'password') {
-        return this.showPassword ? 'text' : 'password';
+      if (this.$attrs.type === "password") {
+        return this.showPassword ? "text" : "password";
       }
-      return this.$attrs.type || 'text';
-    }
+      return this.$attrs.type || "text";
+    },
   },
   inject: {
-    form: { default: null }
+    form: { default: null },
   },
   inheritAttrs: false,
   props: {
     modelValue: String,
     errorMessage: {
       type: String,
-      default: '',
+      default: "",
     },
     rules: {
       type: Array,
       default: () => [],
-    }
+    },
   },
   watch: {
     modelValue(value) {
       if (!value) {
         this.isValid = true;
-        this.error = '';
+        this.error = "";
         return;
       }
       this.validate();
-    }
+    },
   },
   mounted() {
     if (this.form) this.form.registerInput(this);
@@ -89,11 +91,11 @@ export default {
     },
     validate(value = this.modelValue) {
       this.isValid = true;
-      this.error = '';
+      this.error = "";
 
       for (const rule of this.rules) {
         const result = rule(value);
-        if (typeof result === 'object') {
+        if (typeof result === "object") {
           if (!result.hasPassed) {
             this.isValid = false;
             this.error = result.message || this.errorMessage;
@@ -120,10 +122,10 @@ export default {
     reset() {
       this.isFirstInput = true;
       this.isValid = true;
-      this.error = '';
-      this.$emit('update:modelValue', '');
-    }
-  }
+      this.error = "";
+      this.$emit("update:modelValue", "");
+    },
+  },
 };
 </script>
 
@@ -135,6 +137,7 @@ export default {
   flex-direction: column;
   width: 100%;
   position: relative;
+  justify-content: center;
 }
 
 .input-container {
@@ -152,7 +155,7 @@ export default {
   width: 100%;
   height: 54px;
   font-size: 16px;
-  padding: 0 50px 0 20px;
+  padding: 0 20px 0 20px;
 
   &::placeholder {
     color: gray;
@@ -186,5 +189,3 @@ export default {
   }
 }
 </style>
-
-
