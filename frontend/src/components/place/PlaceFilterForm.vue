@@ -172,7 +172,7 @@ export default {
   &__wrapper {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
   }
 }
 
