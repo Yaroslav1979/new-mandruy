@@ -1,11 +1,53 @@
-import ParallaxScrollView from "@/components/parallax-scroll-view";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { Image } from "expo-image";
-import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { BurgerMenu } from "../../components/burger-menu";
+import { API_URL } from "../../constants/api";
+import { useWindowDimensions } from "react-native";
+
+interface Place {
+  _id: string;
+  title: string;
+  imgUrls: string[];
+  location?: {
+    region?: string;
+    city?: string;
+    coordinate?: any;
+  };
+}
 
 export default function LoginScreen() {
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
+
+  const fetchPlaces = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/places/approved`);
+      const data = await response.json();
+      setPlaces(data);
+    } catch (error) {
+      console.error("Помилка отримання місць:", error);
+      console.log("API_URL:", API_URL);
+      console.log("FULL URL:", `${API_URL}/api/places/approved`);
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [category, setCategory] = useState("Без категорії");
   const [categoryItems, setCategoryItems] = useState([
@@ -58,12 +100,13 @@ export default function LoginScreen() {
     { label: "За датою", value: "За датою" },
   ]);
 
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+
+  const [visibleCount, setVisibleCount] = useState(10);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#fff", dark: "#303638" }}
-      headerHeight={50}
-      headerImage={<View />}
-    >
+    <View style={{ flex: 1, marginTop: 30 }}>
       <View style={styles.header}>
         <BurgerMenu />
         <Image
@@ -72,75 +115,134 @@ export default function LoginScreen() {
         />
         <Text style={styles.reactAcount}>Вхід</Text>
       </View>
-      <View style={styles.titleWrapper}>
-        <Text style={styles.title}>ПОШУК МІСЦЬ</Text>
-      </View>
 
-      <View style={styles.form}>
-        <View style={styles.formBlock}>
-          <TextInput
-            style={styles.input}
-            textAlign="center"
-            placeholder="Введіть назву"
-          />
-          <Image
-            source={require("../../assets/images/iconSearch.png")}
-            style={styles.searchBtn}
-          />
-        </View>
-        {/* <Text style={styles.subtitle}>Розширений пошук:</Text> */}
-        <View style={styles.pickerWrapper}>
-          <View style={{ width: "33%", zIndex: 3000, gap: 5 }}>
-            <Text style={styles.label}>Категорія:</Text>
-            <DropDownPicker
-              open={categoryOpen}
-              value={category}
-              items={categoryItems}
-              setOpen={setCategoryOpen}
-              setValue={setCategory}
-              setItems={setCategoryItems}
-              placeholder="Категорія"
-              style={styles.dropdown}
-              textStyle={styles.dropdownText}
-              dropDownContainerStyle={styles.dropdownContainer}
-            />
-          </View>
+      <FlatList<Place>
+        data={places.slice(0, visibleCount)}
+        style={styles.bgd}
+        key={isLandscape ? "landscape" : "portrait"} // 👈 ДОДАТИ
+        numColumns={isLandscape ? 2 : 1} // 👈 ДОДАТИ
+        columnWrapperStyle={
+          isLandscape ? { justifyContent: "space-between" } : undefined
+        } // 👈 ДОДАТИ
+        contentContainerStyle={{ paddingBottom: 20 }} // 👈 бажано
+        keyExtractor={(item) => item._id}
+        ListHeaderComponent={
+          <>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>ПОШУК МІСЦЬ</Text>
+            </View>
 
-          <View style={{ width: "33%", zIndex: 2000, gap: 5 }}>
-            <Text style={styles.label}>Область:</Text>
-            <DropDownPicker
-              open={regionOpen}
-              value={region}
-              items={regionItems}
-              setOpen={setRegionOpen}
-              setValue={setRegion}
-              setItems={setRegionItems}
-              placeholder="Область"
-              style={styles.dropdown}
-              textStyle={styles.dropdownText}
-              dropDownContainerStyle={styles.dropdownContainer}
-            />
-          </View>
+            <View style={styles.form}>
+              <View style={styles.formBlock}>
+                <TextInput
+                  style={styles.input}
+                  textAlign="center"
+                  placeholder="Введіть назву"
+                />
+                <Image
+                  source={require("../../assets/images/iconSearch.png")}
+                  style={styles.searchBtn}
+                />
+              </View>
+              {/* <Text style={styles.subtitle}>Розширений пошук:</Text> */}
+              <View style={styles.pickerWrapper}>
+                <View style={{ width: "33%", zIndex: 3000, gap: 5 }}>
+                  <Text style={styles.label}>Категорія:</Text>
+                  <DropDownPicker
+                    open={categoryOpen}
+                    value={category}
+                    items={categoryItems}
+                    setOpen={setCategoryOpen}
+                    setValue={setCategory}
+                    setItems={setCategoryItems}
+                    placeholder="Категорія"
+                    style={styles.dropdown}
+                    textStyle={styles.dropdownText}
+                    dropDownContainerStyle={styles.dropdownContainer}
+                  />
+                </View>
 
-          <View style={{ width: "33%", zIndex: 1000, gap: 5 }}>
-            <Text style={styles.label}>Сортувати:</Text>
-            <DropDownPicker
-              open={sortedbyOpen}
-              value={sortedby}
-              items={sortedbyItems}
-              setOpen={setSortedbyOpen}
-              setValue={setSortedby}
-              setItems={setSortedbyItems}
-              placeholder="Сортувати"
-              style={styles.dropdown}
-              textStyle={styles.dropdownText}
-              dropDownContainerStyle={styles.dropdownContainer}
-            />
-          </View>
-        </View>
-        <Text style={styles.label}>лмопасра</Text>
-      </View>
-    </ParallaxScrollView>
+                <View style={{ width: "33%", zIndex: 2000, gap: 5 }}>
+                  <Text style={styles.label}>Область:</Text>
+                  <DropDownPicker
+                    open={regionOpen}
+                    value={region}
+                    items={regionItems}
+                    setOpen={setRegionOpen}
+                    setValue={setRegion}
+                    setItems={setRegionItems}
+                    placeholder="Область"
+                    style={styles.dropdown}
+                    textStyle={styles.dropdownText}
+                    dropDownContainerStyle={styles.dropdownContainer}
+                  />
+                </View>
+
+                <View style={{ width: "33%", zIndex: 1000, gap: 5 }}>
+                  <Text style={styles.label}>Сортувати:</Text>
+                  <DropDownPicker
+                    open={sortedbyOpen}
+                    value={sortedby}
+                    items={sortedbyItems}
+                    setOpen={setSortedbyOpen}
+                    setValue={setSortedby}
+                    setItems={setSortedbyItems}
+                    placeholder="Сортувати"
+                    style={styles.dropdown}
+                    textStyle={styles.dropdownText}
+                    dropDownContainerStyle={styles.dropdownContainer}
+                  />
+                </View>
+              </View>
+            </View>
+          </>
+        }
+        renderItem={({ item, index }: { item: Place; index: number }) => {
+          const isLastOdd =
+            isLandscape &&
+            places.length % 2 !== 0 &&
+            index === places.length - 1;
+
+          return (
+            <View
+              style={[
+                styles.placeCard,
+                isLandscape && !isLastOdd ? { width: "48%" } : undefined,
+                isLandscape && isLastOdd
+                  ? { width: "48%", alignSelf: "flex-start" }
+                  : undefined,
+              ]}
+            >
+              {item.imgUrls?.length > 0 && (
+                <Image
+                  source={{ uri: `${API_URL}${item.imgUrls[0]}` }}
+                  style={styles.placeImage}
+                />
+              )}
+              <Text style={styles.placeTitle}>{item.title}</Text>
+              <Text style={styles.placeRegion}>{item.location?.region}</Text>
+            </View>
+          );
+        }}
+        ListEmptyComponent={() =>
+          !loading ? (
+            <Text style={{ textAlign: "center", marginTop: 40 }}>
+              Місця не знайдені
+            </Text>
+          ) : null
+        }
+        ListFooterComponent={
+          visibleCount < places.length ? (
+            <TouchableOpacity
+              style={styles.loadMoreBtn}
+              onPress={() => setVisibleCount((prev) => prev + 10)}
+            >
+              <Text style={styles.loadMoreText}>Показати ще</Text>
+            </TouchableOpacity>
+          ) : null
+        }
+      />
+    </View>
   );
 }
 
@@ -153,6 +255,11 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
   },
+
+  bgd: {
+    backgroundColor: "#eee",
+  },
+
   titleWrapper: {
     alignItems: "center",
     marginTop: 20,
@@ -240,5 +347,47 @@ const styles = StyleSheet.create({
     color: "#eee",
     fontSize: 20,
     fontWeight: "bold",
+  },
+
+  placeCard: {
+    backgroundColor: "#fff",
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 15,
+    marginTop: 15,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+
+  placeImage: {
+    width: "100%",
+    aspectRatio: 16 / 9, // або 4/3 якщо фото інші
+    borderRadius: 10,
+  },
+
+  placeTitle: {
+    fontSize: 18,
+    fontFamily: "Ukrainian-Bold",
+    marginTop: 8,
+  },
+
+  placeRegion: {
+    fontSize: 14,
+    color: "#555",
+    marginTop: 4,
+  },
+  loadMoreBtn: {
+    marginVertical: 20,
+    alignSelf: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    backgroundColor: "#111",
+    borderRadius: 8,
+  },
+
+  loadMoreText: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "Ukrainian-Bold",
   },
 });
