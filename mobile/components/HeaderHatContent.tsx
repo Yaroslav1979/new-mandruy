@@ -1,14 +1,40 @@
-import { Image } from "expo-image";
+import Logo from "../assets/svg/logo.svg";
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  StyleProp, // ← потрібно імпортувати
+  ImageStyle, // ← потрібно імпортувати
+  ViewStyle, // ← потрібно імпортувати
+} from "react-native";
 import { BurgerMenu } from "./burger-menu";
 
-export function HeaderHatContent({ overlay = false }: { overlay?: boolean }) {
-  return (
-    <View style={[styles.container, overlay && styles.overlay]}>
-      <BurgerMenu />
+type Props = {
+  overlay?: boolean;
+  logoStyle?: StyleProp<ImageStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
+};
 
-      <Image source={require("@/assets/svg/logo.svg")} style={styles.logo} />
+export function HeaderHatContent({
+  overlay = false,
+  logoStyle, // ← потрібно отримати з props
+  containerStyle, // ← потрібно отримати з props
+}: Props) {
+  return (
+    <View
+      style={[
+        styles.container,
+        overlay && styles.overlay,
+        containerStyle, // ← кастомний стиль краще ставити останнім
+      ]}
+    >
+      <BurgerMenu />
+      <View>
+        <Logo style={[styles.logo, logoStyle]} />
+      </View>
 
       <Pressable
         style={styles.reactBoxAcount}
@@ -24,11 +50,11 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
-    gap: 20,
+    gap: 15,
     alignItems: "center",
     justifyContent: "space-between",
     marginTop: 20,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   overlay: {
     position: "absolute",
@@ -44,7 +70,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   logo: {
-    top: 120,
     width: 220,
     height: 60,
     marginBottom: 20,

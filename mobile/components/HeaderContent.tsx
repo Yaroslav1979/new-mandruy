@@ -1,8 +1,9 @@
-import { Image } from "expo-image";
+import { Image } from "react-native";
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BurgerMenu } from "./burger-menu";
 import { InfoFlags } from "./IhfoFlags";
+import Logo from "../assets/svg/logoBig.svg";
 
 export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
   return (
@@ -10,7 +11,8 @@ export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
       <View style={styles.box}>
         <BurgerMenu />
 
-        <Image source={require("@/assets/svg/logo.svg")} style={styles.logo} />
+        {/* <Image source={require("@/assets/svg/logo.svg")} style={styles.logo} /> */}
+        <Logo style={styles.logo} />
         <Pressable
           style={styles.reactBoxAcount}
           onPress={() => router.push("/login")}

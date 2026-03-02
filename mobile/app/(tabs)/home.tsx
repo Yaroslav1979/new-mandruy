@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons"; // Для іконок
 import { Image } from "expo-image";
+import Logo from "../../assets/svg/logo.svg";
 import React, { useState } from "react";
 import {
   ImageBackground,
@@ -18,16 +19,13 @@ const HomeScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      {/* Header / Hero Section */}
+     
       <ImageBackground
         source={require("@/assets/images/synevir.jpg")}
         style={styles.hero}
       >
         <View style={styles.overlay}>
-          <Image
-            source={require("@/assets/svg/logo.svg")}
-            style={styles.logo}
-          />
+          <Logo style={styles.logo} />
           <Text style={styles.heroSubTitle}>
             Відкривай нові місця разом з нами
           </Text>

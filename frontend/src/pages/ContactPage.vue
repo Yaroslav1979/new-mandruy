@@ -1,35 +1,35 @@
 <template>
   <div class="head">
-    <HeaderAllPages @openAddModal="isModalOpen = true" class="head-contact"/>   
+    <HeaderAllPages @openAddModal="isModalOpen = true" class="head-contact" />
   </div>
- 
+
   <main>
     <div
       v-if="isModalOpen"
       class="modal-overlay"
       @click.self="isModalOpen = false"
     >
-    <div class="modal-content">
-      <template v-if="!isSuccess">
-        <AddPlaceForm @added="handleNewPlace" />
-      </template>
+      <div class="modal-content">
+        <template v-if="!isSuccess">
+          <AddPlaceForm @added="handleNewPlace" />
+        </template>
 
-      <template v-else>
-        <div class="success-message">
-          <p>Місце успішно додано!</p>
-          <button @click="closeModal">Добре</button>
-        </div>
-      </template>
-    </div>
+        <template v-else>
+          <div class="success-message">
+            <p>Місце успішно додано!</p>
+            <button @click="closeModal">Добре</button>
+          </div>
+        </template>
+      </div>
     </div>
 
     <ContactsUs />
-    
-    <SocialNet />  
+
+    <SocialNet />
+
     <!-- <div class="contact"> -->
-     
+
     <!-- </div>  -->
-    
   </main>
 </template>
 
@@ -40,27 +40,26 @@ import SocialNet from "../components/shared/SocialNet.vue";
 import ContactsUs from "../components/shared/ContactsUs.vue";
 
 export default {
-  name: "PlacePage",  
-  components: {    
+  name: "PlacePage",
+  components: {
     HeaderAllPages,
     ContactsUs,
     AddPlaceForm,
-    SocialNet,    
+    SocialNet,
   },
   data() {
-    return {       
+    return {
       isModalOpen: false, // ДЛЯ МОДАЛКИ
     };
-  },  
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .head {
-  background-color: #111; 
- 
+  background-color: #111;
 }
-  .modal-overlay {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -101,6 +100,4 @@ export default {
   border: none;
   cursor: pointer;
 }
-
-
 </style>

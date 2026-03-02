@@ -1,6 +1,8 @@
 import { HeaderHero } from "@/components/HeaderHero";
+import { router } from "expo-router";
+import { InfoFlags } from "@/components/IhfoFlags";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { Image } from "expo-image";
+
 import {
   ImageBackground,
   Pressable,
@@ -35,7 +37,10 @@ export default function HomeScreen() {
             <Text style={styles.title}>Вітаємо вас на «МАНДРУЙ»</Text>
 
             <View style={styles.buttons}>
-              <Pressable style={styles.button}>
+              <Pressable
+                style={styles.button}
+                onPress={() => router.push("/search")}
+              >
                 <Text style={styles.buttonText}>Розпочати пошук</Text>
               </Pressable>
               <Pressable style={styles.link}>
@@ -43,25 +48,12 @@ export default function HomeScreen() {
               </Pressable>
             </View>
 
-            <View style={styles.wrapperIcons}>
-              <Pressable>
-                <Image
-                  source={require("../../assets/svg/Group14.svg")}
-                  style={styles.icon}
-                />
-              </Pressable>
-              <Pressable>
-                <Image
-                  source={require("../../assets/svg/Group15.svg")}
-                  style={styles.icon}
-                />
-              </Pressable>
-              <Pressable>
-                <Image
-                  source={require("../../assets/svg/Group16.svg")}
-                  style={styles.icon}
-                />
-              </Pressable>
+            <View style={{ padding: 50 }}>
+              <InfoFlags
+                containerStyle={{
+                  gap: 50,
+                }}
+              />
             </View>
           </View>
         </ImageBackground>
@@ -118,14 +110,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 
-  wrapperIcons: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 50,
-    marginTop: 50,
-  },
-  icon: {
-    width: 60,
-    height: 60,
-  },
+  // wrapperIcons: {
+  //   display: "flex",
+  //   flexDirection: "row",
+  //   gap: 50,
+  //   marginTop: 50,
+  //   flex: 1,
+  // },
+  // icon: {
+  //   width: 10,
+  //   height: 10,
+  // },
 });

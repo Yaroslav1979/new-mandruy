@@ -1,5 +1,5 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { Image } from "expo-image";
+import Logo from "../../assets/svg/logo.svg";
 import { router } from "expo-router";
 import {
   KeyboardAvoidingView,
@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
   useWindowDimensions,
 } from "react-native";
 import { BurgerMenu } from "../../components/burger-menu";
@@ -25,7 +26,9 @@ export default function RegistrScreen() {
     >
       <View style={styles.pageTitle}>
         <BurgerMenu />
-        <Image source={require("@/assets/svg/logo.svg")} style={styles.logo} />
+        <View>
+          <Logo style={styles.logo} />
+        </View>
       </View>
 
       <View style={{ position: "relative" }}>
@@ -93,24 +96,25 @@ export default function RegistrScreen() {
               />
             </View>
           </View>
+          <View>
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.btnTxt}> Зареєструватися </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnTxt}> Зареєструватися </Text>
-          </TouchableOpacity>
-
-          <Pressable
-            onPress={() => router.push("/login")}
-            style={{
-              flex: 1,
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: 500,
-              alignItems: "center",
-            }}
-          >
-            <Text style={styles.text}>Вже зареєстровані? Увійти</Text>
-          </Pressable>
+            <Pressable
+              onPress={() => router.push("/login")}
+              style={{
+                flex: 1,
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 70,
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.text}>Вже зареєстровані? Увійти</Text>
+            </Pressable>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </ParallaxScrollView>
@@ -120,6 +124,7 @@ export default function RegistrScreen() {
 const styles = StyleSheet.create({
   bgd: {
     flex: 1,
+    width: "100%",
     height: 800,
   },
 
@@ -143,8 +148,8 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Bold",
     display: "flex",
     maxWidth: 500,
-    top: 150,
-    marginHorizontal: 40,
+    top: 120,
+    marginHorizontal: 20,
   },
 
   formLandscape: {
@@ -152,7 +157,7 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 20,
     width: "100%",
-    maxWidth: 700,
+    maxWidth: 800,
     top: 80,
   },
   formWrapper: {
@@ -163,11 +168,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 20,
+    marginTop: 20,
   },
 
   formBlock: {
     flex: 1,
-    gap: 10,
+    gap: 20,
   },
 
   formBlockLandscape: {

@@ -1,26 +1,29 @@
-import { Image } from "expo-image";
-import { Pressable, StyleSheet, View } from "react-native";
+import Group14 from "../assets/svg/Group14.svg";
+import Group15 from "../assets/svg/Group15.svg";
+import Group16 from "../assets/svg/Group16.svg";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  StyleProp,
+  ViewStyle,
+} from "react-native";
 
-export function InfoFlags() {
+type Props = {
+  containerStyle?: StyleProp<ViewStyle>;
+};
+
+export function InfoFlags({ containerStyle }: Props) {
   return (
-    <View style={styles.wrapperIcons}>
+    <View style={[styles.wrapperIcons, containerStyle]}>
       <Pressable>
-        <Image
-          source={require("../assets/svg/Group14.svg")}
-          style={styles.icon}
-        />
+        <Group14 style={styles.icon} />
       </Pressable>
       <Pressable>
-        <Image
-          source={require("../assets/svg/Group15.svg")}
-          style={styles.icon}
-        />
+        <Group15 style={styles.icon} />
       </Pressable>
       <Pressable>
-        <Image
-          source={require("../assets/svg/Group16.svg")}
-          style={styles.icon}
-        />
+        <Group16 style={styles.icon} />
       </Pressable>
     </View>
   );

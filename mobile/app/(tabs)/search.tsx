@@ -1,5 +1,4 @@
 // import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -7,13 +6,15 @@ import {
   TextInput,
   View,
   FlatList,
-  ActivityIndicator,
+  Image,
   TouchableOpacity,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import { BurgerMenu } from "../../components/burger-menu";
+// import { BurgerMenu } from "../../components/burger-menu";
 import { API_URL } from "../../constants/api";
 import { useWindowDimensions } from "react-native";
+import { HeaderHatContent } from "../../components/HeaderHatContent";
+// import { useNavigation } from "@react-navigation/native";
 
 interface Place {
   _id: string;
@@ -108,12 +109,18 @@ export default function LoginScreen() {
   return (
     <View style={{ flex: 1, marginTop: 30 }}>
       <View style={styles.header}>
-        <BurgerMenu />
-        <Image
-          source={require("../../assets/svg/logo.svg")}
-          style={styles.logo}
+        <HeaderHatContent
+          containerStyle={{
+            gap: 50,
+            marginTop: 0,
+          }}
+          logoStyle={{
+            top: 0,
+            width: 150,
+            height: 40,
+            marginBottom: 0,
+          }}
         />
-        <Text style={styles.reactAcount}>Вхід</Text>
       </View>
 
       <FlatList<Place>
@@ -248,12 +255,9 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
     backgroundColor: "#111",
     padding: 10,
-    alignItems: "center",
+    marginTop: 20,
   },
 
   bgd: {
@@ -311,12 +315,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 5,
+    // zIndex: 100,
   },
 
-  logo: {
-    width: 150,
-    height: 35,
-  },
   searchBtn: {
     width: 50,
     height: 50,
@@ -342,13 +343,6 @@ const styles = StyleSheet.create({
     color: "#111",
   },
 
-  reactAcount: {
-    fontFamily: "Ukrainian-Regular",
-    color: "#eee",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-
   placeCard: {
     backgroundColor: "#fff",
     padding: 12,
@@ -357,6 +351,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     borderWidth: 1,
     borderColor: "#ddd",
+    zIndex: -1,
   },
 
   placeImage: {

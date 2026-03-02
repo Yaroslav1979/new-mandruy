@@ -20,6 +20,7 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "6.15"
+    "mongodb": "6.15",
+    "react-native-svg": "^15.15.3"
   }
 }
