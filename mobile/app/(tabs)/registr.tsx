@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
     color: "#eee",
   },
   logo: {
-    width: 150,
-    height: 35,
+    width: 160,
+    height: 40,
   },
   form: {
     fontFamily: "Ukrainian-Bold",

@@ -17,12 +17,7 @@ export default function LoginScreen() {
             gap: 50,
             marginTop: 0,
           }}
-          logoStyle={{
-            top: 0,
-            width: 150,
-            height: 40,
-            marginBottom: 0,
-          }}
+          logoWidth={150}
         />
       </View>
       <View style={styles.titleWrapper}>

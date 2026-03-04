@@ -26,6 +26,15 @@ export function BurgerMenu() {
           <Pressable
             onPress={() => {
               setMenuOpen(false);
+              router.push("/");
+            }}
+          >
+            <Text style={styles.dropdownItem}>Головна</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              setMenuOpen(false);
               router.push("/search");
             }}
           >

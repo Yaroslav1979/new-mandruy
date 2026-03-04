@@ -2,7 +2,7 @@ import { Text, StyleSheet, ScrollView } from "react-native";
 import { QuestionItem } from "./QuestionItem";
 import { questions } from "../constants/questions";
 
-export function MainQuestions() {
+export function PopularQuestions() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Поширені запитання</Text>
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   title: {
+    fontFamily: "Ukrainian-Black",
     textAlign: "center",
     fontSize: 22,
     fontWeight: "700",
