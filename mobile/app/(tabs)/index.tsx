@@ -1,8 +1,9 @@
 import { HeaderHero } from "@/components/HeaderHero";
 import { router } from "expo-router";
 import { InfoFlags } from "@/components/IhfoFlags";
+import { MainQuestions } from "@/components/MainQuestions";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-
+import ArrowMore from "../../assets/svg/arrow-more.svg";
 import {
   ImageBackground,
   Pressable,
@@ -44,7 +45,9 @@ export default function HomeScreen() {
                 <Text style={styles.buttonText}>Розпочати пошук</Text>
               </Pressable>
               <Pressable style={styles.link}>
-                <Text style={styles.linkText}>Дізнатися більше</Text>
+                <Text style={styles.linkText}>
+                  Дізнатися більше <ArrowMore />
+                </Text>
               </Pressable>
             </View>
 
@@ -58,6 +61,9 @@ export default function HomeScreen() {
           </View>
         </ImageBackground>
       )}
+      <View>
+        <MainQuestions />
+      </View>
     </ParallaxScrollView>
   );
 }
@@ -97,16 +103,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   link: {
-    paddingVertical: 14,
-    borderWidth: 2,
-    borderColor: "#00000050",
-    borderRadius: 30,
+    // paddingVertical: 14,
+    // borderWidth: 2,
+    // borderColor: "#00000050",
+    // borderRadius: 30,
     alignItems: "center",
-    backgroundColor: "#a9a9a980",
+    // backgroundColor: "#a9a9a980",
   },
   linkText: {
     fontFamily: "Ukrainian-Bold",
-    color: "#222",
+    color: "#111",
     fontSize: 20,
   },
 
