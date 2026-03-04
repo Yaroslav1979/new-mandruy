@@ -1,6 +1,9 @@
 import { HeaderHero } from "@/components/HeaderHero";
+import { router } from "expo-router";
+import { InfoFlags } from "@/components/IhfoFlags";
+import { MainQuestions } from "@/components/MainQuestions";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { Image } from "expo-image";
+import ArrowMore from "../../assets/svg/arrow-more.svg";
 import {
   ImageBackground,
   Pressable,
@@ -35,37 +38,32 @@ export default function HomeScreen() {
             <Text style={styles.title}>Вітаємо вас на «МАНДРУЙ»</Text>
 
             <View style={styles.buttons}>
-              <Pressable style={styles.button}>
+              <Pressable
+                style={styles.button}
+                onPress={() => router.push("/search")}
+              >
                 <Text style={styles.buttonText}>Розпочати пошук</Text>
               </Pressable>
               <Pressable style={styles.link}>
-                <Text style={styles.linkText}>Дізнатися більше</Text>
+                <Text style={styles.linkText}>
+                  Дізнатися більше <ArrowMore />
+                </Text>
               </Pressable>
             </View>
 
-            <View style={styles.wrapperIcons}>
-              <Pressable>
-                <Image
-                  source={require("../../assets/svg/Group14.svg")}
-                  style={styles.icon}
-                />
-              </Pressable>
-              <Pressable>
-                <Image
-                  source={require("../../assets/svg/Group15.svg")}
-                  style={styles.icon}
-                />
-              </Pressable>
-              <Pressable>
-                <Image
-                  source={require("../../assets/svg/Group16.svg")}
-                  style={styles.icon}
-                />
-              </Pressable>
+            <View style={{ padding: 50 }}>
+              <InfoFlags
+                containerStyle={{
+                  gap: 50,
+                }}
+              />
             </View>
           </View>
         </ImageBackground>
       )}
+      <View>
+        <MainQuestions />
+      </View>
     </ParallaxScrollView>
   );
 }
@@ -105,27 +103,28 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   link: {
-    paddingVertical: 14,
-    borderWidth: 2,
-    borderColor: "#00000050",
-    borderRadius: 30,
+    // paddingVertical: 14,
+    // borderWidth: 2,
+    // borderColor: "#00000050",
+    // borderRadius: 30,
     alignItems: "center",
-    backgroundColor: "#a9a9a980",
+    // backgroundColor: "#a9a9a980",
   },
   linkText: {
     fontFamily: "Ukrainian-Bold",
-    color: "#222",
+    color: "#111",
     fontSize: 20,
   },
 
-  wrapperIcons: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 50,
-    marginTop: 50,
-  },
-  icon: {
-    width: 60,
-    height: 60,
-  },
+  // wrapperIcons: {
+  //   display: "flex",
+  //   flexDirection: "row",
+  //   gap: 50,
+  //   marginTop: 50,
+  //   flex: 1,
+  // },
+  // icon: {
+  //   width: 10,
+  //   height: 10,
+  // },
 });

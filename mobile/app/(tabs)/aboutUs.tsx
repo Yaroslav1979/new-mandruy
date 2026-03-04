@@ -1,92 +1,154 @@
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import ParallaxScrollView from "@/components/parallax-scroll-view";
+import IconMail from "../../assets/svg/iconMail.svg";
+import IconSite from "../../assets/svg/iconSite.svg";
+import IconTele from "../../assets/svg/iconTele.svg";
+
 import {
   StyleSheet,
   Text,
-  TextInput,
+  Image,
+  Pressable,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
+
+import { HeaderHatContent } from "../../components/HeaderHatContent";
 
 export default function LoginScreen() {
   return (
     <ParallaxScrollView
-          headerBackgroundColor={{ light: '#fff', dark: '#1D3D47' }}
-          headerHeight={50}
-          headerImage={<View />}
-      >
-         
-      <View style={styles.pageTitle}>
-        <Text style={styles.title}>Login page</Text>
+      headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
+      headerHeight={50}
+      headerImage={<View />}
+    >
+      <View style={styles.header}>
+        <HeaderHatContent
+          containerStyle={{
+            gap: 50,
+            marginTop: 0,
+          }}
+          logoStyle={{
+            top: 0,
+            width: 150,
+            height: 40,
+            marginBottom: 0,
+          }}
+        />
+      </View>
+      <View style={styles.titleWrapper}>
+        <Text style={styles.title}>ПРО НАС</Text>
       </View>
 
-      <View style={styles.form}>
-
-        <View style={styles.formBlock}>
-         <Text style={styles.label}>Електронна пошта / Email:</Text>
-         <TextInput style={styles.input} textAlign='center' />
+      <View style={styles.imgWrapper}>
+        <Image
+          source={require("../../assets/images/landscape.jpeg")}
+          style={styles.img}
+        />
+        <View style={styles.txtWrapper}>
+          <Text style={styles.txt}>
+            Отримуй актуальні новини про сервіс “Мандруй” та ділись із друзями.
+            Дякуємо за підтримку. Якщо ти маєш якісь пропозиції чи зауваження
+            щодо функціоналу або роботи сайту, тоді напиши нам.
+          </Text>
         </View>
-        <View style={styles.formBlock}>
-          <Text style={styles.label}>Пароль / Password:</Text>
-         <TextInput style={styles.input} textAlign='center' secureTextEntry={true}/>
-        </View>
-        <TouchableOpacity style={styles.btn} >
-          <Text style={styles.btnTxt}> Вхід </Text> 
-        </TouchableOpacity>
 
+        <View style={styles.contacts}>
+          <Text style={styles.title}>Контакти</Text>
+        </View>
+
+        <View style={styles.social}>
+          <Pressable style={styles.socialBlock}>
+            <IconMail style={styles.svgSocial} />
+            <Text style={{ fontFamily: "e-Ukraine-Medium", fontSize: 20 }}>
+              ourwebsite.com
+            </Text>
+          </Pressable>
+          <Pressable style={styles.socialBlock}>
+            <IconSite style={styles.svgSocial} />
+            <Text style={{ fontFamily: "e-Ukraine-Medium", fontSize: 20 }}>
+              ouremail1222@gmail.com
+            </Text>
+          </Pressable>
+          <Pressable style={styles.socialBlock}>
+            <IconTele style={styles.svgSocial} />
+            <Text style={{ fontFamily: "e-Ukraine-Medium", fontSize: 20 }}>
+              @telegramnickname
+            </Text>
+          </Pressable>
+        </View>
       </View>
-
-     </ParallaxScrollView>
+    </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  pageTitle: {
-    backgroundColor: "#000",
-    padding: 20,
-    alignItems: 'center',
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#111",
+    padding: 10,
+    alignItems: "center",
   },
+
+  titleWrapper: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
+
   title: {
-    fontFamily: 'Ukrainian-Bold',
-    color: "#eee"
+    fontFamily: "Ukrainian-Bold",
+    color: "#111",
+    fontSize: 20,
   },
 
-    form: {
-      fontFamily: 'Ukrainian-Bold',
-      display: "flex",
-      gap: 40,
-      marginTop: 100,
-      marginHorizontal: 40,
-    },
-    formBlock: {
-      display: "flex",
-      gap: 10
-    },
-     label: {
-      fontFamily: 'Ukrainian-Regular',
-      color: "#111",
-      fontSize: 20,
+  imgWrapper: {
+    position: "relative",
+  },
 
-    },
-    input: {
-      borderWidth: 2,
-      borderColor: "#111",
-      height: 60,
-      borderRadius: 30,
-      fontSize: 20,
-      fontFamily: 'Ukrainian-Regular',
-      color: "#111",
-    },
-    btn: {
-      backgroundColor: '#9370db99',
-      borderWidth: 2,
-      height: 60,
-      borderRadius: 30,
-      alignItems: "center",
-      justifyContent: "center"
-    },
-    btnTxt: {
-      fontFamily: 'Ukrainian-Regular',
-      color: "#eee",
-      fontSize: 20
-    }
-})
+  img: {
+    width: "100%",
+    flex: 1,
+  },
+  txtWrapper: {
+    position: "absolute",
+    top: 100,
+    marginHorizontal: 20,
+  },
+
+  txt: {
+    color: "#111",
+    fontFamily: "Ukrainian-Regular",
+    fontSize: 20,
+    fontStyle: "normal",
+    fontWeight: 400,
+    lineHeight: 35,
+  },
+
+  contacts: {
+    position: "absolute",
+    display: "flex",
+    left: 120,
+    top: 450,
+  },
+
+  social: {
+    position: "absolute",
+    top: 500,
+    left: 30,
+    display: "flex",
+    gap: 30,
+  },
+
+  socialBlock: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+  },
+
+  svgSocial: {
+    width: 40,
+    height: 40,
+  },
+});

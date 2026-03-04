@@ -1,6 +1,5 @@
 <template>
   <section class="contacts" id="contacts">
-   
     <div class="contacts__bgd"></div>
     <h3 class="contacts__title">Контакти</h3>
 
@@ -23,8 +22,7 @@
         ouremail1222@gmail.com
       </a>
 
-      <a
-        href="https://t.me/telegramnickname" class="contacts__link-block">
+      <a href="https://t.me/telegramnickname" class="contacts__link-block">
         <img
           class="contacts__icon"
           src="../../assets/svg/iconTele.svg"
@@ -93,7 +91,7 @@ export default {
   justify-content: center;
   gap: 20px;
   padding: 12px 10px;
-  background: #fff;   
+  background: #fff;
   color: #000;
   font-family: e-Ukraine, sans-serif;
   font-size: 16px;
@@ -116,5 +114,4 @@ export default {
   height: 42px;
   flex-shrink: 0;
 } */
- 
 </style>

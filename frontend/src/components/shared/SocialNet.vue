@@ -1,7 +1,12 @@
 <template>
   <section class="social" id="social">
     <div class="social__bgd"></div>
-    <img class="social__picture" src="../../assets/png/phone.png" alt="picture" srcset="" />
+    <img
+      class="social__picture"
+      src="../../assets/png/phone.png"
+      alt="picture"
+      srcset=""
+    />
 
     <div class="social-block">
       <h2 class="social-block__title">Слідкуй за нами в соцмережах</h2>
@@ -11,26 +16,8 @@
         Дякуємо за підтримку. Якщо ти маєш якісь пропозиції чи зауваження щодо
         функціоналу або роботи сайту, тоді напиши нам.
       </p>
-
-      <!-- <div class="social-block__icons">
-        <div class="box-icon">
-          <a href="">
-            <img class="social-icon" src="../../assets/png/instagram.png" alt="" />
-          </a>
-        </div>
-        <div class="box-icon">
-          <a href="">
-            <img class="social-icon" src="../../assets/png/Facebook.png" alt="" />
-          </a>
-        </div>
-        <div class="box-icon">
-          <a href="">
-            <img class="social-icon" src="../../assets/png/Telegram.png" alt="" />
-          </a>
-        </div>
-      </div> -->
     </div>
-</section>
+  </section>
 </template>
 
 <script>
@@ -53,10 +40,10 @@ export default {
     top: 0px;
     flex-shrink: 0;
     /* background-color: #111; */
-    background-image: url('../../../public/img/landscape.jpeg');
-     background-size: cover;        /* або contain */
-  background-repeat: no-repeat;
-  background-position: center;
+    background-image: url("../../../public/img/landscape.jpeg");
+    background-size: cover; /* або contain */
+    background-repeat: no-repeat;
+    background-position: center;
     transform: skewY(3deg);
     margin: 20px 0;
   }
@@ -69,7 +56,7 @@ export default {
     top: 160px;
     width: 30%;
 
-      &__title {
+    &__title {
       color: #000;
       font-family: e-Ukraine, sans-serif;
       font-size: 28px;
@@ -86,14 +73,14 @@ export default {
       font-weight: 400;
       line-height: 140%;
     }
-      &__icons {
+    &__icons {
       display: flex;
       margin-top: -20px;
     }
   }
 }
 
-  .social__picture {
+.social__picture {
   position: absolute;
   top: -68px;
   left: 400px;
@@ -101,7 +88,6 @@ export default {
   height: 668px;
   transform: rotate(-2.001eg);
   flex-shrink: 0;
-
 
   &:last-of-type {
     position: absolute;
@@ -129,5 +115,4 @@ export default {
   width: 200px;
   height: 200px;
 }
-
 </style>
