@@ -3,14 +3,7 @@ import IconMail from "../../assets/svg/iconMail.svg";
 import IconSite from "../../assets/svg/iconSite.svg";
 import IconTele from "../../assets/svg/iconTele.svg";
 
-import {
-  StyleSheet,
-  Text,
-  Image,
-  Pressable,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, Image, Pressable, View } from "react-native";
 
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 
@@ -27,12 +20,7 @@ export default function LoginScreen() {
             gap: 50,
             marginTop: 0,
           }}
-          logoStyle={{
-            top: 0,
-            width: 150,
-            height: 40,
-            marginBottom: 0,
-          }}
+          logoWidth={150}
         />
       </View>
       <View style={styles.titleWrapper}>

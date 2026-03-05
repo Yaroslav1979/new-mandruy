@@ -17,7 +17,7 @@ export function HeaderHero({
         resizeMode="cover"
       >
         <HeaderContent overlay />
-        <Text
+        {/* <Text
           style={{
             fontFamily: "Ukrainian-Bold",
             color: "#fff",
@@ -27,7 +27,7 @@ export function HeaderHero({
           }}
         >
           Відкривай нові місця разом з нами
-        </Text>
+        </Text> */}
       </ImageBackground>
     );
   }

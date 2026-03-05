@@ -1,5 +1,4 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import Logo from "../../assets/svg/logo.svg";
 import { router } from "expo-router";
 import {
   KeyboardAvoidingView,
@@ -13,7 +12,7 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
-import { BurgerMenu } from "../../components/burger-menu";
+import HeaderLog from "../../components/HeaderLog";
 
 export default function RegistrScreen() {
   const { width, height } = useWindowDimensions();
@@ -24,12 +23,7 @@ export default function RegistrScreen() {
       headerHeight={35}
       headerImage={<View />}
     >
-      <View style={styles.pageTitle}>
-        <BurgerMenu />
-        <View>
-          <Logo style={styles.logo} />
-        </View>
-      </View>
+      <HeaderLog />
 
       <View style={{ position: "relative" }}>
         <Image
@@ -128,22 +122,11 @@ const styles = StyleSheet.create({
     height: 800,
   },
 
-  pageTitle: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "#111",
-    padding: 10,
-    alignItems: "center",
-  },
   title: {
     fontFamily: "Ukrainian-Bold",
     color: "#eee",
   },
-  logo: {
-    width: 160,
-    height: 40,
-  },
+
   form: {
     fontFamily: "Ukrainian-Bold",
     display: "flex",

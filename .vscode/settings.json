@@ -1,15 +1,43 @@
 {
-  "eslint.workingDirectories": ["frontend"],
-  "eslint.validate": ["javascript", "javascriptreact", "vue"],
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  "eslint.workingDirectories": ["frontend", "backend", "mobile"],
+
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue"
+  ],
+
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+
+  "files.autoSave": "off",
+
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  "editor.inlineSuggest.enabled": true,
+
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false
 }
