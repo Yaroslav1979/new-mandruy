@@ -47,7 +47,7 @@ export function HeaderHero({
         style={{
           fontFamily: "Ukrainian-Bold",
           color: "#fff",
-          fontSize: 16,
+          fontSize: 13,
           top: 210,
           left: 30,
         }}

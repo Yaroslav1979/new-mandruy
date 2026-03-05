@@ -1,4 +1,3 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -8,13 +7,12 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-// import { BurgerMenu } from "../../components/burger-menu";
 import { API_URL } from "../../constants/api";
-import { useWindowDimensions } from "react-native";
+// import { API_URL } from "../../services/api";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
-// import { useNavigation } from "@react-navigation/native";
 
 interface Place {
   _id: string;
@@ -121,12 +119,12 @@ export default function LoginScreen() {
       <FlatList<Place>
         data={places.slice(0, visibleCount)}
         style={styles.bgd}
-        key={isLandscape ? "landscape" : "portrait"} // 👈 ДОДАТИ
-        numColumns={isLandscape ? 2 : 1} // 👈 ДОДАТИ
+        key={isLandscape ? "landscape" : "portrait"}
+        numColumns={isLandscape ? 2 : 1}
         columnWrapperStyle={
           isLandscape ? { justifyContent: "space-between" } : undefined
-        } // 👈 ДОДАТИ
-        contentContainerStyle={{ paddingBottom: 20 }} // 👈 бажано
+        }
+        contentContainerStyle={{ paddingBottom: 20 }}
         keyExtractor={(item) => item._id}
         ListHeaderComponent={
           <>
