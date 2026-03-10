@@ -1,9 +1,8 @@
-import { Image } from "react-native";
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BurgerMenu } from "./burger-menu";
 import { InfoFlags } from "./IhfoFlags";
-import Logo from "../assets/svg/logoBig.svg";
+import Logo from "../assets/svg/logo.svg";
 
 export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
   return (
@@ -11,7 +10,6 @@ export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
       <View style={styles.box}>
         <BurgerMenu />
 
-        {/* <Image source={require("@/assets/svg/logo.svg")} style={styles.logo} /> */}
         <Logo style={styles.logo} />
         <Pressable
           style={styles.reactBoxAcount}
@@ -28,7 +26,7 @@ export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
       <InfoFlags />
 
       <View style={styles.buttons}>
-        <Pressable style={styles.button}>
+        <Pressable style={styles.button} onPress={() => router.push("/search")}>
           <Text style={styles.buttonText}>Розпочати пошук</Text>
         </Pressable>
         <Pressable style={styles.link}>

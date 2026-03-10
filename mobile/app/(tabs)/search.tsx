@@ -1,5 +1,5 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { useState, useEffect } from "react";
+import { router } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -8,13 +8,12 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-// import { BurgerMenu } from "../../components/burger-menu";
 import { API_URL } from "../../constants/api";
-import { useWindowDimensions } from "react-native";
+// import { API_URL } from "../../services/api";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
-// import { useNavigation } from "@react-navigation/native";
 
 interface Place {
   _id: string;
@@ -114,24 +113,19 @@ export default function LoginScreen() {
             gap: 50,
             marginTop: 0,
           }}
-          logoStyle={{
-            top: 0,
-            width: 150,
-            height: 40,
-            marginBottom: 0,
-          }}
+          logoWidth={150}
         />
       </View>
 
       <FlatList<Place>
         data={places.slice(0, visibleCount)}
         style={styles.bgd}
-        key={isLandscape ? "landscape" : "portrait"} // 👈 ДОДАТИ
-        numColumns={isLandscape ? 2 : 1} // 👈 ДОДАТИ
+        key={isLandscape ? "landscape" : "portrait"}
+        numColumns={isLandscape ? 2 : 1}
         columnWrapperStyle={
           isLandscape ? { justifyContent: "space-between" } : undefined
-        } // 👈 ДОДАТИ
-        contentContainerStyle={{ paddingBottom: 20 }} // 👈 бажано
+        }
+        contentContainerStyle={{ paddingBottom: 20 }}
         keyExtractor={(item) => item._id}
         ListHeaderComponent={
           <>
@@ -211,7 +205,7 @@ export default function LoginScreen() {
             index === places.length - 1;
 
           return (
-            <View
+            <TouchableOpacity
               style={[
                 styles.placeCard,
                 isLandscape && !isLastOdd ? { width: "48%" } : undefined,
@@ -219,6 +213,13 @@ export default function LoginScreen() {
                   ? { width: "48%", alignSelf: "flex-start" }
                   : undefined,
               ]}
+              activeOpacity={0.9}
+              onPress={() =>
+                router.push({
+                  pathname: "/placeDetails",
+                  params: { id: item._id },
+                })
+              }
             >
               {item.imgUrls?.length > 0 && (
                 <Image
@@ -228,7 +229,7 @@ export default function LoginScreen() {
               )}
               <Text style={styles.placeTitle}>{item.title}</Text>
               <Text style={styles.placeRegion}>{item.location?.region}</Text>
-            </View>
+            </TouchableOpacity>
           );
         }}
         ListEmptyComponent={() =>

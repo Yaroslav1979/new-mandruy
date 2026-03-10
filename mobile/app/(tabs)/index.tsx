@@ -1,7 +1,7 @@
 import { HeaderHero } from "@/components/HeaderHero";
 import { router } from "expo-router";
 import { InfoFlags } from "@/components/IhfoFlags";
-import { MainQuestions } from "@/components/MainQuestions";
+import { PopularQuestions } from "@/components/PopularQuestions";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import ArrowMore from "../../assets/svg/arrow-more.svg";
 import {
@@ -62,7 +62,7 @@ export default function HomeScreen() {
         </ImageBackground>
       )}
       <View>
-        <MainQuestions />
+        <PopularQuestions />
       </View>
     </ParallaxScrollView>
   );
@@ -103,28 +103,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   link: {
-    // paddingVertical: 14,
-    // borderWidth: 2,
-    // borderColor: "#00000050",
-    // borderRadius: 30,
     alignItems: "center",
-    // backgroundColor: "#a9a9a980",
   },
   linkText: {
     fontFamily: "Ukrainian-Bold",
     color: "#111",
     fontSize: 20,
   },
-
-  // wrapperIcons: {
-  //   display: "flex",
-  //   flexDirection: "row",
-  //   gap: 50,
-  //   marginTop: 50,
-  //   flex: 1,
-  // },
-  // icon: {
-  //   width: 10,
-  //   height: 10,
-  // },
 });

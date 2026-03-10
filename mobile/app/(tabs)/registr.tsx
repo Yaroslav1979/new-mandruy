@@ -1,5 +1,4 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import Logo from "../../assets/svg/logo.svg";
 import { router } from "expo-router";
 import {
   KeyboardAvoidingView,
@@ -13,7 +12,10 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
-import { BurgerMenu } from "../../components/burger-menu";
+import HeaderLog from "../../components/HeaderLog";
+import PasswordInput from "../../components/hide-eyes-input";
+// import hidePasswordIcon from '../../assets/svg/hide.svg';
+// import showPasswordIcon from '../../assets/svg/eye.svg';
 
 export default function RegistrScreen() {
   const { width, height } = useWindowDimensions();
@@ -24,12 +26,7 @@ export default function RegistrScreen() {
       headerHeight={35}
       headerImage={<View />}
     >
-      <View style={styles.pageTitle}>
-        <BurgerMenu />
-        <View>
-          <Logo style={styles.logo} />
-        </View>
-      </View>
+      <HeaderLog />
 
       <View style={{ position: "relative" }}>
         <Image
@@ -75,25 +72,29 @@ export default function RegistrScreen() {
 
             <View style={styles.formBlock}>
               <Text style={styles.label}>Пароль / Password:</Text>
-              <TextInput
+              <PasswordInput />
+              {/* <TextInput
                 style={styles.input}
                 textAlign="center"
                 secureTextEntry={true}
                 autoFocus={false}
                 textContentType="password"
-              />
+              /> */}
             </View>
+
             <View style={styles.formBlock}>
               <Text style={styles.label}>
                 Повторіть пароль/Confirm password:
               </Text>
-              <TextInput
+              <PasswordInput />
+
+              {/* <TextInput
                 style={styles.input}
                 textAlign="center"
                 secureTextEntry={true}
                 autoFocus={false}
                 textContentType="password"
-              />
+              /> */}
             </View>
           </View>
           <View>
@@ -128,22 +129,11 @@ const styles = StyleSheet.create({
     height: 800,
   },
 
-  pageTitle: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "#111",
-    padding: 10,
-    alignItems: "center",
-  },
   title: {
     fontFamily: "Ukrainian-Bold",
     color: "#eee",
   },
-  logo: {
-    width: 150,
-    height: 35,
-  },
+
   form: {
     fontFamily: "Ukrainian-Bold",
     display: "flex",

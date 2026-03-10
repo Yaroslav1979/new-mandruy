@@ -7,20 +7,23 @@ import {
   Text,
   View,
   StyleProp, // ← потрібно імпортувати
-  ImageStyle, // ← потрібно імпортувати
+  // ImageStyle, // ← потрібно імпортувати
   ViewStyle, // ← потрібно імпортувати
 } from "react-native";
 import { BurgerMenu } from "./burger-menu";
 
 type Props = {
   overlay?: boolean;
-  logoStyle?: StyleProp<ImageStyle>;
+  logoWidth?: number;
+  logoHeight?: number;
+  logoStyle?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
 };
 
 export function HeaderHatContent({
   overlay = false,
-  logoStyle, // ← потрібно отримати з props
+  logoWidth,
+  logoStyle,
   containerStyle, // ← потрібно отримати з props
 }: Props) {
   return (
@@ -33,7 +36,11 @@ export function HeaderHatContent({
     >
       <BurgerMenu />
       <View>
-        <Logo style={[styles.logo, logoStyle]} />
+        <Logo
+          width={logoWidth ?? 220}
+          height={(logoWidth ?? 220) * (50 / 183)}
+          style={logoStyle}
+        />
       </View>
 
       <Pressable

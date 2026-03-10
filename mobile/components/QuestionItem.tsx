@@ -47,21 +47,24 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   number: {
+    fontFamily: "Ukrainian-Regular",
     marginRight: 8,
     fontSize: 16,
   },
   questionText: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 16,
     flexShrink: 1,
   },
   icon: {
-    fontSize: 28,
-    fontWeight: "600",
+    fontSize: 30,
+    fontWeight: "700",
   },
   answer: {
+    fontFamily: "Ukrainian-Regular",
     marginTop: 10,
     paddingLeft: 20,
-    fontSize: 15,
+    fontSize: 16,
     lineHeight: 22,
   },
 });
