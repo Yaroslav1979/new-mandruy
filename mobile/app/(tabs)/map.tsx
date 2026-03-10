@@ -1,8 +1,8 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-
-import { StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-
+import IconMapArrow from "../../assets/svg/IconMapArrow.svg";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 
 export default function LoginScreen() {
@@ -23,7 +23,7 @@ export default function LoginScreen() {
       </View>
 
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>КАРТА</Text>
+        <Text style={styles.title}>ІНТЕРАКТИВНА МАПА</Text>
       </View>
 
       <View style={styles.mapWrapper}>
@@ -46,6 +46,18 @@ export default function LoginScreen() {
           />
         </MapView>
       </View>
+
+      <TouchableOpacity
+        style={styles.googlBtn}
+        onPress={() =>
+          router.push(
+            "https://www.google.com/maps/@50.393338,25.9771985,11.38z?authuser=0&entry=ttu",
+          )
+        }
+      >
+        <Text style={styles.text}>Google Maps</Text>
+        <IconMapArrow />
+      </TouchableOpacity>
     </ParallaxScrollView>
   );
 }
@@ -111,6 +123,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+
   mapWrapper: {
     height: 400,
     marginHorizontal: 20,
@@ -119,5 +132,23 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+
+  googlBtn: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10",
+    marginTop: 20,
+    marginHorizontal: 20,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#111",
+  },
+  text: {
+    fontFamily: "Ukrainian-Regular",
+    color: "#eee",
+    fontSize: 15,
   },
 });

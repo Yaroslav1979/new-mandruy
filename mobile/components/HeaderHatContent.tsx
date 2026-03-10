@@ -23,7 +23,6 @@ type Props = {
 export function HeaderHatContent({
   overlay = false,
   logoWidth,
-  logoHeight,
   logoStyle,
   containerStyle, // ← потрібно отримати з props
 }: Props) {

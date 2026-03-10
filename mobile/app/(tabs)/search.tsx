@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { router } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -204,7 +205,7 @@ export default function LoginScreen() {
             index === places.length - 1;
 
           return (
-            <View
+            <TouchableOpacity
               style={[
                 styles.placeCard,
                 isLandscape && !isLastOdd ? { width: "48%" } : undefined,
@@ -212,6 +213,13 @@ export default function LoginScreen() {
                   ? { width: "48%", alignSelf: "flex-start" }
                   : undefined,
               ]}
+              activeOpacity={0.9}
+              onPress={() =>
+                router.push({
+                  pathname: "/placeDetails",
+                  params: { id: item._id },
+                })
+              }
             >
               {item.imgUrls?.length > 0 && (
                 <Image
@@ -221,7 +229,7 @@ export default function LoginScreen() {
               )}
               <Text style={styles.placeTitle}>{item.title}</Text>
               <Text style={styles.placeRegion}>{item.location?.region}</Text>
-            </View>
+            </TouchableOpacity>
           );
         }}
         ListEmptyComponent={() =>

@@ -1,4 +1,4 @@
-import { ImageBackground, Text } from "react-native";
+import { ImageBackground, Text, View } from "react-native";
 import { HeaderContent } from "./HeaderContent";
 import { HeaderHatContent } from "./HeaderHatContent";
 
@@ -17,17 +17,6 @@ export function HeaderHero({
         resizeMode="cover"
       >
         <HeaderContent overlay />
-        {/* <Text
-          style={{
-            fontFamily: "Ukrainian-Bold",
-            color: "#fff",
-            fontSize: 16,
-            top: 200,
-            left: 20,
-          }}
-        >
-          Відкривай нові місця разом з нами
-        </Text> */}
       </ImageBackground>
     );
   }
@@ -43,17 +32,23 @@ export function HeaderHero({
         logoWidth={200}
         logoStyle={{ marginTop: 40, top: 80 }}
       />
-      <Text
+      <View
         style={{
-          fontFamily: "Ukrainian-Bold",
-          color: "#fff",
-          fontSize: 13,
+          display: "flex",
+          alignItems: "center",
           top: 210,
-          left: 30,
         }}
       >
-        Відкривай нові місця разом з нами!
-      </Text>
+        <Text
+          style={{
+            fontFamily: "Ukrainian-Bold",
+            color: "#fff",
+            fontSize: 15,
+          }}
+        >
+          Відкривай нові місця разом з нами!
+        </Text>
+      </View>
     </ImageBackground>
   );
 }

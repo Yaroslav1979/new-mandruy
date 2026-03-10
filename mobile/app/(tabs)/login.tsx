@@ -13,6 +13,7 @@ import {
   Image,
 } from "react-native";
 import HeaderLog from "../../components/HeaderLog";
+import PasswordInput from "../../components/hide-eyes-input";
 
 export default function LoginScreen() {
   const { width, height } = useWindowDimensions();
@@ -72,13 +73,14 @@ export default function LoginScreen() {
 
             <View style={styles.formBlock}>
               <Text style={styles.label}>Пароль / Password:</Text>
-              <TextInput
+              <PasswordInput />
+              {/* <TextInput
                 style={styles.input}
                 textAlign="center"
                 secureTextEntry={true}
                 autoFocus={false}
                 textContentType="password"
-              />
+              /> */}
               <Pressable>
                 <Text style={styles.text}>Забули пароль?</Text>
               </Pressable>

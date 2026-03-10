@@ -13,6 +13,9 @@ import {
   useWindowDimensions,
 } from "react-native";
 import HeaderLog from "../../components/HeaderLog";
+import PasswordInput from "../../components/hide-eyes-input";
+// import hidePasswordIcon from '../../assets/svg/hide.svg';
+// import showPasswordIcon from '../../assets/svg/eye.svg';
 
 export default function RegistrScreen() {
   const { width, height } = useWindowDimensions();
@@ -69,25 +72,29 @@ export default function RegistrScreen() {
 
             <View style={styles.formBlock}>
               <Text style={styles.label}>Пароль / Password:</Text>
-              <TextInput
+              <PasswordInput />
+              {/* <TextInput
                 style={styles.input}
                 textAlign="center"
                 secureTextEntry={true}
                 autoFocus={false}
                 textContentType="password"
-              />
+              /> */}
             </View>
+
             <View style={styles.formBlock}>
               <Text style={styles.label}>
                 Повторіть пароль/Confirm password:
               </Text>
-              <TextInput
+              <PasswordInput />
+
+              {/* <TextInput
                 style={styles.input}
                 textAlign="center"
                 secureTextEntry={true}
                 autoFocus={false}
                 textContentType="password"
-              />
+              /> */}
             </View>
           </View>
           <View>
