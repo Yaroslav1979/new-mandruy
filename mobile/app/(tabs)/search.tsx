@@ -12,13 +12,14 @@ import {
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { API_URL } from "../../constants/api";
-// import { API_URL } from "../../services/api";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
+import StarRating from "../../components/star-rating";
 
 interface Place {
   _id: string;
   title: string;
   imgUrls: string[];
+  rating: number;
   location?: {
     region?: string;
     city?: string;
@@ -102,6 +103,7 @@ export default function LoginScreen() {
 
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
+  // const [place, setPlace] = useState<any>(null);
 
   const [visibleCount, setVisibleCount] = useState(10);
 
@@ -227,7 +229,18 @@ export default function LoginScreen() {
                   style={styles.placeImage}
                 />
               )}
-              <Text style={styles.placeTitle}>{item.title}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "flex-end",
+                  gap: 10,
+                }}
+              >
+                <Text style={styles.placeTitle}>{item.title}</Text>
+                <StarRating rating={Number(item.rating) || 0} />
+              </View>
+
               <Text style={styles.placeRegion}>{item.location?.region}</Text>
             </TouchableOpacity>
           );

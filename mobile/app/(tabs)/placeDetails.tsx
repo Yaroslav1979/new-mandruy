@@ -13,6 +13,9 @@ import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { API_URL } from "../../constants/api";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
+import categories from "../../constants/categories";
+import PlaceCategory from "../../components/PlaceCategory";
+import StarRating from "../../components/star-rating";
 
 const { width } = Dimensions.get("window");
 
@@ -63,6 +66,7 @@ export default function PlaceDetails() {
       </View>
       <ScrollView style={styles.container}>
         <Text style={styles.title}>{place.title}</Text>
+        <StarRating rating={Number(place.rating) || 0} />
 
         <ScrollView
           horizontal
@@ -108,6 +112,21 @@ export default function PlaceDetails() {
           {place.location?.coordinate}
         </Text>
 
+        <View style={styles.categoriesContainer}>
+          {place.categoryIds?.map((catId: string) => {
+            const category = categories.find((c) => c.id === catId);
+            if (!category) return null;
+
+            return (
+              <PlaceCategory
+                key={category.id}
+                title={category.title}
+                Icon={category.icon}
+              />
+            );
+          })}
+        </View>
+
         <Modal visible={fullscreen} transparent>
           <View style={styles.fullscreenContainer}>
             <Image
@@ -144,12 +163,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: "Ukrainian-Bold",
     fontSize: 22,
     fontWeight: "700",
     marginBottom: 15,
   },
 
   image: {
+    marginTop: 10,
     width: width - 32,
     height: 250,
     borderRadius: 12,
@@ -157,18 +178,20 @@ const styles = StyleSheet.create({
   },
 
   description: {
+    fontFamily: "Ukrainian-Regular",
     marginTop: 20,
     fontSize: 15,
     lineHeight: 22,
   },
 
   info: {
+    fontFamily: "Ukrainian-Regular",
     marginTop: 10,
     fontSize: 14,
   },
 
   bold: {
-    fontWeight: "700",
+    fontFamily: "Ukrainian-Bold",
   },
 
   fullscreenContainer: {
@@ -192,5 +215,36 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  categoriesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 20,
+  },
+
+  categoryItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: "#E7E6ED",
+    backgroundColor: "#fff",
+    gap: 5,
+  },
+
+  categoryIcon: {
+    width: 19,
+    height: 20,
+    marginRight: 10,
+  },
+
+  categoryText: {
+    fontFamily: "Ukrainian-Regular",
+    fontSize: 14,
+    fontWeight: "500",
   },
 });
