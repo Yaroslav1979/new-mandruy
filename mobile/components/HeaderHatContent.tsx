@@ -1,13 +1,13 @@
 import Logo from "../assets/svg/logo.svg";
 import { router } from "expo-router";
-
+import { useAuth } from "@/context/AuthContext";
 import {
   Pressable,
   StyleSheet,
   Text,
   View,
   StyleProp, // ← потрібно імпортувати
-  // ImageStyle, // ← потрібно імпортувати
+  Image, // ← потрібно імпортувати
   ViewStyle, // ← потрібно імпортувати
 } from "react-native";
 import { BurgerMenu } from "./burger-menu";
@@ -26,6 +26,8 @@ export function HeaderHatContent({
   logoStyle,
   containerStyle, // ← потрібно отримати з props
 }: Props) {
+  const { token } = useAuth();
+
   return (
     <View
       style={[
@@ -43,12 +45,28 @@ export function HeaderHatContent({
         />
       </View>
 
-      <Pressable
+      {token ? (
+        <Pressable
+          style={styles.reactBoxAcount}
+          onPress={() => router.push("/login")}
+        >
+          <Image
+            source={require("../assets/images/avatar4.png")}
+            style={{ width: 34, height: 34, borderRadius: 17 }}
+          />
+        </Pressable>
+      ) : (
+        <Pressable onPress={() => router.push("/login")}>
+          <Text>Вхід</Text>
+        </Pressable>
+      )}
+
+      {/* <Pressable
         style={styles.reactBoxAcount}
         onPress={() => router.push("/login")}
       >
         <Text style={styles.reactAcount}>Вхід</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 }

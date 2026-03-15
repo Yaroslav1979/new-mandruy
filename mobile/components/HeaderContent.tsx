@@ -1,22 +1,41 @@
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, Image } from "react-native";
 import { BurgerMenu } from "./burger-menu";
 import { InfoFlags } from "./IhfoFlags";
 import Logo from "../assets/svg/logo.svg";
+import { useAuth } from "@/context/AuthContext";
 
 export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
+  const { token } = useAuth();
+
   return (
     <View style={[styles.container, overlay && styles.overlay]}>
       <View style={styles.box}>
         <BurgerMenu />
 
         <Logo style={styles.logo} />
-        <Pressable
+
+        {token ? (
+          <Pressable onPress={() => router.push("/login")}>
+            <Image
+              source={require("../assets/images/avatar4.png")}
+              style={{ width: 32, height: 32, borderRadius: 16 }}
+            />
+          </Pressable>
+        ) : (
+          <Pressable
+            style={styles.reactBoxAcount}
+            onPress={() => router.push("/login")}
+          >
+            <Text style={styles.reactAcount}>Вхід</Text>
+          </Pressable>
+        )}
+        {/* <Pressable
           style={styles.reactBoxAcount}
           onPress={() => router.push("/login")}
         >
           <Text style={styles.reactAcount}>Вхід</Text>
-        </Pressable>
+        </Pressable> */}
       </View>
 
       <Text style={[styles.title, overlay && styles.overlayText]}>

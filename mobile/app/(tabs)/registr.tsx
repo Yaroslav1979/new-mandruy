@@ -1,7 +1,8 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/api";
-
+import HeaderLog from "../../components/HeaderLog";
+import PasswordInput from "../../components/hide-eyes-input";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -13,10 +14,12 @@ import {
   View,
   useWindowDimensions,
   Modal,
+  Image,
 } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function RegistrScreen() {
   const { width, height } = useWindowDimensions();
@@ -32,8 +35,9 @@ export default function RegistrScreen() {
   const [confirmModal, setConfirmModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
   const [errorModal, setErrorModal] = useState(false);
+  const { login } = useAuth();
 
-  const register = async () => {
+  const handleRegister = async () => {
     if (!name || !email || !password) {
       alert("Заповніть усі поля");
       return;
@@ -87,16 +91,19 @@ export default function RegistrScreen() {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorModal(true);
+        setConfirmModal(false); // Закриваємо модалку вводу
+        setErrorModal(true); // Показуємо помилку
         return;
       }
 
-      await AsyncStorage.setItem("token", data.token);
+      await login(data.token);
 
       setConfirmModal(false);
       setSuccessModal(true);
+      setCode("");
     } catch (error) {
       console.log(error);
+      alert("Помилка підтвердження");
     }
   };
 
@@ -106,52 +113,86 @@ export default function RegistrScreen() {
       headerHeight={35}
       headerImage={<View />}
     >
+      <HeaderLog />
+
+      <View style={{ position: "relative" }}>
+        <Image
+          source={require("../../assets/images/NightMoon.jpg")}
+          style={styles.bgd}
+        />
+      </View>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
         <View style={[styles.form, isLandscape && styles.formLandscape]}>
-          <Text style={styles.title}>Реєстрація</Text>
+          {/* <Text style={styles.title}>Реєстрація</Text> */}
 
-          <TextInput
-            style={styles.input}
-            placeholder="Імʼя"
-            value={name}
-            onChangeText={setName}
-          />
+          <View
+            style={[
+              styles.formWrapper,
+              isLandscape && styles.formWrapperLandscape,
+            ]}
+          >
+            <View style={styles.formBlock}>
+              <Text style={styles.label}>Імʼя/Name:</Text>
+              <TextInput
+                style={styles.input}
+                // placeholder="Імʼя"
+                value={name}
+                onChangeText={setName}
+                textAlign="center"
+                autoFocus={false}
+                // keyboardType="text"
+                autoCapitalize="none"
+                autoCorrect={false}
+                // textContentType="text"
+              />
+            </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-          />
+            <View style={styles.formBlock}>
+              <Text style={styles.label}>Електронна адреса/Email:</Text>
+              <TextInput
+                style={styles.input}
+                // placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
+                textAlign="center"
+                autoFocus={false}
+                autoCorrect={false}
+                textContentType="emailAddress"
+              />
+            </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Пароль"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+            <View style={styles.formBlock}>
+              <Text style={styles.label}>Пароль / Password:</Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Підтвердіть пароль"
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
+              <PasswordInput value={password} onChangeText={setPassword} />
+            </View>
 
-          <TouchableOpacity style={styles.btn} onPress={register}>
-            <Text style={styles.btnText}>Зареєструватися</Text>
-          </TouchableOpacity>
+            <View style={styles.formBlock}>
+              <Text style={styles.label}>
+                Повторіть пароль/Confirm password:
+              </Text>
 
-          <Pressable onPress={() => router.push("/login")}>
-            <Text style={styles.link}>Вже є акаунт? Увійти</Text>
-          </Pressable>
+              <PasswordInput
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+            </View>
+            <View style={styles.formBlock}>
+              <TouchableOpacity style={styles.btn} onPress={handleRegister}>
+                <Text style={styles.btnText}>Зареєструватися</Text>
+              </TouchableOpacity>
+
+              <Pressable onPress={() => router.push("/login")}>
+                <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
       </KeyboardAvoidingView>
 
@@ -187,7 +228,20 @@ export default function RegistrScreen() {
         <Pressable style={styles.modal} onPress={() => router.replace("/")}>
           <View style={styles.modalContent}>
             <Text style={styles.success}>Вітаємо з успішною реєстрацією!</Text>
-            <Text style={styles.link}>Натисніть щоб перейти</Text>
+
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => setSuccessModal(false)}
+            >
+              <Text style={styles.btnText}>Натисніть щоб перейти</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setSuccessModal(false); // Закриваємо перед переходом
+                router.replace("/");
+              }}
+            ></TouchableOpacity>
           </View>
         </Pressable>
       </Modal>
@@ -201,11 +255,19 @@ export default function RegistrScreen() {
               Невірний код. Email не підтверджено
             </Text>
 
-            <TouchableOpacity style={styles.btn} onPress={confirmEmail}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => setErrorModal(false)}
+            >
               <Text style={styles.btnText}>Спробувати ще</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.replace("/")}>
+            <TouchableOpacity
+              onPress={() => {
+                setErrorModal(false); // Закриваємо перед переходом
+                router.replace("/");
+              }}
+            >
               <Text style={styles.link}>На головну</Text>
             </TouchableOpacity>
           </View>
@@ -218,17 +280,45 @@ export default function RegistrScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
     alignItems: "center",
   },
 
+  bgd: {
+    flex: 1,
+    width: "100%",
+    height: 800,
+  },
+
   form: {
-    width: "85%",
-    gap: 15,
-    marginTop: 120,
+    width: "100%",
+    paddingHorizontal: 40,
+    top: 120,
   },
 
   formLandscape: {
-    width: "50%",
+    fontFamily: "Ukrainian-Bold",
+    display: "flex",
+    gap: 20,
+    width: "100%",
+    maxWidth: 800,
+    top: 80,
+  },
+
+  formWrapper: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    gap: 20,
+  },
+
+  formWrapperLandscape: {
+    width: "100%",
+    flexDirection: "column",
+    gap: 20,
+    marginTop: 20,
   },
 
   title: {
@@ -238,27 +328,40 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    borderRadius: 10,
+    width: "100%",
+    borderWidth: 2,
+    borderColor: "#111",
+    height: 60,
+    borderRadius: 30,
+    fontSize: 20,
+    fontFamily: "Ukrainian-Regular",
+    color: "#111",
+    backgroundColor: "#eeeeee90",
   },
 
   btn: {
+    width: "100%",
     backgroundColor: "#9370db",
     padding: 15,
+    borderWidth: 2,
     borderRadius: 30,
     alignItems: "center",
+    height: 60,
   },
 
   btnText: {
+    fontFamily: "Ukrainian-Regular",
     color: "#fff",
-    fontSize: 18,
+    fontSize: 20,
   },
 
   link: {
+    fontFamily: "Ukrainian-Regular",
+    color: "#eee",
+    paddingTop: 5,
+    fontSize: 15,
     textAlign: "center",
-    marginTop: 10,
+    marginTop: 5,
   },
 
   modal: {
@@ -292,6 +395,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "red",
   },
+
+  formBlock: {
+    flex: 1,
+    gap: 20,
+  },
+
+  label: {
+    fontFamily: "Ukrainian-Regular",
+    color: "#eee",
+    fontSize: 15,
+  },
+
+  text: {
+    fontFamily: "Ukrainian-Regular",
+    color: "#eee",
+    fontSize: 15,
+    textAlign: "center",
+  },
 });
 
 // import ParallaxScrollView from "@/components/parallax-scroll-view";
@@ -316,6 +437,7 @@ const styles = StyleSheet.create({
 // export default function RegistrScreen() {
 //   const { width, height } = useWindowDimensions();
 //   const isLandscape = width > height;
+
 //   return (
 //     <ParallaxScrollView
 //       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
