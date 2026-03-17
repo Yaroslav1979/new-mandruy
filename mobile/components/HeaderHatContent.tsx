@@ -6,11 +6,13 @@ import {
   StyleSheet,
   Text,
   View,
-  StyleProp, // ← потрібно імпортувати
-  Image, // ← потрібно імпортувати
-  ViewStyle, // ← потрібно імпортувати
+  StyleProp,
+  Image,
+  ViewStyle,
+  Modal,
 } from "react-native";
 import { BurgerMenu } from "./burger-menu";
+import { useState } from "react";
 
 type Props = {
   overlay?: boolean;
@@ -26,7 +28,15 @@ export function HeaderHatContent({
   logoStyle,
   containerStyle, // ← потрібно отримати з props
 }: Props) {
-  const { token } = useAuth();
+  const { token, user, logout } = useAuth();
+
+  const [profileVisible, setProfileVisible] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    setProfileVisible(false);
+    router.replace("/");
+  };
 
   return (
     <View
@@ -46,10 +56,7 @@ export function HeaderHatContent({
       </View>
 
       {token ? (
-        <Pressable
-          style={styles.reactBoxAcount}
-          onPress={() => router.push("/login")}
-        >
+        <Pressable onPress={() => setProfileVisible(true)}>
           <Image
             source={require("../assets/images/avatar4.png")}
             style={{ width: 34, height: 34, borderRadius: 17 }}
@@ -57,16 +64,30 @@ export function HeaderHatContent({
         </Pressable>
       ) : (
         <Pressable onPress={() => router.push("/login")}>
-          <Text>Вхід</Text>
+          <Text style={styles.reactAcount}>Вхід</Text>
         </Pressable>
       )}
 
-      {/* <Pressable
-        style={styles.reactBoxAcount}
-        onPress={() => router.push("/login")}
-      >
-        <Text style={styles.reactAcount}>Вхід</Text>
-      </Pressable> */}
+      <Modal visible={profileVisible} transparent animationType="fade">
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setProfileVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <Image
+              source={require("../assets/images/avatar4.png")}
+              style={styles.avatarBig}
+            />
+
+            <Text style={styles.name}>{user?.name}</Text>
+            <Text style={styles.email}>{user?.email}</Text>
+
+            <Pressable style={styles.logoutBtn} onPress={handleLogout}>
+              <Text style={styles.logoutText}>Вийти</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
@@ -88,6 +109,7 @@ const styles = StyleSheet.create({
   },
 
   reactBoxAcount: {},
+
   reactAcount: {
     fontFamily: "Ukrainian-Regular",
     color: "#fff",
@@ -105,5 +127,49 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: "center",
     marginBottom: 80,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "#00000090",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalContent: {
+    width: "80%",
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    padding: 25,
+    alignItems: "center",
+    gap: 10,
+  },
+
+  avatarBig: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+  },
+
+  name: {
+    fontSize: 20,
+    fontWeight: "600",
+  },
+
+  email: {
+    fontSize: 16,
+    color: "#666",
+  },
+
+  logoutBtn: {
+    marginTop: 10,
+    backgroundColor: "#9370db",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+
+  logoutText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });

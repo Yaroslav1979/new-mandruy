@@ -17,7 +17,6 @@ import {
   Image,
 } from "react-native";
 
-// import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -144,10 +143,8 @@ export default function RegistrScreen() {
                 onChangeText={setName}
                 textAlign="center"
                 autoFocus={false}
-                // keyboardType="text"
                 autoCapitalize="none"
                 autoCorrect={false}
-                // textContentType="text"
               />
             </View>
 
@@ -322,6 +319,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    fontFamily: "Ukrainian-Bold",
     fontSize: 28,
     textAlign: "center",
     marginBottom: 20,
@@ -380,17 +378,20 @@ const styles = StyleSheet.create({
   },
 
   modalTitle: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 20,
     textAlign: "center",
   },
 
   success: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 22,
     textAlign: "center",
     color: "green",
   },
 
   error: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 20,
     textAlign: "center",
     color: "red",

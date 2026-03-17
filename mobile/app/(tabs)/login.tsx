@@ -107,23 +107,28 @@ export default function LoginScreen() {
                 autoCorrect={false}
                 textContentType="emailAddress"
               />
-              <Pressable onPress={() => router.push("/registr")}>
-                <Text style={styles.text}>Не зареєстровані? Реєстрація</Text>
-              </Pressable>
             </View>
 
             <View style={styles.formBlock}>
               <Text style={styles.label}>Пароль / Password:</Text>
+
               <PasswordInput value={password} onChangeText={setPassword} />
-              <Pressable>
-                <Text style={styles.text}>Забули пароль?</Text>
-              </Pressable>
             </View>
+            <Pressable>
+              <Text style={styles.text}>Забули пароль?</Text>
+            </Pressable>
           </View>
 
           <TouchableOpacity style={styles.btn} onPress={handleLogin}>
             <Text style={styles.btnTxt}> Вхід </Text>
           </TouchableOpacity>
+
+          <Pressable
+            style={{ display: "flex", alignItems: "center" }}
+            onPress={() => router.push("/registr")}
+          >
+            <Text style={styles.text}>Не зареєстровані? Реєстрація</Text>
+          </Pressable>
         </View>
       </KeyboardAvoidingView>
 
@@ -196,10 +201,10 @@ const styles = StyleSheet.create({
     height: 800,
   },
 
-  title: {
-    fontFamily: "Ukrainian-Bold",
-    color: "#eee",
-  },
+  // title: {
+  //   fontFamily: "Ukrainian-Bold",
+  //   color: "#eee",
+  // },
 
   form: {
     width: "100%",
@@ -263,6 +268,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 30,
+    marginBottom: 30,
   },
   btnTxt: {
     fontFamily: "Ukrainian-Regular",
@@ -299,16 +306,19 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   btnText: {
+    fontFamily: "Ukrainian-Regular",
     color: "#fff",
     fontSize: 18,
   },
   success: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 22,
     textAlign: "center",
     color: "green",
   },
 
   error: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 20,
     textAlign: "center",
     color: "red",
