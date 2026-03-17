@@ -1,21 +1,16 @@
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text, View, Image, Modal } from "react-native";
+import { Pressable, StyleSheet, Text, View, Image } from "react-native";
 import { BurgerMenu } from "./burger-menu";
 import { InfoFlags } from "./IhfoFlags";
 import Logo from "../assets/svg/logo.svg";
 import { useAuth } from "@/context/AuthContext";
+import { ProfilesModal } from "@/components/ProfilesModal";
 import { useState } from "react";
 
 export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
-  const { token, user, logout } = useAuth();
+  const { token } = useAuth();
 
   const [profileVisible, setProfileVisible] = useState(false);
-
-  const handleLogout = async () => {
-    await logout();
-    setProfileVisible(false);
-    router.replace("/");
-  };
 
   return (
     <View style={[styles.container, overlay && styles.overlay]}>
@@ -37,27 +32,12 @@ export function HeaderContent({ overlay = false }: { overlay?: boolean }) {
           </Pressable>
         )}
       </View>
-
-      <Modal visible={profileVisible} transparent animationType="fade">
-        <Pressable
-          style={styles.modalOverlay}
-          onPress={() => setProfileVisible(false)}
-        >
-          <View style={styles.modalContent}>
-            <Image
-              source={require("../assets/images/avatar4.png")}
-              style={styles.avatarBig}
-            />
-
-            <Text style={styles.name}>{user?.name}</Text>
-            <Text style={styles.email}>{user?.email}</Text>
-
-            <Pressable style={styles.logoutBtn} onPress={handleLogout}>
-              <Text style={styles.logoutText}>Вийти</Text>
-            </Pressable>
-          </View>
-        </Pressable>
-      </Modal>
+      <View>
+        <ProfilesModal
+          visible={profileVisible}
+          setVisible={setProfileVisible}
+        />
+      </View>
 
       <Text style={[styles.title, overlay && styles.overlayText]}>
         Вітаємо вас на «МАНДРУЙ»
@@ -146,50 +126,5 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Bold",
     color: "#eee",
     fontSize: 20,
-  },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "#00000090",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  modalContent: {
-    width: "80%",
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 25,
-    alignItems: "center",
-    gap: 10,
-  },
-
-  avatarBig: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-  },
-
-  name: {
-    fontSize: 20,
-    fontWeight: "600",
-  },
-
-  email: {
-    fontSize: 16,
-    color: "#666",
-  },
-
-  logoutBtn: {
-    marginTop: 10,
-    backgroundColor: "#9370db",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-
-  logoutText: {
-    color: "#fff",
-    fontSize: 16,
   },
 });
