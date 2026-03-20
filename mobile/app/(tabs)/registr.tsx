@@ -99,11 +99,17 @@ export default function RegistrScreen() {
 
       setConfirmModal(false);
       setSuccessModal(true);
-      setCode("");
     } catch (error) {
       console.log(error);
       alert("Помилка підтвердження");
     }
+  };
+  const resetForm = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setCode("");
   };
 
   return (
@@ -222,23 +228,20 @@ export default function RegistrScreen() {
       {/* SUCCESS MODAL */}
 
       <Modal visible={successModal} transparent animationType="fade">
-        <Pressable style={styles.modal} onPress={() => router.replace("/")}>
+        <Pressable style={styles.modal} onPress={() => setSuccessModal(false)}>
           <View style={styles.modalContent}>
             <Text style={styles.success}>Вітаємо з успішною реєстрацією!</Text>
 
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => setSuccessModal(false)}
+              onPress={() => {
+                setSuccessModal(false);
+                resetForm(); // ✅ очищаємо ВСЕ
+                router.replace("/"); // ✅ перехід
+              }}
             >
               <Text style={styles.btnText}>Натисніть щоб перейти</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                setSuccessModal(false); // Закриваємо перед переходом
-                router.replace("/");
-              }}
-            ></TouchableOpacity>
           </View>
         </Pressable>
       </Modal>

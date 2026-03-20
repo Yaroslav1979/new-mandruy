@@ -26,9 +26,10 @@ export function HeaderHatContent({
   overlay = false,
   logoWidth,
   logoStyle,
-  containerStyle, // ← потрібно отримати з props
+  containerStyle,
 }: Props) {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+  const userInitial = user?.name?.[0]?.toUpperCase() || "";
 
   const [profileVisible, setProfileVisible] = useState(false);
 
@@ -51,10 +52,13 @@ export function HeaderHatContent({
 
       {token ? (
         <Pressable onPress={() => setProfileVisible(true)}>
-          <Image
-            source={require("../assets/images/avatar4.png")}
-            style={{ width: 34, height: 34, borderRadius: 17 }}
-          />
+          {user?.avatar ? (
+            <Image source={{ uri: user.avatar }} style={styles.avatarSmall} />
+          ) : (
+            <View style={styles.avatarCircleSmall}>
+              <Text style={styles.avatarLetterSmall}>{userInitial}</Text>
+            </View>
+          )}
         </Pressable>
       ) : (
         <Pressable onPress={() => router.push("/login")}>
@@ -107,5 +111,25 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: "center",
     marginBottom: 80,
+  },
+  avatarSmall: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+  },
+
+  avatarCircleSmall: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#007bff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  avatarLetterSmall: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

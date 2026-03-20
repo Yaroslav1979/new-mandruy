@@ -29,12 +29,29 @@ export default function LoginScreen() {
   const [successModal, setSuccessModal] = useState(false);
   const { login } = useAuth();
 
+  const [forgotModal, setForgotModal] = useState(false);
+  const [resetModal, setResetModal] = useState(false);
+
+  const [resetCode, setResetCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  // const [loading, setLoading] = useState(false);
+
+  const [emailModal, setEmailModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const resetPasswordForm = () => {
+    setResetCode("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+  };
+
   const handleLogin = async () => {
     if (!email || !password) {
       alert("Заповніть усі поля");
       return;
     }
-    // console.log("LOGIN:", email, password);
+
     try {
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
@@ -48,7 +65,6 @@ export default function LoginScreen() {
       });
 
       const data = await response.json();
-      // console.log("SERVER RESPONSE:", data);
 
       if (!response.ok) {
         setErrorModal(true);
@@ -56,6 +72,8 @@ export default function LoginScreen() {
       }
 
       await login(data.token);
+      setEmail("");
+      setPassword("");
 
       setSuccessModal(true);
     } catch (error) {
@@ -63,6 +81,7 @@ export default function LoginScreen() {
       alert("Помилка з'єднання з сервером");
     }
   };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
@@ -114,7 +133,12 @@ export default function LoginScreen() {
 
               <PasswordInput value={password} onChangeText={setPassword} />
             </View>
-            <Pressable>
+
+            <Pressable
+              onPress={() => {
+                setEmailModal(true);
+              }}
+            >
               <Text style={styles.text}>Забули пароль?</Text>
             </Pressable>
           </View>
@@ -135,23 +159,26 @@ export default function LoginScreen() {
       {/* SUCCESS MODAL */}
 
       <Modal visible={successModal} transparent animationType="fade">
-        <Pressable style={styles.modal} onPress={() => router.replace("/")}>
+        <Pressable style={styles.modal} onPress={() => setSuccessModal(false)}>
           <View style={styles.modalContent}>
-            <Text style={styles.success}>Успішно!</Text>
+            <Text style={styles.success}>{successMessage || "Успішно!"}</Text>
 
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => setSuccessModal(false)}
+              onPress={() => {
+                setSuccessModal(false);
+
+                resetPasswordForm(); // 🔥 очистка reset
+                setEmail("");
+                setPassword("");
+
+                setSuccessMessage("Успішний вхід!");
+
+                router.replace("/");
+              }}
             >
               <Text style={styles.btnText}>Натисніть щоб перейти</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                setSuccessModal(false); // Закриваємо перед переходом
-                router.replace("/");
-              }}
-            ></TouchableOpacity>
           </View>
         </Pressable>
       </Modal>
@@ -161,7 +188,7 @@ export default function LoginScreen() {
       <Modal visible={errorModal} transparent animationType="fade">
         <View style={styles.modal}>
           <View style={styles.modalContent}>
-            <Text style={styles.error}>Невірний email або пароль</Text>
+            <Text style={styles.error}>{"Невірний email або пароль"}</Text>
 
             {/* Змінюємо логіку тут: замість переходу просто закриваємо модалку */}
             <TouchableOpacity
@@ -178,6 +205,158 @@ export default function LoginScreen() {
               }}
             >
               <Text style={styles.link}>На головну</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* EMAIL MODAL */}
+
+      <Modal visible={emailModal} transparent animationType="fade">
+        <View style={styles.modal}>
+          <View style={styles.modalContent}>
+            <Text style={styles.label}>
+              Введіть email для відправлення коду скидання паролю
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+            />
+
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={async () => {
+                if (!email) return;
+
+                try {
+                  await fetch(`${API_URL}/api/auth/forgot-password`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email }),
+                  });
+
+                  setEmailModal(false);
+                  setForgotModal(true);
+                } catch (e) {
+                  console.log(e);
+                }
+              }}
+            >
+              <Text style={styles.btnText}>Відправити код</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setEmailModal(false)}>
+              <Text style={styles.link}>Скасувати</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* CODE MODAL */}
+
+      <Modal visible={forgotModal} transparent animationType="fade">
+        <View style={styles.modal}>
+          <View style={styles.modalContent}>
+            <Text style={styles.label}>
+              Введіть відправлений вам на email код
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Код"
+              value={resetCode}
+              onChangeText={setResetCode}
+              keyboardType="number-pad"
+            />
+
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => {
+                if (!resetCode) return alert("Введіть код");
+
+                setForgotModal(false);
+                setResetModal(true);
+              }}
+            >
+              <Text style={styles.btnText}>Скинути пароль</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setForgotModal(false)}>
+              <Text style={styles.link}>Скасувати</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* NEW PASSWORD MODAL */}
+
+      <Modal visible={resetModal} transparent animationType="fade">
+        <View style={styles.modal}>
+          <View style={styles.modalContent}>
+            <Text style={styles.success}>Пароль успішно скинуто!</Text>
+
+            <Text style={styles.label}>Введіть новий пароль</Text>
+
+            <PasswordInput value={newPassword} onChangeText={setNewPassword} />
+
+            <Text style={styles.label}>Повторіть новий пароль</Text>
+
+            <PasswordInput
+              value={confirmNewPassword}
+              onChangeText={setConfirmNewPassword}
+            />
+
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={async () => {
+                if (!newPassword || !confirmNewPassword) {
+                  return alert("Заповніть всі поля");
+                }
+
+                if (newPassword !== confirmNewPassword) {
+                  return alert("Паролі не співпадають");
+                }
+
+                try {
+                  const response = await fetch(
+                    `${API_URL}/api/auth/reset-password/${resetCode}`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        password: newPassword,
+                      }),
+                    },
+                  );
+
+                  const data = await response.json();
+
+                  if (!response.ok) {
+                    setResetModal(false);
+                    setSuccessMessage(data.message || "Помилка");
+                    setErrorModal(true);
+                    return;
+                  }
+
+                  resetPasswordForm();
+                  setResetModal(false);
+
+                  setSuccessMessage("Пароль успішно змінено!");
+                  setSuccessModal(true);
+                } catch (e) {
+                  console.log(e);
+                  alert("Помилка сервера");
+                }
+              }}
+            >
+              <Text style={styles.btnText}>Змінити пароль</Text>
             </TouchableOpacity>
           </View>
         </View>

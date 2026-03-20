@@ -20,6 +20,8 @@ type Props = {
 
 export function ProfilesModal({ visible, setVisible }: Props) {
   const { user, logout, token } = useAuth();
+  const userInitial = user?.name?.[0]?.toUpperCase() || "";
+
   const [nameModal, setNameModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
   const [avatarModal, setAvatarModal] = useState(false);
@@ -101,10 +103,13 @@ export function ProfilesModal({ visible, setVisible }: Props) {
     <Modal visible={visible} transparent animationType="fade">
       <Pressable style={styles.modalOverlay} onPress={() => setVisible(false)}>
         <View style={styles.modalContent}>
-          <Image
-            source={require("../assets/images/avatar4.png")}
-            style={styles.avatarBig}
-          />
+          {user?.avatar ? (
+            <Image source={{ uri: user.avatar }} style={styles.avatarBig} />
+          ) : (
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarLetter}>{userInitial}</Text>
+            </View>
+          )}
 
           <Text style={styles.name}>{user?.name}</Text>
           <Text style={styles.email}>{user?.email}</Text>
@@ -145,8 +150,12 @@ export function ProfilesModal({ visible, setVisible }: Props) {
               <Text>Вибрати фото</Text>
             </Pressable>
 
-            {avatar && (
+            {avatar ? (
               <Image source={{ uri: avatar }} style={styles.avatarBig} />
+            ) : (
+              <View style={styles.avatarCircle}>
+                <Text style={styles.avatarLetter}>{userInitial}</Text>
+              </View>
             )}
           </View>
         </View>
@@ -268,5 +277,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#9370db",
     padding: 10,
     borderRadius: 8,
+  },
+  avatarCircle: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: "#007bff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  avatarLetter: {
+    color: "#fff",
+    fontSize: 32,
+    fontWeight: "bold",
   },
 });
