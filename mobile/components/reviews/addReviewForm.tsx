@@ -43,6 +43,7 @@ const AddReviewForm: React.FC<Props> = ({
       });
 
       onAdded(); // Викликає fetchPlace у батька
+      onClose();
     } catch (e) {
       console.error("Помилка:", e);
       alert("Не вдалося надіслати відгук");

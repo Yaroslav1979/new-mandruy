@@ -91,7 +91,9 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 // GET /api/places — отримати всі місця
 router.get("/", async (req, res) => {
   try {
-    const places = await Place.find({ isApproved: false }).sort({ createdAt: -1 });
+    const places = await Place.find({ isApproved: false }).sort({
+      createdAt: -1,
+    });
     res.json(places);
   } catch (err) {
     console.error("❌ Помилка при отриманні місць:", err);
@@ -102,7 +104,9 @@ router.get("/", async (req, res) => {
 
 router.get("/approved", async (req, res) => {
   try {
-    const approvedPlaces = await Place.find({ isApproved: true }).sort({ createdAt: -1 });
+    const approvedPlaces = await Place.find({ isApproved: true }).sort({
+      createdAt: -1,
+    });
     res.json(approvedPlaces);
   } catch (err) {
     res.status(500).json({ message: "Помилка при отриманні місць" });
@@ -165,7 +169,9 @@ router.get("/:_id", getPlaceById);
 router.patch("/:id", async (req, res) => {
   try {
     const placeId = req.params.id;
-    const updated = await Place.findByIdAndUpdate(placeId, req.body, { new: true });
+    const updated = await Place.findByIdAndUpdate(placeId, req.body, {
+      new: true,
+    });
     res.json(updated);
   } catch (err) {
     res.status(500).json({ message: "Помилка при оновленні місця" });
@@ -186,9 +192,6 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Помилка при видаленні місця" });
   }
 });
-
 //---------------------------------------------------------------------
-
-
 
 module.exports = router;
