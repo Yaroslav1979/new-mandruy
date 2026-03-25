@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: any) => {
 
   useEffect(() => {
     initAuth();
-  });
+  }, []);
 
   const initAuth = async () => {
     const storedToken = await AsyncStorage.getItem("token");
