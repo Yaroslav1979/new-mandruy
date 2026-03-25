@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 import {
   View,
   Text,
@@ -8,6 +9,7 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
+
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,28 +18,25 @@ import { HeaderHatContent } from "../../components/HeaderHatContent";
 import categories from "../../constants/categories";
 import PlaceCategory from "../../components/PlaceCategory";
 import StarRating from "../../components/star-rating";
+import Reviews from "../../components/reviews/reviewItem/reviewsAll";
+import { Review } from "../../components/reviews/reviewItem/typesReviews";
 
 const { width } = Dimensions.get("window");
 
 export default function PlaceDetails() {
   const { id } = useLocalSearchParams<{ id?: string }>();
+  const placeId = Array.isArray(id) ? id[0] : id;
 
   const [place, setPlace] = useState<any>(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [reviewsList, setReviewsList] = useState<Review[]>([]);
 
-  useEffect(
-    () => {
-      if (id) {
-        fetchPlace();
-      }
-    },
-    //  [id]
-  );
+  const { token, loading } = useAuth();
 
   const fetchPlace = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/places/${id}`);
+      const response = await fetch(`${API_URL}/api/places/${placeId}`);
       const data = await response.json();
       setPlace(data);
     } catch (error) {
@@ -45,7 +44,26 @@ export default function PlaceDetails() {
     }
   };
 
-  if (!place) {
+  const fetchReviews = async () => {
+    if (!id) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/places/${placeId}/reviews`);
+      const data = await res.json();
+      setReviewsList(Array.isArray(data) ? data : []);
+    } catch (e) {
+      console.error("Помилка відгуків:", e);
+    }
+  };
+
+  useEffect(() => {
+    if (placeId) {
+      fetchPlace();
+      fetchReviews();
+    }
+  }, [id]);
+
+  if (loading || !place) {
     return (
       <View style={styles.center}>
         <Text>Завантаження...</Text>
@@ -126,6 +144,17 @@ export default function PlaceDetails() {
             );
           })}
         </View>
+
+        <Reviews
+          reviews={reviewsList}
+          placeId={place._id}
+          onReviewAdded={() => {
+            fetchReviews();
+            fetchPlace();
+          }}
+          isAuthenticated={!!token}
+          totalRating={Number(place.rating) || 0}
+        />
 
         <Modal visible={fullscreen} transparent>
           <View style={styles.fullscreenContainer}>

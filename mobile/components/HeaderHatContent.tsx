@@ -1,16 +1,18 @@
 import Logo from "../assets/svg/logo.svg";
 import { router } from "expo-router";
-
+import { useAuth } from "@/context/AuthContext";
 import {
   Pressable,
   StyleSheet,
   Text,
   View,
-  StyleProp, // ← потрібно імпортувати
-  // ImageStyle, // ← потрібно імпортувати
-  ViewStyle, // ← потрібно імпортувати
+  StyleProp,
+  Image,
+  ViewStyle,
 } from "react-native";
 import { BurgerMenu } from "./burger-menu";
+import { ProfilesModal } from "@/components/ProfilesModal";
+import { useState } from "react";
 
 type Props = {
   overlay?: boolean;
@@ -24,8 +26,13 @@ export function HeaderHatContent({
   overlay = false,
   logoWidth,
   logoStyle,
-  containerStyle, // ← потрібно отримати з props
+  containerStyle,
 }: Props) {
+  const { token, user } = useAuth();
+  const userInitial = user?.name?.[0]?.toUpperCase() || "";
+
+  const [profileVisible, setProfileVisible] = useState(false);
+
   return (
     <View
       style={[
@@ -43,12 +50,28 @@ export function HeaderHatContent({
         />
       </View>
 
-      <Pressable
-        style={styles.reactBoxAcount}
-        onPress={() => router.push("/login")}
-      >
-        <Text style={styles.reactAcount}>Вхід</Text>
-      </Pressable>
+      {token ? (
+        <Pressable onPress={() => setProfileVisible(true)}>
+          {user?.avatar ? (
+            <Image source={{ uri: user.avatar }} style={styles.avatarSmall} />
+          ) : (
+            <View style={styles.avatarCircleSmall}>
+              <Text style={styles.avatarLetterSmall}>{userInitial}</Text>
+            </View>
+          )}
+        </Pressable>
+      ) : (
+        <Pressable onPress={() => router.push("/login")}>
+          <Text style={styles.reactAcount}>Вхід</Text>
+        </Pressable>
+      )}
+
+      <View>
+        <ProfilesModal
+          visible={profileVisible}
+          setVisible={setProfileVisible}
+        />
+      </View>
     </View>
   );
 }
@@ -70,6 +93,7 @@ const styles = StyleSheet.create({
   },
 
   reactBoxAcount: {},
+
   reactAcount: {
     fontFamily: "Ukrainian-Regular",
     color: "#fff",
@@ -87,5 +111,25 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: "center",
     marginBottom: 80,
+  },
+  avatarSmall: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+  },
+
+  avatarCircleSmall: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#007bff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  avatarLetterSmall: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
