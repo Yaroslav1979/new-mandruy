@@ -1,9 +1,10 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-
+import { useAuth } from "../context/AuthContext";
 export function BurgerMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { token } = useAuth();
   return (
     <View
       style={{
@@ -40,6 +41,17 @@ export function BurgerMenu() {
           >
             <Text style={styles.dropdownItem}>Пошук місць</Text>
           </Pressable>
+
+          {token && (
+            <Pressable
+              onPress={() => {
+                setMenuOpen(false);
+                router.push("/addPlace");
+              }}
+            >
+              <Text style={styles.dropdownItem}>Додати місце</Text>
+            </Pressable>
+          )}
 
           <Pressable
             onPress={() => {
