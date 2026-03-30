@@ -157,6 +157,9 @@ export default function AddPlaceScreen() {
       </View>
 
       <ScrollView style={styles.container}>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>ДОДАТИ МІСЦЕ</Text>
+        </View>
         {/* 📸 ФОТО */}
         <View style={styles.uploadBox}>
           <Pressable onPress={pickImages} style={styles.uploadArea}>
@@ -226,6 +229,7 @@ export default function AddPlaceScreen() {
               <Text
                 style={{
                   color: categoryIds.includes(cat.id) ? "#fff" : "#000",
+                  fontFamily: "Ukrainian-Regular",
                 }}
               >
                 {cat.title}
@@ -245,7 +249,9 @@ export default function AddPlaceScreen() {
 
         {/* 🚀 SUBMIT */}
         <Pressable style={styles.submit} onPress={handleSubmit}>
-          <Text style={{ color: "#fff" }}>Надіслати</Text>
+          <Text style={{ color: "#fff", fontFamily: "Ukrainian-Regular" }}>
+            Надіслати
+          </Text>
         </Pressable>
       </ScrollView>
     </ParallaxScrollView>
@@ -268,6 +274,7 @@ const styles = StyleSheet.create({
   },
 
   uploadText: {
+    fontFamily: "Ukrainian-Regular",
     textAlign: "center",
     marginBottom: 10,
   },
@@ -307,6 +314,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    fontFamily: "Ukrainian-Regular",
     borderWidth: 1,
     borderColor: "#ccc",
     marginBottom: 10,
@@ -315,6 +323,7 @@ const styles = StyleSheet.create({
   },
 
   textArea: {
+    fontFamily: "Ukrainian-Regular",
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 10,
@@ -332,6 +341,7 @@ const styles = StyleSheet.create({
   },
 
   category: {
+    fontFamily: "Ukrainian-Regular",
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 10,
@@ -339,17 +349,20 @@ const styles = StyleSheet.create({
   },
 
   categorySelected: {
+    fontFamily: "Ukrainian-Regular",
     backgroundColor: "#000",
   },
 
   submit: {
+    fontFamily: "Ukrainian-Regular",
     backgroundColor: "#000",
     padding: 15,
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 30,
   },
 
   header: {
+    fontFamily: "Ukrainian-Regular",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
@@ -367,46 +380,46 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 
-  textWrapper: {
-    // position: "absolute",
-    top: 100,
-    marginHorizontal: 20,
-  },
+  // textWrapper: {
 
-  text: {
-    fontFamily: "Ukrainian-Regular",
-    color: "#eee",
-    fontSize: 15,
-  },
+  //   top: 100,
+  //   marginHorizontal: 20,
+  // },
 
-  form: {
-    width: "100%",
-    paddingHorizontal: 40,
-    top: 20,
-  },
+  // text: {
+  //   fontFamily: "Ukrainian-Regular",
+  //   color: "#eee",
+  //   fontSize: 15,
+  // },
 
-  formLandscape: {
-    fontFamily: "Ukrainian-Bold",
-    display: "flex",
-    gap: 20,
-    width: "100%",
-    maxWidth: 800,
-    top: 80,
-  },
+  // form: {
+  //   width: "100%",
+  //   paddingHorizontal: 40,
+  //   top: 20,
+  // },
 
-  formWrapper: {
-    display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    gap: 20,
-  },
+  // formLandscape: {
+  //   fontFamily: "Ukrainian-Bold",
+  //   display: "flex",
+  //   gap: 20,
+  //   width: "100%",
+  //   maxWidth: 800,
+  //   top: 80,
+  // },
 
-  formWrapperLandscape: {
-    width: "100%",
-    flexDirection: "column",
-    gap: 20,
-    marginTop: 20,
-  },
+  // formWrapper: {
+  //   display: "flex",
+  //   width: "100%",
+  //   flexDirection: "column",
+  //   gap: 20,
+  // },
+
+  // formWrapperLandscape: {
+  //   width: "100%",
+  //   flexDirection: "column",
+  //   gap: 20,
+  //   marginTop: 20,
+  // },
 
   // textArea: {
   //   height: 100,
@@ -425,30 +438,30 @@ const styles = StyleSheet.create({
   //   backgroundColor: "#eeeeee90",
   // },
 
-  btn: {
-    width: "100%",
-    backgroundColor: "#9370db",
-    padding: 15,
-    borderWidth: 2,
-    borderRadius: 30,
-    alignItems: "center",
-    height: 60,
-  },
+  // btn: {
+  //   width: "100%",
+  //   backgroundColor: "#9370db",
+  //   padding: 15,
+  //   borderWidth: 2,
+  //   borderRadius: 30,
+  //   alignItems: "center",
+  //   height: 60,
+  // },
 
-  btnText: {
-    fontFamily: "Ukrainian-Regular",
-    color: "#fff",
-    fontSize: 20,
-  },
+  // btnText: {
+  //   fontFamily: "Ukrainian-Regular",
+  //   color: "#fff",
+  //   fontSize: 20,
+  // },
 
-  link: {
-    fontFamily: "Ukrainian-Regular",
-    color: "#eee",
-    paddingTop: 5,
-    fontSize: 15,
-    textAlign: "center",
-    marginTop: 5,
-  },
+  // link: {
+  //   fontFamily: "Ukrainian-Regular",
+  //   color: "#eee",
+  //   paddingTop: 5,
+  //   fontSize: 15,
+  //   textAlign: "center",
+  //   marginTop: 5,
+  // },
 
   modal: {
     flex: 1,
