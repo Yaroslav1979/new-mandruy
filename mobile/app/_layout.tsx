@@ -1,4 +1,5 @@
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { View } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
@@ -20,8 +21,6 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  // console.log(AuthProvider);
-  // console.log(Auth);
   const colorScheme = useColorScheme();
 
   const [fontsLoaded, fontError] = Font.useFonts({
@@ -43,17 +42,21 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", title: "Modal" }}
-          />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </AuthProvider>
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <AuthProvider>
+        <ThemeProvider
+          value={colorScheme === "light" ? DarkTheme : DefaultTheme}
+        >
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="modal"
+              options={{ presentation: "modal", title: "Modal" }}
+            />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </AuthProvider>
+    </View>
   );
 }

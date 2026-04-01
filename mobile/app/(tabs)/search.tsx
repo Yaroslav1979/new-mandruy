@@ -20,16 +20,18 @@ interface Place {
   title: string;
   imgUrls: string[];
   rating: number;
+  categoryIds?: string[];
+  createdAt?: string;
   location?: {
     region?: string;
     city?: string;
-    coordinate?: any;
   };
 }
 
 export default function LoginScreen() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchPlaces();
@@ -107,6 +109,40 @@ export default function LoginScreen() {
 
   const [visibleCount, setVisibleCount] = useState(10);
 
+  const processedPlaces = places
+    // 🔎 1. Пошук по назві
+    .filter((place) =>
+      place.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+
+    // 🏷️ 2. Фільтр по категорії
+    .filter((place) =>
+      category === "Без категорії"
+        ? true
+        : place.categoryIds?.includes(category),
+    )
+
+    // 🌍 3. Фільтр по області
+    .filter((place) =>
+      region === "Вся Україна" ? true : place.location?.region === region,
+    )
+
+    // 🔃 4. Сортування
+    .sort((a, b) => {
+      if (sortedby === "За назвою") {
+        return a.title.localeCompare(b.title);
+      }
+
+      if (sortedby === "За датою") {
+        return (
+          new Date(b.createdAt || "").getTime() -
+          new Date(a.createdAt || "").getTime()
+        );
+      }
+
+      return 0; // За замовчуванням
+    });
+
   return (
     <View style={{ flex: 1, marginTop: 30 }}>
       <View style={styles.header}>
@@ -120,7 +156,7 @@ export default function LoginScreen() {
       </View>
 
       <FlatList<Place>
-        data={places.slice(0, visibleCount)}
+        data={processedPlaces.slice(0, visibleCount)}
         style={styles.bgd}
         key={isLandscape ? "landscape" : "portrait"}
         numColumns={isLandscape ? 2 : 1}
@@ -141,15 +177,22 @@ export default function LoginScreen() {
                   style={styles.input}
                   textAlign="center"
                   placeholder="Введіть назву"
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
                 />
                 <Image
                   source={require("../../assets/images/iconSearch.png")}
                   style={styles.searchBtn}
                 />
               </View>
-              {/* <Text style={styles.subtitle}>Розширений пошук:</Text> */}
+
               <View style={styles.pickerWrapper}>
-                <View style={{ width: "33%", zIndex: 3000, gap: 5 }}>
+                <View
+                  style={{
+                    width: "33%",
+                    gap: 5,
+                  }}
+                >
                   <Text style={styles.label}>Категорія:</Text>
                   <DropDownPicker
                     open={categoryOpen}
@@ -161,11 +204,17 @@ export default function LoginScreen() {
                     placeholder="Категорія"
                     style={styles.dropdown}
                     textStyle={styles.dropdownText}
+                    listMode="SCROLLVIEW"
                     dropDownContainerStyle={styles.dropdownContainer}
                   />
                 </View>
 
-                <View style={{ width: "33%", zIndex: 2000, gap: 5 }}>
+                <View
+                  style={{
+                    width: "33%",
+                    gap: 5,
+                  }}
+                >
                   <Text style={styles.label}>Область:</Text>
                   <DropDownPicker
                     open={regionOpen}
@@ -177,11 +226,17 @@ export default function LoginScreen() {
                     placeholder="Область"
                     style={styles.dropdown}
                     textStyle={styles.dropdownText}
+                    listMode="SCROLLVIEW"
                     dropDownContainerStyle={styles.dropdownContainer}
                   />
                 </View>
 
-                <View style={{ width: "33%", zIndex: 1000, gap: 5 }}>
+                <View
+                  style={{
+                    width: "33%",
+                    gap: 5,
+                  }}
+                >
                   <Text style={styles.label}>Сортувати:</Text>
                   <DropDownPicker
                     open={sortedbyOpen}
@@ -193,6 +248,7 @@ export default function LoginScreen() {
                     placeholder="Сортувати"
                     style={styles.dropdown}
                     textStyle={styles.dropdownText}
+                    listMode="SCROLLVIEW"
                     dropDownContainerStyle={styles.dropdownContainer}
                   />
                 </View>
@@ -253,7 +309,7 @@ export default function LoginScreen() {
           ) : null
         }
         ListFooterComponent={
-          visibleCount < places.length ? (
+          visibleCount < processedPlaces.length ? (
             <TouchableOpacity
               style={styles.loadMoreBtn}
               onPress={() => setVisibleCount((prev) => prev + 10)}
@@ -273,11 +329,10 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 20,
   },
-
   bgd: {
     backgroundColor: "#eee",
+    zIndex: 0,
   },
-
   titleWrapper: {
     alignItems: "center",
     marginTop: 20,
@@ -287,7 +342,6 @@ const styles = StyleSheet.create({
     color: "#111",
     fontSize: 20,
   },
-
   form: {
     fontFamily: "Ukrainian-Bold",
     display: "flex",
@@ -301,7 +355,6 @@ const styles = StyleSheet.create({
     gap: 10,
     justifyContent: "center",
     alignItems: "center",
-
     marginBottom: 20,
   },
   label: {
@@ -329,9 +382,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 5,
-    // zIndex: 100,
   },
-
   searchBtn: {
     width: 50,
     height: 50,
@@ -345,18 +396,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     minHeight: 45,
   },
-
   dropdownContainer: {
+    backgroundColor: "#fff",
     borderColor: "#333",
-    // marginHorizontal: 20,
+    maxHeight: 200,
   },
-
   dropdownText: {
     fontFamily: "Ukrainian-Regular",
     fontSize: 10,
     color: "#111",
   },
-
   placeCard: {
     backgroundColor: "#fff",
     padding: 12,
@@ -367,19 +416,16 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     zIndex: -1,
   },
-
   placeImage: {
     width: "100%",
     aspectRatio: 16 / 9, // або 4/3 якщо фото інші
     borderRadius: 10,
   },
-
   placeTitle: {
     fontSize: 18,
     fontFamily: "Ukrainian-Bold",
     marginTop: 8,
   },
-
   placeRegion: {
     fontSize: 14,
     color: "#555",
