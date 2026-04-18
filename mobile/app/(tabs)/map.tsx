@@ -1,11 +1,46 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import IconMapArrow from "../../assets/svg/IconMapArrow.svg";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
+import { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+import { API_URL } from "@/constants/api";
 
-export default function LoginScreen() {
+export default function MapScreen() {
+  const [places, setPlaces] = useState([]);
+
+  const fetchPlaces = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/places`);
+      setPlaces(res.data);
+    } catch (e) {
+      console.log("Помилка завантаження місць:", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPlaces();
+    }, []),
+  );
+
+  // 🔹 парсинг координат
+  const parseCoordinate = (coordString: string) => {
+    if (!coordString) return null;
+
+    const [lat, lng] = coordString.split(",").map((c) => parseFloat(c.trim()));
+
+    if (isNaN(lat) || isNaN(lng)) return null;
+
+    return { latitude: lat, longitude: lng };
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
@@ -36,6 +71,29 @@ export default function LoginScreen() {
             longitudeDelta: 0.05,
           }}
         >
+          {/* 🔹 ДИНАМІЧНІ МІТКИ */}
+          {places.map((place: any) => {
+            const coords = parseCoordinate(place.location?.coordinate);
+
+            if (!coords) return null;
+
+            return (
+              <Marker
+                key={place._id}
+                coordinate={coords}
+                title={place.title}
+                description={place.descr}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(tabs)/placeDetails",
+                    params: { id: place._id },
+                  })
+                }
+              />
+            );
+          })}
+
+          {/* 🔹 СТАТИЧНА (можеш прибрати) */}
           <Marker
             coordinate={{
               latitude: 49.8397,

@@ -11,6 +11,7 @@ import {
   StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { MapPickerModal } from "../../components/MapPickerModal";
 import { useAuth } from "../../context/AuthContext";
 import { API_URL } from "@/constants/api";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -30,6 +31,8 @@ export default function AddPlaceScreen() {
 
   const [title, setTitle] = useState("");
   const [coordinate, setCoordinate] = useState("");
+  const [mapVisible, setMapVisible] = useState(false);
+
   const [region, setRegion] = useState("");
   const [city, setCity] = useState("");
   const [descr, setDescr] = useState("");
@@ -196,12 +199,25 @@ export default function AddPlaceScreen() {
           value={title}
           onChangeText={setTitle}
         />
+
         <TextInput
-          placeholder="Координати"
+          placeholder="Координати (наприклад: 49.839700, 24.029700)"
           style={styles.input}
           value={coordinate}
           onChangeText={setCoordinate}
         />
+
+        <Pressable style={styles.mapButton} onPress={() => setMapVisible(true)}>
+          <Text style={styles.mapButtonText}>Вибрати на мапі</Text>
+        </Pressable>
+
+        <MapPickerModal
+          visible={mapVisible}
+          onClose={() => setMapVisible(false)}
+          onSelect={(coord) => setCoordinate(coord)}
+          initialCoordinate={coordinate}
+        />
+
         <TextInput
           placeholder="Область"
           style={styles.input}
@@ -424,5 +440,16 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
     fontSize: 15,
+  },
+  mapButton: {
+    backgroundColor: "#111",
+    padding: 12,
+    borderRadius: 25,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  mapButtonText: {
+    color: "#fff",
+    fontFamily: "Ukrainian-Regular",
   },
 });
