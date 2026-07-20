@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
+    marginTop: 50,
   },
 
   logo: {

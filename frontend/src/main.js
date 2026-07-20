@@ -1,9 +1,9 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import './assets/scss/index.scss';
-import router from './router';
-import Notifications from '@kyvg/vue3-notification';
-import store from './store';
+import { createApp } from "vue";
+import App from "./App.vue";
+import "./assets/scss/index.scss";
+import router from "./router.js";
+import Notifications from "@kyvg/vue3-notification";
+import store from "./store/index.js";
 
 const app = createApp(App);
 
@@ -11,8 +11,6 @@ app.use(router);
 app.use(Notifications);
 app.use(store); // Реєструємо store
 
-store.dispatch('auth/fetchUser'); // ✨ Отримуємо юзера по токену
+store.dispatch("auth/fetchUser"); // ✨ Отримуємо юзера по токену
 
-app.mount('#app');
-
-
+app.mount("#app");

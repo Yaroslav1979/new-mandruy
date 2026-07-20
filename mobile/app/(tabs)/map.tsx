@@ -1,4 +1,4 @@
-import ParallaxScrollView from "@/components/parallax-scroll-view";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router, useFocusEffect } from "expo-router";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -7,6 +7,7 @@ import { HeaderHatContent } from "../../components/HeaderHatContent";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { API_URL } from "@/constants/api";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function MapScreen() {
   const [places, setPlaces] = useState([]);
@@ -42,11 +43,12 @@ export default function MapScreen() {
   };
 
   return (
-    <ParallaxScrollView
+    <PortalProvider>
+      {/* <ParallaxScrollView
       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
       headerHeight={50}
       headerImage={<View />}
-    >
+    > */}
       <View style={styles.header}>
         <HeaderHatContent
           containerStyle={{
@@ -116,7 +118,8 @@ export default function MapScreen() {
         <Text style={styles.text}>Google Maps</Text>
         <IconMapArrow />
       </TouchableOpacity>
-    </ParallaxScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 
@@ -128,6 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
+    top: 50,
   },
   titleWrapper: {
     alignItems: "center",

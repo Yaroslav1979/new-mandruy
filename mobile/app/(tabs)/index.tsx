@@ -2,7 +2,7 @@ import { HeaderHero } from "@/components/HeaderHero";
 import { router } from "expo-router";
 import { InfoFlags } from "@/components/IhfoFlags";
 import { PopularQuestions } from "@/components/PopularQuestions";
-import ParallaxScrollView from "@/components/parallax-scroll-view";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import ArrowMore from "../../assets/svg/arrow-more.svg";
 import {
   ImageBackground,
@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
@@ -19,7 +20,8 @@ export default function HomeScreen() {
   const currentHeaderHeight = isLandscape ? height : 250;
 
   return (
-    <ParallaxScrollView
+    <PortalProvider>
+      {/* <ParallaxScrollView
       headerBackgroundColor={{ light: "#d7b8b8ff", dark: "#1D3D47" }}
       headerHeight={currentHeaderHeight} // Передає мо висоту сюди!
       headerImage={
@@ -28,7 +30,12 @@ export default function HomeScreen() {
           screenHeight={currentHeaderHeight}
         />
       }
-    >
+    > */}
+
+      <HeaderHero
+        isLandscape={isLandscape}
+        screenHeight={currentHeaderHeight}
+      />
       {!isLandscape && (
         <ImageBackground
           source={require("../../assets/images/Map.jpg")}
@@ -64,7 +71,8 @@ export default function HomeScreen() {
       <View>
         <PopularQuestions />
       </View>
-    </ParallaxScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 const styles = StyleSheet.create({

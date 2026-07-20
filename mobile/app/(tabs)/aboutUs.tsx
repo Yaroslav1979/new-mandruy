@@ -1,4 +1,4 @@
-import ParallaxScrollView from "@/components/parallax-scroll-view";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import IconMail from "../../assets/svg/iconMail.svg";
 import IconSite from "../../assets/svg/iconSite.svg";
 import IconTele from "../../assets/svg/iconTele.svg";
@@ -6,14 +6,16 @@ import IconTele from "../../assets/svg/iconTele.svg";
 import { StyleSheet, Text, Image, Pressable, View } from "react-native";
 
 import { HeaderHatContent } from "../../components/HeaderHatContent";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function LoginScreen() {
   return (
-    <ParallaxScrollView
+    <PortalProvider>
+      {/* <ParallaxScrollView
       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
       headerHeight={50}
       headerImage={<View />}
-    >
+    > */}
       <View style={styles.header}>
         <HeaderHatContent
           containerStyle={{
@@ -23,25 +25,18 @@ export default function LoginScreen() {
           logoWidth={150}
         />
       </View>
-      <View style={styles.titleWrapper}>
+      {/* <View style={styles.titleWrapper}>
         <Text style={styles.title}>ПРО НАС</Text>
-      </View>
+      </View> */}
 
       <View style={styles.imgWrapper}>
         <Image
           source={require("../../assets/images/landscape.jpeg")}
           style={styles.img}
         />
-        <View style={styles.txtWrapper}>
-          <Text style={styles.txt}>
-            Отримуй актуальні новини про сервіс “Мандруй” та ділись із друзями.
-            Дякуємо за підтримку. Якщо ти маєш якісь пропозиції чи зауваження
-            щодо функціоналу або роботи сайту, тоді напиши нам.
-          </Text>
-        </View>
 
         <View style={styles.contacts}>
-          <Text style={styles.title}>Контакти</Text>
+          <Text style={styles.title}>КОНТАКТИ</Text>
         </View>
 
         <View style={styles.social}>
@@ -64,8 +59,16 @@ export default function LoginScreen() {
             </Text>
           </Pressable>
         </View>
+        <View style={styles.txtWrapper}>
+          <Text style={styles.txt}>
+            Отримуй актуальні новини про сервіс “Мандруй” та ділись із друзями.
+            Дякуємо за підтримку. Якщо ти маєш якісь пропозиції чи зауваження
+            щодо функціоналу або роботи сайту, тоді напиши нам.
+          </Text>
+        </View>
       </View>
-    </ParallaxScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 
@@ -77,6 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
+    top: 50,
   },
 
   titleWrapper: {
@@ -92,39 +96,41 @@ const styles = StyleSheet.create({
 
   imgWrapper: {
     position: "relative",
+    top: 50,
   },
 
   img: {
     width: "100%",
-    flex: 1,
+
+    // flex: 1,
   },
   txtWrapper: {
     position: "absolute",
-    top: 100,
+    top: 350,
     marginHorizontal: 20,
   },
 
   txt: {
-    color: "#111",
     fontFamily: "Ukrainian-Regular",
-    fontSize: 20,
     fontStyle: "normal",
+    color: "#111",
+    fontSize: 20,
     fontWeight: 400,
     lineHeight: 35,
   },
 
   contacts: {
-    position: "absolute",
     display: "flex",
+    position: "absolute",
     left: 120,
-    top: 450,
+    top: 60,
   },
 
   social: {
-    position: "absolute",
-    top: 500,
-    left: 30,
     display: "flex",
+    position: "absolute",
+    top: 120,
+    left: 30,
     gap: 30,
   },
 

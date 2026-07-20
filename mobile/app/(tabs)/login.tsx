@@ -1,4 +1,4 @@
-import ParallaxScrollView from "@/components/parallax-scroll-view";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/api";
 import HeaderLog from "../../components/HeaderLog";
@@ -19,6 +19,7 @@ import {
 
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function LoginScreen() {
   const { width, height } = useWindowDimensions();
@@ -83,11 +84,13 @@ export default function LoginScreen() {
   };
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-      headerHeight={35}
-      headerImage={<View />}
-    >
+    <PortalProvider>
+      {/* <ParallaxScrollView
+        headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
+        headerHeight={35}
+        headerImage={<View />}
+      > */}
+
       <HeaderLog />
 
       <View style={{ position: "relative" }}>
@@ -114,7 +117,7 @@ export default function LoginScreen() {
                 isLandscape && styles.formBlockLandscape,
               ]}
             >
-              <Text style={styles.label}>Електронна пошта / Email:</Text>
+              <Text style={styles.label}>Електронна адреса:</Text>
               <TextInput
                 style={styles.input}
                 value={email}
@@ -129,7 +132,7 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.formBlock}>
-              <Text style={styles.label}>Пароль / Password:</Text>
+              <Text style={styles.label}>Пароль:</Text>
 
               <PasswordInput value={password} onChangeText={setPassword} />
             </View>
@@ -144,7 +147,7 @@ export default function LoginScreen() {
           </View>
 
           <TouchableOpacity style={styles.btn} onPress={handleLogin}>
-            <Text style={styles.btnTxt}> Вхід </Text>
+            <Text style={styles.btnText}> Вхід </Text>
           </TouchableOpacity>
 
           <Pressable
@@ -215,13 +218,14 @@ export default function LoginScreen() {
       <Modal visible={emailModal} transparent animationType="fade">
         <View style={styles.modal}>
           <View style={styles.modalContent}>
-            <Text style={styles.label}>
+            <Text style={styles.modalLabel}>
               Введіть email для відправлення коду скидання паролю
             </Text>
 
             <TextInput
               style={styles.input}
               value={email}
+              textAlign="center"
               onChangeText={setEmail}
               keyboardType="email-address"
             />
@@ -251,7 +255,7 @@ export default function LoginScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setEmailModal(false)}>
-              <Text style={styles.link}>Скасувати</Text>
+              <Text style={styles.modalLabel}>Скасувати</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -262,7 +266,7 @@ export default function LoginScreen() {
       <Modal visible={forgotModal} transparent animationType="fade">
         <View style={styles.modal}>
           <View style={styles.modalContent}>
-            <Text style={styles.label}>
+            <Text style={styles.modalLabel}>
               Введіть відправлений вам на email код
             </Text>
 
@@ -300,11 +304,11 @@ export default function LoginScreen() {
           <View style={styles.modalContent}>
             <Text style={styles.success}>Пароль успішно скинуто!</Text>
 
-            <Text style={styles.label}>Введіть новий пароль</Text>
+            <Text style={styles.modalLabel}>Введіть новий пароль</Text>
 
             <PasswordInput value={newPassword} onChangeText={setNewPassword} />
 
-            <Text style={styles.label}>Повторіть новий пароль</Text>
+            <Text style={styles.modalLabel}>Повторіть новий пароль</Text>
 
             <PasswordInput
               value={confirmNewPassword}
@@ -361,7 +365,8 @@ export default function LoginScreen() {
           </View>
         </View>
       </Modal>
-    </ParallaxScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 
@@ -372,10 +377,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+    top: 50,
   },
 
   bgd: {
-    flex: 1,
     width: "100%",
     height: 800,
   },
@@ -399,12 +404,14 @@ const styles = StyleSheet.create({
     maxWidth: 800,
     top: 100,
   },
+
   formWrapper: {
     display: "flex",
     width: "100%",
     flexDirection: "column",
     gap: 20,
   },
+
   formWrapperLandscape: {
     display: "flex",
     flexDirection: "row",
@@ -426,8 +433,9 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
-    fontSize: 16,
+    fontSize: 18,
   },
+
   input: {
     width: "100%",
     borderWidth: 2,
@@ -439,6 +447,7 @@ const styles = StyleSheet.create({
     color: "#111",
     backgroundColor: "#eeeeee90",
   },
+
   btn: {
     width: "100%",
     backgroundColor: "#9370db99",
@@ -450,11 +459,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30,
   },
-  btnTxt: {
-    fontFamily: "Ukrainian-Regular",
-    color: "#eee",
-    fontSize: 20,
-  },
+
   text: {
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
@@ -479,16 +484,25 @@ const styles = StyleSheet.create({
 
   modalContent: {
     width: "80%",
-    backgroundColor: "#fff",
+    backgroundColor: "#eee",
     padding: 25,
     borderRadius: 15,
     gap: 15,
   },
+
+  modalLabel: {
+    fontFamily: "Ukrainian-Regular",
+    color: "#111",
+    textAlign: "center",
+    fontSize: 16,
+  },
+
   btnText: {
     fontFamily: "Ukrainian-Regular",
-    color: "#fff",
+    color: "#eee",
     fontSize: 18,
   },
+
   success: {
     fontFamily: "Ukrainian-Regular",
     fontSize: 22,

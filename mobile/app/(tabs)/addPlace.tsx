@@ -1,4 +1,4 @@
-import ParallaxScrollView from "@/components/parallax-scroll-view";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import React, { useState } from "react";
 import {
@@ -15,6 +15,7 @@ import { MapPickerModal } from "../../components/MapPickerModal";
 import { useAuth } from "../../context/AuthContext";
 import { API_URL } from "@/constants/api";
 import * as ImageManipulator from "expo-image-manipulator";
+import { PortalProvider } from "@gorhom/portal";
 
 const categories = [
   { id: "Табір", title: "Табір" },
@@ -144,11 +145,12 @@ export default function AddPlaceScreen() {
   };
 
   return (
-    <ParallaxScrollView
+    <PortalProvider>
+      {/* <ParallaxScrollView
       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
       headerHeight={50}
       headerImage={<View />}
-    >
+    > */}
       <View style={styles.header}>
         <HeaderHatContent
           containerStyle={{
@@ -270,12 +272,14 @@ export default function AddPlaceScreen() {
           </Text>
         </Pressable>
       </ScrollView>
-    </ParallaxScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    top: 50,
   },
 
   uploadBox: {
@@ -385,6 +389,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
+    top: 50,
   },
   titleWrapper: {
     alignItems: "center",
