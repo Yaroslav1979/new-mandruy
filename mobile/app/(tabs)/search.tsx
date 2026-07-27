@@ -14,6 +14,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { API_URL } from "../../constants/api";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import StarRating from "../../components/star-rating";
+import { PortalProvider } from "@gorhom/portal";
 
 interface Place {
   _id: string;
@@ -144,182 +145,184 @@ export default function LoginScreen() {
     });
 
   return (
-    <View style={{ flex: 1, marginTop: 30 }}>
-      <View style={styles.header}>
-        <HeaderHatContent
-          containerStyle={{
-            gap: 50,
-            marginTop: 0,
+    <PortalProvider>
+      <View style={{ flex: 1, marginTop: 30 }}>
+        <View style={styles.header}>
+          <HeaderHatContent
+            containerStyle={{
+              gap: 50,
+              marginTop: 0,
+            }}
+            logoWidth={150}
+          />
+        </View>
+
+        <FlatList<Place>
+          data={processedPlaces.slice(0, visibleCount)}
+          style={styles.bgd}
+          key={isLandscape ? "landscape" : "portrait"}
+          numColumns={isLandscape ? 2 : 1}
+          columnWrapperStyle={
+            isLandscape ? { justifyContent: "space-between" } : undefined
+          }
+          contentContainerStyle={{ paddingBottom: 20 }}
+          keyExtractor={(item) => item._id}
+          ListHeaderComponent={
+            <>
+              <View style={styles.titleWrapper}>
+                <Text style={styles.title}>ПОШУК МІСЦЬ</Text>
+              </View>
+
+              <View style={styles.form}>
+                <View style={styles.formBlock}>
+                  <TextInput
+                    style={styles.input}
+                    textAlign="center"
+                    placeholder="Введіть назву"
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                  />
+                  <Image
+                    source={require("../../assets/images/iconSearch.png")}
+                    style={styles.searchBtn}
+                  />
+                </View>
+
+                <View style={styles.pickerWrapper}>
+                  <View
+                    style={{
+                      width: "33%",
+                      gap: 5,
+                    }}
+                  >
+                    <Text style={styles.label}>Категорія:</Text>
+                    <DropDownPicker
+                      open={categoryOpen}
+                      value={category}
+                      items={categoryItems}
+                      setOpen={setCategoryOpen}
+                      setValue={setCategory}
+                      setItems={setCategoryItems}
+                      placeholder="Категорія"
+                      style={styles.dropdown}
+                      textStyle={styles.dropdownText}
+                      listMode="SCROLLVIEW"
+                      dropDownContainerStyle={styles.dropdownContainer}
+                    />
+                  </View>
+
+                  <View
+                    style={{
+                      width: "33%",
+                      gap: 5,
+                    }}
+                  >
+                    <Text style={styles.label}>Область:</Text>
+                    <DropDownPicker
+                      open={regionOpen}
+                      value={region}
+                      items={regionItems}
+                      setOpen={setRegionOpen}
+                      setValue={setRegion}
+                      setItems={setRegionItems}
+                      placeholder="Область"
+                      style={styles.dropdown}
+                      textStyle={styles.dropdownText}
+                      listMode="SCROLLVIEW"
+                      dropDownContainerStyle={styles.dropdownContainer}
+                    />
+                  </View>
+
+                  <View
+                    style={{
+                      width: "33%",
+                      gap: 5,
+                    }}
+                  >
+                    <Text style={styles.label}>Сортувати:</Text>
+                    <DropDownPicker
+                      open={sortedbyOpen}
+                      value={sortedby}
+                      items={sortedbyItems}
+                      setOpen={setSortedbyOpen}
+                      setValue={setSortedby}
+                      setItems={setSortedbyItems}
+                      placeholder="Сортувати"
+                      style={styles.dropdown}
+                      textStyle={styles.dropdownText}
+                      listMode="SCROLLVIEW"
+                      dropDownContainerStyle={styles.dropdownContainer}
+                    />
+                  </View>
+                </View>
+              </View>
+            </>
+          }
+          renderItem={({ item, index }: { item: Place; index: number }) => {
+            const isLastOdd =
+              isLandscape &&
+              places.length % 2 !== 0 &&
+              index === places.length - 1;
+
+            return (
+              <TouchableOpacity
+                style={[
+                  styles.placeCard,
+                  isLandscape && !isLastOdd ? { width: "48%" } : undefined,
+                  isLandscape && isLastOdd
+                    ? { width: "48%", alignSelf: "flex-start" }
+                    : undefined,
+                ]}
+                activeOpacity={0.9}
+                onPress={() =>
+                  router.push({
+                    pathname: "/placeDetails",
+                    params: { id: item._id },
+                  })
+                }
+              >
+                {item.imgUrls?.length > 0 && (
+                  <Image
+                    source={{ uri: `${API_URL}${item.imgUrls[0]}` }}
+                    style={styles.placeImage}
+                  />
+                )}
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "flex-end",
+                    gap: 10,
+                  }}
+                >
+                  <Text style={styles.placeTitle}>{item.title}</Text>
+                  <StarRating rating={Number(item.rating) || 0} />
+                </View>
+
+                <Text style={styles.placeRegion}>{item.location?.region}</Text>
+              </TouchableOpacity>
+            );
           }}
-          logoWidth={150}
+          ListEmptyComponent={() =>
+            !loading ? (
+              <Text style={{ textAlign: "center", marginTop: 40 }}>
+                Місця не знайдені
+              </Text>
+            ) : null
+          }
+          ListFooterComponent={
+            visibleCount < processedPlaces.length ? (
+              <TouchableOpacity
+                style={styles.loadMoreBtn}
+                onPress={() => setVisibleCount((prev) => prev + 10)}
+              >
+                <Text style={styles.loadMoreText}>Показати ще</Text>
+              </TouchableOpacity>
+            ) : null
+          }
         />
       </View>
-
-      <FlatList<Place>
-        data={processedPlaces.slice(0, visibleCount)}
-        style={styles.bgd}
-        key={isLandscape ? "landscape" : "portrait"}
-        numColumns={isLandscape ? 2 : 1}
-        columnWrapperStyle={
-          isLandscape ? { justifyContent: "space-between" } : undefined
-        }
-        contentContainerStyle={{ paddingBottom: 20 }}
-        keyExtractor={(item) => item._id}
-        ListHeaderComponent={
-          <>
-            <View style={styles.titleWrapper}>
-              <Text style={styles.title}>ПОШУК МІСЦЬ</Text>
-            </View>
-
-            <View style={styles.form}>
-              <View style={styles.formBlock}>
-                <TextInput
-                  style={styles.input}
-                  textAlign="center"
-                  placeholder="Введіть назву"
-                  value={searchQuery}
-                  onChangeText={setSearchQuery}
-                />
-                <Image
-                  source={require("../../assets/images/iconSearch.png")}
-                  style={styles.searchBtn}
-                />
-              </View>
-
-              <View style={styles.pickerWrapper}>
-                <View
-                  style={{
-                    width: "33%",
-                    gap: 5,
-                  }}
-                >
-                  <Text style={styles.label}>Категорія:</Text>
-                  <DropDownPicker
-                    open={categoryOpen}
-                    value={category}
-                    items={categoryItems}
-                    setOpen={setCategoryOpen}
-                    setValue={setCategory}
-                    setItems={setCategoryItems}
-                    placeholder="Категорія"
-                    style={styles.dropdown}
-                    textStyle={styles.dropdownText}
-                    listMode="SCROLLVIEW"
-                    dropDownContainerStyle={styles.dropdownContainer}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    width: "33%",
-                    gap: 5,
-                  }}
-                >
-                  <Text style={styles.label}>Область:</Text>
-                  <DropDownPicker
-                    open={regionOpen}
-                    value={region}
-                    items={regionItems}
-                    setOpen={setRegionOpen}
-                    setValue={setRegion}
-                    setItems={setRegionItems}
-                    placeholder="Область"
-                    style={styles.dropdown}
-                    textStyle={styles.dropdownText}
-                    listMode="SCROLLVIEW"
-                    dropDownContainerStyle={styles.dropdownContainer}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    width: "33%",
-                    gap: 5,
-                  }}
-                >
-                  <Text style={styles.label}>Сортувати:</Text>
-                  <DropDownPicker
-                    open={sortedbyOpen}
-                    value={sortedby}
-                    items={sortedbyItems}
-                    setOpen={setSortedbyOpen}
-                    setValue={setSortedby}
-                    setItems={setSortedbyItems}
-                    placeholder="Сортувати"
-                    style={styles.dropdown}
-                    textStyle={styles.dropdownText}
-                    listMode="SCROLLVIEW"
-                    dropDownContainerStyle={styles.dropdownContainer}
-                  />
-                </View>
-              </View>
-            </View>
-          </>
-        }
-        renderItem={({ item, index }: { item: Place; index: number }) => {
-          const isLastOdd =
-            isLandscape &&
-            places.length % 2 !== 0 &&
-            index === places.length - 1;
-
-          return (
-            <TouchableOpacity
-              style={[
-                styles.placeCard,
-                isLandscape && !isLastOdd ? { width: "48%" } : undefined,
-                isLandscape && isLastOdd
-                  ? { width: "48%", alignSelf: "flex-start" }
-                  : undefined,
-              ]}
-              activeOpacity={0.9}
-              onPress={() =>
-                router.push({
-                  pathname: "/placeDetails",
-                  params: { id: item._id },
-                })
-              }
-            >
-              {item.imgUrls?.length > 0 && (
-                <Image
-                  source={{ uri: `${API_URL}${item.imgUrls[0]}` }}
-                  style={styles.placeImage}
-                />
-              )}
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "flex-end",
-                  gap: 10,
-                }}
-              >
-                <Text style={styles.placeTitle}>{item.title}</Text>
-                <StarRating rating={Number(item.rating) || 0} />
-              </View>
-
-              <Text style={styles.placeRegion}>{item.location?.region}</Text>
-            </TouchableOpacity>
-          );
-        }}
-        ListEmptyComponent={() =>
-          !loading ? (
-            <Text style={{ textAlign: "center", marginTop: 40 }}>
-              Місця не знайдені
-            </Text>
-          ) : null
-        }
-        ListFooterComponent={
-          visibleCount < processedPlaces.length ? (
-            <TouchableOpacity
-              style={styles.loadMoreBtn}
-              onPress={() => setVisibleCount((prev) => prev + 10)}
-            >
-              <Text style={styles.loadMoreText}>Показати ще</Text>
-            </TouchableOpacity>
-          ) : null
-        }
-      />
-    </View>
+    </PortalProvider>
   );
 }
 

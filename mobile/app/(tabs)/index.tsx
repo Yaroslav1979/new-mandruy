@@ -1,10 +1,5 @@
-import { HeaderHero } from "@/components/HeaderHero";
-import { router } from "expo-router";
-import { InfoFlags } from "@/components/IhfoFlags";
-import { PopularQuestions } from "@/components/PopularQuestions";
-import ParallaxScrollView from "@/components/parallax-scroll-view";
-import ArrowMore from "../../assets/svg/arrow-more.svg";
 import {
+  ScrollView,
   ImageBackground,
   Pressable,
   StyleSheet,
@@ -12,6 +7,13 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { HeaderHero } from "@/components/HeaderHero";
+import { router } from "expo-router";
+import { InfoFlags } from "@/components/IhfoFlags";
+import { PopularQuestions } from "@/components/PopularQuestions";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
+import ArrowMore from "../../assets/svg/arrow-more.svg";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
@@ -19,7 +21,8 @@ export default function HomeScreen() {
   const currentHeaderHeight = isLandscape ? height : 250;
 
   return (
-    <ParallaxScrollView
+    <PortalProvider>
+      {/* <ParallaxScrollView
       headerBackgroundColor={{ light: "#d7b8b8ff", dark: "#1D3D47" }}
       headerHeight={currentHeaderHeight} // Передає мо висоту сюди!
       headerImage={
@@ -28,43 +31,53 @@ export default function HomeScreen() {
           screenHeight={currentHeaderHeight}
         />
       }
-    >
-      {!isLandscape && (
-        <ImageBackground
-          source={require("../../assets/images/Map.jpg")}
-          style={{ width: "100%", height: 600 }}
-        >
-          <View style={styles.container}>
-            <Text style={styles.title}>Вітаємо вас на «МАНДРУЙ»</Text>
+    > */}
 
-            <View style={styles.buttons}>
-              <Pressable
-                style={styles.button}
-                onPress={() => router.push("/search")}
-              >
-                <Text style={styles.buttonText}>Розпочати пошук</Text>
-              </Pressable>
-              <Pressable style={styles.link}>
-                <Text style={styles.linkText}>
-                  Дізнатися більше <ArrowMore />
-                </Text>
-              </Pressable>
-            </View>
+      <HeaderHero
+        isLandscape={isLandscape}
+        screenHeight={currentHeaderHeight}
+      />
+      <ScrollView
+      // style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}
+      >
+        {!isLandscape && (
+          <ImageBackground
+            source={require("../../assets/images/Map.jpg")}
+            style={{ width: "100%", height: 600 }}
+          >
+            <View style={styles.container}>
+              <Text style={styles.title}>Вітаємо вас на «МАНДРУЙ»</Text>
 
-            <View style={{ padding: 50 }}>
-              <InfoFlags
-                containerStyle={{
-                  gap: 50,
-                }}
-              />
+              <View style={styles.buttons}>
+                <Pressable
+                  style={styles.button}
+                  onPress={() => router.push("/search")}
+                >
+                  <Text style={styles.buttonText}>Розпочати пошук</Text>
+                </Pressable>
+                <Pressable style={styles.link}>
+                  <Text style={styles.linkText}>
+                    Дізнатися більше <ArrowMore />
+                  </Text>
+                </Pressable>
+              </View>
+
+              <View style={{ padding: 50 }}>
+                <InfoFlags
+                  containerStyle={{
+                    gap: 50,
+                  }}
+                />
+              </View>
             </View>
-          </View>
-        </ImageBackground>
-      )}
-      <View>
-        <PopularQuestions />
-      </View>
-    </ParallaxScrollView>
+          </ImageBackground>
+        )}
+        <View>
+          <PopularQuestions />
+        </View>
+      </ScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 const styles = StyleSheet.create({

@@ -1,17 +1,60 @@
-import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { router } from "expo-router";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
+import { router, useFocusEffect } from "expo-router";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import IconMapArrow from "../../assets/svg/IconMapArrow.svg";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
+import { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+import { API_URL } from "@/constants/api";
+import { PortalProvider } from "@gorhom/portal";
 
-export default function LoginScreen() {
+export default function MapScreen() {
+  const [places, setPlaces] = useState([]);
+
+  const fetchPlaces = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/places`);
+      setPlaces(res.data);
+    } catch (e) {
+      console.log("Помилка завантаження місць:", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPlaces();
+    }, []),
+  );
+
+  // 🔹 парсинг координат
+  const parseCoordinate = (coordString: string) => {
+    if (!coordString) return null;
+
+    const [lat, lng] = coordString.split(",").map((c) => parseFloat(c.trim()));
+
+    if (isNaN(lat) || isNaN(lng)) return null;
+
+    return { latitude: lat, longitude: lng };
+  };
+
   return (
-    <ParallaxScrollView
+    <PortalProvider>
+      {/* <ParallaxScrollView
       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
       headerHeight={50}
       headerImage={<View />}
-    >
+    > */}
       <View style={styles.header}>
         <HeaderHatContent
           containerStyle={{
@@ -22,43 +65,69 @@ export default function LoginScreen() {
         />
       </View>
 
-      <View style={styles.titleWrapper}>
-        <Text style={styles.title}>ІНТЕРАКТИВНА МАПА</Text>
-      </View>
+      <ScrollView>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>ІНТЕРАКТИВНА МАПА</Text>
+        </View>
 
-      <View style={styles.mapWrapper}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 49.8397,
-            longitude: 24.0297,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          }}
-        >
-          <Marker
-            coordinate={{
+        <View style={styles.mapWrapper}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
               latitude: 49.8397,
               longitude: 24.0297,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
             }}
-            title="Львів"
-            description="Центр міста"
-          />
-        </MapView>
-      </View>
+          >
+            {/* 🔹 ДИНАМІЧНІ МІТКИ */}
+            {places.map((place: any) => {
+              const coords = parseCoordinate(place.location?.coordinate);
 
-      <TouchableOpacity
-        style={styles.googlBtn}
-        onPress={() =>
-          router.push(
-            "https://www.google.com/maps/@50.393338,25.9771985,11.38z?authuser=0&entry=ttu",
-          )
-        }
-      >
-        <Text style={styles.text}>Google Maps</Text>
-        <IconMapArrow />
-      </TouchableOpacity>
-    </ParallaxScrollView>
+              if (!coords) return null;
+
+              return (
+                <Marker
+                  key={place._id}
+                  coordinate={coords}
+                  title={place.title}
+                  description={place.descr}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(tabs)/placeDetails",
+                      params: { id: place._id },
+                    })
+                  }
+                />
+              );
+            })}
+
+            {/* 🔹 СТАТИЧНА (можеш прибрати) */}
+            <Marker
+              coordinate={{
+                latitude: 49.8397,
+                longitude: 24.0297,
+              }}
+              title="Львів"
+              description="Центр міста"
+            />
+          </MapView>
+        </View>
+
+        <TouchableOpacity
+          style={styles.googlBtn}
+          onPress={() =>
+            router.push(
+              "https://www.google.com/maps/@50.393338,25.9771985,11.38z?authuser=0&entry=ttu",
+            )
+          }
+        >
+          <Text style={styles.text}>Google Maps</Text>
+          <IconMapArrow />
+        </TouchableOpacity>
+      </ScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 
@@ -70,6 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
+    top: 50,
   },
   titleWrapper: {
     alignItems: "center",

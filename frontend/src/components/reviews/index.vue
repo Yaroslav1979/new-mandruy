@@ -3,15 +3,15 @@
     <div class="reviews__heading">
       <h2 class="reviews__title">Відгуки</h2>
       <div class="reviews__rating">
-        <div> Кількість відгуків: {{ amountOfReviews }} </div>
+        <div>Кількість відгуків: {{ amountOfReviews }}</div>
         <div>Підсумковий рейтинг: <Rating :rating="totalRating" /></div>
       </div>
       <!-- Кнопка для виклику форми -->
-     <button class="leave-review-button" @click="toggleModal">
-      {{ showModal ? "Приховати" : "Залишити відгук" }}
-    </button>
+      <button class="leave-review-button" @click="toggleModal">
+        {{ showModal ? "Приховати" : "Залишити відгук" }}
+      </button>
     </div>
-     
+
     <!-- Модальне вікно з формою -->
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-content">
@@ -39,7 +39,7 @@
 <script>
 import AddReviewForm from "./AddReviewForm.vue";
 import ReviewItem from "./reviews-item/ReviewItem.vue";
-import Rating from "../StarRating";
+import Rating from "../StarRating.js";
 
 export default {
   name: "ReviewsAll",
@@ -78,7 +78,7 @@ export default {
       if (!this.localReviews.length) return 0;
       const total = this.localReviews.reduce(
         (acc, review) => acc + review.rating,
-        0
+        0,
       );
       return (total / this.localReviews.length).toFixed(1); // округлимо до 1 знаку
     },
@@ -103,12 +103,12 @@ export default {
       this.reviewsLimit = this.reviews.length;
     },
     toggleModal() {
-  this.showModal = !this.showModal;
-},
-    handleAdded() {     
+      this.showModal = !this.showModal;
+    },
+    handleAdded() {
       this.showModal = false;
       this.$emit("review-added"); // кидаємо подію нагору
-    },    
+    },
   },
 };
 </script>
@@ -123,7 +123,7 @@ export default {
   width: 300px;
 
   &__heading {
-    display: flex;    
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;

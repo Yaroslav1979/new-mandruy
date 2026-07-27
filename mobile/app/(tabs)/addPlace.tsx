@@ -1,4 +1,4 @@
-import ParallaxScrollView from "@/components/parallax-scroll-view";
+// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import React, { useState } from "react";
 import {
@@ -11,9 +11,11 @@ import {
   StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { MapPickerModal } from "../../components/MapPickerModal";
 import { useAuth } from "../../context/AuthContext";
 import { API_URL } from "@/constants/api";
 import * as ImageManipulator from "expo-image-manipulator";
+import { PortalProvider } from "@gorhom/portal";
 
 const categories = [
   { id: "Табір", title: "Табір" },
@@ -30,6 +32,8 @@ export default function AddPlaceScreen() {
 
   const [title, setTitle] = useState("");
   const [coordinate, setCoordinate] = useState("");
+  const [mapVisible, setMapVisible] = useState(false);
+
   const [region, setRegion] = useState("");
   const [city, setCity] = useState("");
   const [descr, setDescr] = useState("");
@@ -141,11 +145,12 @@ export default function AddPlaceScreen() {
   };
 
   return (
-    <ParallaxScrollView
+    <PortalProvider>
+      {/* <ParallaxScrollView
       headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
       headerHeight={50}
       headerImage={<View />}
-    >
+    > */}
       <View style={styles.header}>
         <HeaderHatContent
           containerStyle={{
@@ -196,12 +201,25 @@ export default function AddPlaceScreen() {
           value={title}
           onChangeText={setTitle}
         />
+
         <TextInput
-          placeholder="Координати"
+          placeholder="Координати (наприклад: 49.839700, 24.029700)"
           style={styles.input}
           value={coordinate}
           onChangeText={setCoordinate}
         />
+
+        <Pressable style={styles.mapButton} onPress={() => setMapVisible(true)}>
+          <Text style={styles.mapButtonText}>Вибрати на мапі</Text>
+        </Pressable>
+
+        <MapPickerModal
+          visible={mapVisible}
+          onClose={() => setMapVisible(false)}
+          onSelect={(coord) => setCoordinate(coord)}
+          initialCoordinate={coordinate}
+        />
+
         <TextInput
           placeholder="Область"
           style={styles.input}
@@ -254,12 +272,14 @@ export default function AddPlaceScreen() {
           </Text>
         </Pressable>
       </ScrollView>
-    </ParallaxScrollView>
+      {/* </ParallaxScrollView> */}
+    </PortalProvider>
   );
 }
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    top: 50,
   },
 
   uploadBox: {
@@ -369,6 +389,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
+    top: 50,
   },
   titleWrapper: {
     alignItems: "center",
@@ -424,5 +445,16 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
     fontSize: 15,
+  },
+  mapButton: {
+    backgroundColor: "#111",
+    padding: 12,
+    borderRadius: 25,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  mapButtonText: {
+    color: "#fff",
+    fontFamily: "Ukrainian-Regular",
   },
 });

@@ -46,7 +46,7 @@
 import { getPlaceById } from "../services/places.service.js";
 import { getReviewsByPlaceId } from "../services/reviews.service.js";
 import Container from "../components/shared/Container.vue";
-import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
+import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer.js";
 import PlaceMainInfo from "../components/place/PlaceMainInfo.vue";
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import ReviewsAll from "../components/reviews/index.vue";
