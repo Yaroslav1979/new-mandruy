@@ -1,6 +1,12 @@
 // import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router, useFocusEffect } from "expo-router";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import IconMapArrow from "../../assets/svg/IconMapArrow.svg";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
@@ -59,65 +65,67 @@ export default function MapScreen() {
         />
       </View>
 
-      <View style={styles.titleWrapper}>
-        <Text style={styles.title}>ІНТЕРАКТИВНА МАПА</Text>
-      </View>
+      <ScrollView>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>ІНТЕРАКТИВНА МАПА</Text>
+        </View>
 
-      <View style={styles.mapWrapper}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 49.8397,
-            longitude: 24.0297,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          }}
-        >
-          {/* 🔹 ДИНАМІЧНІ МІТКИ */}
-          {places.map((place: any) => {
-            const coords = parseCoordinate(place.location?.coordinate);
-
-            if (!coords) return null;
-
-            return (
-              <Marker
-                key={place._id}
-                coordinate={coords}
-                title={place.title}
-                description={place.descr}
-                onPress={() =>
-                  router.push({
-                    pathname: "/(tabs)/placeDetails",
-                    params: { id: place._id },
-                  })
-                }
-              />
-            );
-          })}
-
-          {/* 🔹 СТАТИЧНА (можеш прибрати) */}
-          <Marker
-            coordinate={{
+        <View style={styles.mapWrapper}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
               latitude: 49.8397,
               longitude: 24.0297,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
             }}
-            title="Львів"
-            description="Центр міста"
-          />
-        </MapView>
-      </View>
+          >
+            {/* 🔹 ДИНАМІЧНІ МІТКИ */}
+            {places.map((place: any) => {
+              const coords = parseCoordinate(place.location?.coordinate);
 
-      <TouchableOpacity
-        style={styles.googlBtn}
-        onPress={() =>
-          router.push(
-            "https://www.google.com/maps/@50.393338,25.9771985,11.38z?authuser=0&entry=ttu",
-          )
-        }
-      >
-        <Text style={styles.text}>Google Maps</Text>
-        <IconMapArrow />
-      </TouchableOpacity>
+              if (!coords) return null;
+
+              return (
+                <Marker
+                  key={place._id}
+                  coordinate={coords}
+                  title={place.title}
+                  description={place.descr}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(tabs)/placeDetails",
+                      params: { id: place._id },
+                    })
+                  }
+                />
+              );
+            })}
+
+            {/* 🔹 СТАТИЧНА (можеш прибрати) */}
+            <Marker
+              coordinate={{
+                latitude: 49.8397,
+                longitude: 24.0297,
+              }}
+              title="Львів"
+              description="Центр міста"
+            />
+          </MapView>
+        </View>
+
+        <TouchableOpacity
+          style={styles.googlBtn}
+          onPress={() =>
+            router.push(
+              "https://www.google.com/maps/@50.393338,25.9771985,11.38z?authuser=0&entry=ttu",
+            )
+          }
+        >
+          <Text style={styles.text}>Google Maps</Text>
+          <IconMapArrow />
+        </TouchableOpacity>
+      </ScrollView>
       {/* </ParallaxScrollView> */}
     </PortalProvider>
   );

@@ -3,7 +3,14 @@ import IconMail from "../../assets/svg/iconMail.svg";
 import IconSite from "../../assets/svg/iconSite.svg";
 import IconTele from "../../assets/svg/iconTele.svg";
 
-import { StyleSheet, Text, Image, Pressable, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  ImageBackground,
+} from "react-native";
 
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import { PortalProvider } from "@gorhom/portal";
@@ -25,48 +32,43 @@ export default function LoginScreen() {
           logoWidth={150}
         />
       </View>
-      {/* <View style={styles.titleWrapper}>
-        <Text style={styles.title}>ПРО НАС</Text>
-      </View> */}
+      <ImageBackground
+        source={require("../../assets/images/landscape.jpeg")}
+        style={styles.img}
+        resizeMode="cover"
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>КОНТАКТИ</Text>
+          </View>
 
-      <View style={styles.imgWrapper}>
-        <Image
-          source={require("../../assets/images/landscape.jpeg")}
-          style={styles.img}
-        />
-
-        <View style={styles.contacts}>
-          <Text style={styles.title}>КОНТАКТИ</Text>
-        </View>
-
-        <View style={styles.social}>
-          <Pressable style={styles.socialBlock}>
-            <IconMail style={styles.svgSocial} />
-            <Text style={{ fontFamily: "e-Ukraine-Medium", fontSize: 20 }}>
-              ourwebsite.com
+          <View style={styles.social}>
+            <Pressable style={styles.socialBlock}>
+              <IconMail style={styles.svgSocial} />
+              <Text style={styles.socialText}>ourwebsite.com</Text>
+            </Pressable>
+            <Pressable style={styles.socialBlock}>
+              <IconSite style={styles.svgSocial} />
+              <Text style={styles.socialText}>ouremail1222@gmail.com</Text>
+            </Pressable>
+            <Pressable style={styles.socialBlock}>
+              <IconTele style={styles.svgSocial} />
+              <Text style={styles.socialText}>@telegramnickname</Text>
+            </Pressable>
+          </View>
+          <View style={styles.txtWrapper}>
+            <Text style={styles.txt}>
+              Отримуй актуальні новини про сервіс “Мандруй” та ділись із
+              друзями. Якщо ти маєш якісь пропозиції чи зауваження щодо
+              функціоналу або роботи сайту, тоді напиши нам. Дякуємо за
+              підтримку!
             </Text>
-          </Pressable>
-          <Pressable style={styles.socialBlock}>
-            <IconSite style={styles.svgSocial} />
-            <Text style={{ fontFamily: "e-Ukraine-Medium", fontSize: 20 }}>
-              ouremail1222@gmail.com
-            </Text>
-          </Pressable>
-          <Pressable style={styles.socialBlock}>
-            <IconTele style={styles.svgSocial} />
-            <Text style={{ fontFamily: "e-Ukraine-Medium", fontSize: 20 }}>
-              @telegramnickname
-            </Text>
-          </Pressable>
-        </View>
-        <View style={styles.txtWrapper}>
-          <Text style={styles.txt}>
-            Отримуй актуальні новини про сервіс “Мандруй” та ділись із друзями.
-            Дякуємо за підтримку. Якщо ти маєш якісь пропозиції чи зауваження
-            щодо функціоналу або роботи сайту, тоді напиши нам.
-          </Text>
-        </View>
-      </View>
+          </View>
+        </ScrollView>
+      </ImageBackground>
       {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
@@ -83,9 +85,15 @@ const styles = StyleSheet.create({
     top: 50,
   },
 
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+  },
+
   titleWrapper: {
     alignItems: "center",
-    marginVertical: 20,
+    marginBottom: 30,
   },
 
   title: {
@@ -94,44 +102,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 
-  imgWrapper: {
-    position: "relative",
-    top: 50,
-  },
-
   img: {
+    top: 50,
     width: "100%",
-
-    // flex: 1,
-  },
-  txtWrapper: {
-    position: "absolute",
-    top: 350,
-    marginHorizontal: 20,
-  },
-
-  txt: {
-    fontFamily: "Ukrainian-Regular",
-    fontStyle: "normal",
-    color: "#111",
-    fontSize: 20,
-    fontWeight: 400,
-    lineHeight: 35,
-  },
-
-  contacts: {
-    display: "flex",
-    position: "absolute",
-    left: 120,
-    top: 60,
+    height: "100%",
   },
 
   social: {
     display: "flex",
-    position: "absolute",
-    top: 120,
-    left: 30,
-    gap: 30,
+    backgroundColor: "#99999980",
+    gap: 20,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
   },
 
   socialBlock: {
@@ -141,8 +124,28 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 
+  socialText: {
+    fontFamily: "e-Ukraine-Medium",
+    fontSize: 18,
+  },
+
   svgSocial: {
-    width: 40,
-    height: 40,
+    width: 26,
+    height: 26,
+  },
+
+  txtWrapper: {
+    backgroundColor: "#99999980",
+    borderRadius: 20,
+    padding: 20,
+  },
+
+  txt: {
+    fontFamily: "Ukrainian-Regular",
+    fontStyle: "normal",
+    color: "#111",
+    fontSize: 18,
+    fontWeight: 400,
+    lineHeight: 35,
   },
 });

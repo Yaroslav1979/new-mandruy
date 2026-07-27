@@ -12,7 +12,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Дозвольте додатку отримувати вашу геолокацію для вибору місця на мапі."
-      }
+      },
+      "bundleIdentifier": "com.anonymous.mandruy"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +22,12 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "output": "static",
@@ -46,7 +52,9 @@
         {
           "locationWhenInUsePermission": "Дозвольте додатку отримувати вашу геолокацію для вибору місця на мапі."
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

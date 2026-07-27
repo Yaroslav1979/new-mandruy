@@ -4,6 +4,7 @@ import { API_URL } from "@/constants/api";
 import HeaderLog from "../../components/HeaderLog";
 import PasswordInput from "../../components/hide-eyes-input";
 import {
+  ScrollView,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -121,83 +122,85 @@ export default function RegistrScreen() {
         headerImage={<View />}
       > */}
       <HeaderLog />
+      <ScrollView>
+        <View style={{ position: "relative" }}>
+          <Image
+            source={require("../../assets/images/NightMoon.jpg")}
+            style={styles.bgd}
+          />
+        </View>
 
-      <View style={{ position: "relative" }}>
-        <Image
-          source={require("../../assets/images/NightMoon.jpg")}
-          style={styles.bgd}
-        />
-      </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.container}
+        >
+          <View>
+            <Text style={styles.title}>Реєстрація</Text>
+          </View>
+          <View style={[styles.form, isLandscape && styles.formLandscape]}>
+            <View
+              style={[
+                styles.formWrapper,
+                isLandscape && styles.formWrapperLandscape,
+              ]}
+            >
+              <View style={styles.formBlock}>
+                <Text style={styles.label}>Імʼя:</Text>
+                <TextInput
+                  style={styles.input}
+                  // placeholder="Імʼя"
+                  value={name}
+                  onChangeText={setName}
+                  textAlign="center"
+                  autoFocus={false}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <View style={[styles.form, isLandscape && styles.formLandscape]}>
-          {/* <Text style={styles.title}>Реєстрація</Text> */}
+              <View style={styles.formBlock}>
+                <Text style={styles.label}>Електронна адреса:</Text>
+                <TextInput
+                  style={styles.input}
+                  // placeholder="Email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                  textAlign="center"
+                  autoFocus={false}
+                  autoCorrect={false}
+                  textContentType="emailAddress"
+                />
+              </View>
 
-          <View
-            style={[
-              styles.formWrapper,
-              isLandscape && styles.formWrapperLandscape,
-            ]}
-          >
-            <View style={styles.formBlock}>
-              <Text style={styles.label}>Імʼя:</Text>
-              <TextInput
-                style={styles.input}
-                // placeholder="Імʼя"
-                value={name}
-                onChangeText={setName}
-                textAlign="center"
-                autoFocus={false}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
+              <View style={styles.formBlock}>
+                <Text style={styles.label}>Пароль:</Text>
 
-            <View style={styles.formBlock}>
-              <Text style={styles.label}>Електронна адреса:</Text>
-              <TextInput
-                style={styles.input}
-                // placeholder="Email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-                textAlign="center"
-                autoFocus={false}
-                autoCorrect={false}
-                textContentType="emailAddress"
-              />
-            </View>
+                <PasswordInput value={password} onChangeText={setPassword} />
+              </View>
 
-            <View style={styles.formBlock}>
-              <Text style={styles.label}>Пароль:</Text>
+              <View style={styles.formBlock}>
+                <Text style={styles.label}>Повторіть пароль:</Text>
 
-              <PasswordInput value={password} onChangeText={setPassword} />
-            </View>
+                <PasswordInput
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                />
+                {/* </View>
+              <View style={styles.formBlock}> */}
+                <TouchableOpacity style={styles.btn} onPress={handleRegister}>
+                  <Text style={styles.btnText}>Зареєструватися</Text>
+                </TouchableOpacity>
 
-            <View style={styles.formBlock}>
-              <Text style={styles.label}>Повторіть пароль:</Text>
-
-              <PasswordInput
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-              />
-            </View>
-            <View style={styles.formBlock}>
-              <TouchableOpacity style={styles.btn} onPress={handleRegister}>
-                <Text style={styles.btnText}>Зареєструватися</Text>
-              </TouchableOpacity>
-
-              <Pressable onPress={() => router.push("/login")}>
-                <Text style={styles.text}>Вже є акаунт? Увійти</Text>
-              </Pressable>
+                <Pressable onPress={() => router.push("/login")}>
+                  <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ScrollView>
 
       {/* MODAL CONFIRM CODE */}
 
@@ -294,19 +297,27 @@ const styles = StyleSheet.create({
     height: 800,
   },
 
+  title: {
+    fontFamily: "Ukrainian-Bold",
+    color: "#eee",
+    fontSize: 22,
+    marginBottom: 10,
+  },
+
   form: {
     width: "100%",
     paddingHorizontal: 40,
-    top: 120,
+    top: 10,
   },
 
   formLandscape: {
     fontFamily: "Ukrainian-Bold",
     display: "flex",
+    alignItems: "center",
     gap: 20,
     width: "100%",
     maxWidth: 800,
-    top: 80,
+    top: 10,
   },
 
   formWrapper: {
@@ -317,7 +328,7 @@ const styles = StyleSheet.create({
   },
 
   formWrapperLandscape: {
-    width: "100%",
+    width: "80%",
     flexDirection: "column",
     gap: 20,
     marginTop: 20,

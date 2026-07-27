@@ -4,6 +4,7 @@ import { API_URL } from "@/constants/api";
 import HeaderLog from "../../components/HeaderLog";
 import PasswordInput from "../../components/hide-eyes-input";
 import {
+  ScrollView,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -92,72 +93,71 @@ export default function LoginScreen() {
       > */}
 
       <HeaderLog />
+      <ScrollView>
+        <View style={{ position: "relative" }}>
+          <Image
+            source={require("../../assets/images/NightMoon.jpg")}
+            style={styles.bgd}
+          />
+        </View>
 
-      <View style={{ position: "relative" }}>
-        <Image
-          source={require("../../assets/images/NightMoon.jpg")}
-          style={styles.bgd}
-        />
-      </View>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <View style={[styles.form, isLandscape && styles.formLandscape]}>
-          <View
-            style={[
-              styles.formWrapper,
-              isLandscape && styles.formWrapperLandscape,
-            ]}
-          >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.container}
+        >
+          <View>
+            <Text style={styles.title}>Увійти в кабінет</Text>
+          </View>
+          <View style={[styles.form, isLandscape && styles.formLandscape]}>
             <View
               style={[
-                styles.formBlock,
-                isLandscape && styles.formBlockLandscape,
+                styles.formWrapper,
+                isLandscape && styles.formWrapperLandscape,
               ]}
             >
-              <Text style={styles.label}>Електронна адреса:</Text>
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                textAlign="center"
-                autoFocus={false}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                textContentType="emailAddress"
-              />
-            </View>
+              <View style={[styles.formBlock]}>
+                <Text style={styles.label}>Електронна адреса:</Text>
+                <TextInput
+                  style={styles.input}
+                  value={email}
+                  onChangeText={setEmail}
+                  textAlign="center"
+                  autoFocus={false}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="emailAddress"
+                />
+              </View>
 
-            <View style={styles.formBlock}>
-              <Text style={styles.label}>Пароль:</Text>
+              <View style={styles.formBlock}>
+                <Text style={styles.label}>Пароль:</Text>
 
-              <PasswordInput value={password} onChangeText={setPassword} />
+                <PasswordInput value={password} onChangeText={setPassword} />
+              </View>
+
+              <Pressable
+                onPress={() => {
+                  setEmailModal(true);
+                }}
+              >
+                <Text style={styles.text}>Забули пароль?</Text>
+              </Pressable>
+
+              <TouchableOpacity style={styles.btn} onPress={handleLogin}>
+                <Text style={styles.btnText}> Вхід </Text>
+              </TouchableOpacity>
             </View>
 
             <Pressable
-              onPress={() => {
-                setEmailModal(true);
-              }}
+              style={{ display: "flex", alignItems: "center" }}
+              onPress={() => router.push("/registr")}
             >
-              <Text style={styles.text}>Забули пароль?</Text>
+              <Text style={styles.text}>Не зареєстровані? Реєстрація</Text>
             </Pressable>
           </View>
-
-          <TouchableOpacity style={styles.btn} onPress={handleLogin}>
-            <Text style={styles.btnText}> Вхід </Text>
-          </TouchableOpacity>
-
-          <Pressable
-            style={{ display: "flex", alignItems: "center" }}
-            onPress={() => router.push("/registr")}
-          >
-            <Text style={styles.text}>Не зареєстровані? Реєстрація</Text>
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ScrollView>
 
       {/* SUCCESS MODAL */}
 
@@ -385,24 +385,27 @@ const styles = StyleSheet.create({
     height: 800,
   },
 
-  // title: {
-  //   fontFamily: "Ukrainian-Bold",
-  //   color: "#eee",
-  // },
+  title: {
+    fontFamily: "Ukrainian-Bold",
+    color: "#eee",
+    fontSize: 22,
+    marginBottom: 10,
+  },
 
   form: {
     width: "100%",
     paddingHorizontal: 40,
-    top: 120,
+    top: 10,
   },
 
   formLandscape: {
     fontFamily: "Ukrainian-Bold",
     display: "flex",
+    alignItems: "center",
     gap: 20,
     width: "100%",
     maxWidth: 800,
-    top: 100,
+    top: 10,
   },
 
   formWrapper: {
@@ -413,9 +416,10 @@ const styles = StyleSheet.create({
   },
 
   formWrapperLandscape: {
-    display: "flex",
-    flexDirection: "row",
+    width: "80%",
+    flexDirection: "column",
     gap: 20,
+    marginTop: 20,
   },
 
   formBlock: {
@@ -423,12 +427,12 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 
-  formBlockLandscape: {
-    display: "flex",
-    flex: 1,
-    width: 200,
-    gap: 10,
-  },
+  // formBlockLandscape: {
+  //   display: "flex",
+  //   flex: 1,
+  //   width: 200,
+  //   gap: 10,
+  // },
 
   label: {
     fontFamily: "Ukrainian-Regular",
