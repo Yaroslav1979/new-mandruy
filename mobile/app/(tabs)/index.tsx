@@ -37,9 +37,7 @@ export default function HomeScreen() {
         isLandscape={isLandscape}
         screenHeight={currentHeaderHeight}
       />
-      <ScrollView
-      // style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}
-      >
+      <ScrollView>
         {!isLandscape && (
           <ImageBackground
             source={require("../../assets/images/Map.jpg")}

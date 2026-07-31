@@ -1,10 +1,10 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router, useFocusEffect } from "expo-router";
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
+  useWindowDimensions,
   ScrollView,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -16,6 +16,8 @@ import { API_URL } from "@/constants/api";
 import { PortalProvider } from "@gorhom/portal";
 
 export default function MapScreen() {
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
   const [places, setPlaces] = useState([]);
 
   const fetchPlaces = async () => {
@@ -50,12 +52,7 @@ export default function MapScreen() {
 
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-      headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-      headerHeight={50}
-      headerImage={<View />}
-    > */}
-      <View style={styles.header}>
+      <View style={[styles.header, isLandscape && styles.headerLandscape]}>
         <HeaderHatContent
           containerStyle={{
             gap: 50,
@@ -65,12 +62,19 @@ export default function MapScreen() {
         />
       </View>
 
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          isLandscape && styles.containerLandscape,
+        ]}
+      >
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>ІНТЕРАКТИВНА МАПА</Text>
         </View>
 
-        <View style={styles.mapWrapper}>
+        <View
+          style={[styles.mapWrapper, isLandscape && styles.mapWrapperLandscape]}
+        >
           <MapView
             style={styles.map}
             initialRegion={{
@@ -80,7 +84,6 @@ export default function MapScreen() {
               longitudeDelta: 0.05,
             }}
           >
-            {/* 🔹 ДИНАМІЧНІ МІТКИ */}
             {places.map((place: any) => {
               const coords = parseCoordinate(place.location?.coordinate);
 
@@ -102,7 +105,6 @@ export default function MapScreen() {
               );
             })}
 
-            {/* 🔹 СТАТИЧНА (можеш прибрати) */}
             <Marker
               coordinate={{
                 latitude: 49.8397,
@@ -115,7 +117,7 @@ export default function MapScreen() {
         </View>
 
         <TouchableOpacity
-          style={styles.googlBtn}
+          style={[styles.googlBtn, isLandscape && styles.googlBtnLandscape]}
           onPress={() =>
             router.push(
               "https://www.google.com/maps/@50.393338,25.9771985,11.38z?authuser=0&entry=ttu",
@@ -126,72 +128,42 @@ export default function MapScreen() {
           <IconMapArrow />
         </TouchableOpacity>
       </ScrollView>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 30,
+  },
+
+  containerLandscape: {
+    paddingHorizontal: 25,
+    paddingBottom: 20,
+  },
+
   header: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
-    top: 50,
+    marginTop: 50,
   },
+
+  headerLandscape: {
+    marginTop: 0,
+  },
+
   titleWrapper: {
     alignItems: "center",
     marginVertical: 20,
   },
+
   title: {
     fontFamily: "Ukrainian-Bold",
     color: "#111",
     fontSize: 20,
-  },
-  imgWrapper: {
-    position: "relative",
-  },
-  img: {
-    width: "100%",
-    flex: 1,
-  },
-  txtWrapper: {
-    position: "absolute",
-    top: 100,
-    marginHorizontal: 20,
-  },
-  txt: {
-    color: "#111",
-    fontFamily: "Ukrainian-Regular",
-    fontSize: 20,
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: 35,
-  },
-  contacts: {
-    position: "absolute",
-    display: "flex",
-    left: 120,
-    top: 450,
-  },
-  social: {
-    position: "absolute",
-    top: 500,
-    left: 30,
-    display: "flex",
-    gap: 30,
-  },
-  socialBlock: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 20,
-  },
-  svgSocial: {
-    width: 40,
-    height: 40,
   },
 
   mapWrapper: {
@@ -200,25 +172,83 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     overflow: "hidden",
   },
+
+  mapWrapperLandscape: {
+    height: 520,
+    marginHorizontal: 0,
+  },
+
   map: {
     flex: 1,
   },
 
   googlBtn: {
-    display: "flex",
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "center",
-    gap: "10",
+    alignItems: "center",
     marginTop: 20,
     marginHorizontal: 20,
     height: 50,
     borderRadius: 25,
     backgroundColor: "#111",
   },
+
+  googlBtnLandscape: {
+    width: 260,
+    alignSelf: "center",
+    marginTop: 25,
+  },
+
   text: {
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
     fontSize: 15,
+    marginRight: 10,
+  },
+
+  imgWrapper: {
+    position: "relative",
+  },
+
+  img: {
+    width: "100%",
+    flex: 1,
+  },
+
+  txtWrapper: {
+    position: "absolute",
+    top: 100,
+    marginHorizontal: 20,
+  },
+
+  txt: {
+    color: "#111",
+    fontFamily: "Ukrainian-Regular",
+    fontSize: 20,
+    lineHeight: 35,
+  },
+
+  contacts: {
+    position: "absolute",
+    left: 120,
+    top: 450,
+  },
+
+  social: {
+    position: "absolute",
+    top: 500,
+    left: 30,
+    gap: 30,
+  },
+
+  socialBlock: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+  },
+
+  svgSocial: {
+    width: 40,
+    height: 40,
   },
 });

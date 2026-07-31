@@ -146,8 +146,8 @@ export default function LoginScreen() {
 
   return (
     <PortalProvider>
-      <View style={{ flex: 1, marginTop: 30 }}>
-        <View style={styles.header}>
+      <View>
+        <View style={[styles.header, isLandscape && styles.headerLandscape]}>
           <HeaderHatContent
             containerStyle={{
               gap: 50,
@@ -328,10 +328,21 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   header: {
+    flexDirection: "row",
+    justifyContent: "space-around",
     backgroundColor: "#111",
     padding: 10,
-    marginTop: 20,
+    alignItems: "center",
+    marginTop: 50,
+    // backgroundColor: "#111",
+    // padding: 10,
+    // marginTop: 20,
   },
+
+  headerLandscape: {
+    marginTop: 0,
+  },
+
   bgd: {
     backgroundColor: "#eee",
     zIndex: 0,

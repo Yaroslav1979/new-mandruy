@@ -292,7 +292,6 @@ const styles = StyleSheet.create({
   },
 
   bgd: {
-    // flex: 1,
     width: "100%",
     height: 800,
   },
@@ -333,13 +332,6 @@ const styles = StyleSheet.create({
     gap: 20,
     marginTop: 20,
   },
-
-  // title: {
-  //   fontFamily: "Ukrainian-Bold",
-  //   fontSize: 28,
-  //   textAlign: "center",
-  //   marginBottom: 20,
-  // },
 
   input: {
     width: "100%",
@@ -394,6 +386,7 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
     fontSize: 18,
+    paddingLeft: 20,
   },
 
   text: {

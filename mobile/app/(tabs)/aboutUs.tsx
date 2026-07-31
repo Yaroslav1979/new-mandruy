@@ -10,12 +10,15 @@ import {
   Pressable,
   View,
   ImageBackground,
+  useWindowDimensions,
 } from "react-native";
 
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import { PortalProvider } from "@gorhom/portal";
 
 export default function LoginScreen() {
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
   return (
     <PortalProvider>
       {/* <ParallaxScrollView
@@ -23,7 +26,7 @@ export default function LoginScreen() {
       headerHeight={50}
       headerImage={<View />}
     > */}
-      <View style={styles.header}>
+      <View style={[styles.header, isLandscape && styles.headerLandscape]}>
         <HeaderHatContent
           containerStyle={{
             gap: 50,
@@ -45,16 +48,31 @@ export default function LoginScreen() {
             <Text style={styles.title}>КОНТАКТИ</Text>
           </View>
 
-          <View style={styles.social}>
-            <Pressable style={styles.socialBlock}>
+          <View style={[styles.social, isLandscape && styles.socialLandscape]}>
+            <Pressable
+              style={[
+                styles.socialBlock,
+                isLandscape && styles.socialBlockLandscape,
+              ]}
+            >
               <IconMail style={styles.svgSocial} />
               <Text style={styles.socialText}>ourwebsite.com</Text>
             </Pressable>
-            <Pressable style={styles.socialBlock}>
+            <Pressable
+              style={[
+                styles.socialBlock,
+                isLandscape && styles.socialBlockLandscape,
+              ]}
+            >
               <IconSite style={styles.svgSocial} />
               <Text style={styles.socialText}>ouremail1222@gmail.com</Text>
             </Pressable>
-            <Pressable style={styles.socialBlock}>
+            <Pressable
+              style={[
+                styles.socialBlock,
+                isLandscape && styles.socialBlockLandscape,
+              ]}
+            >
               <IconTele style={styles.svgSocial} />
               <Text style={styles.socialText}>@telegramnickname</Text>
             </Pressable>
@@ -82,7 +100,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
-    top: 50,
+    marginTop: 50,
+  },
+
+  headerLandscape: {
+    marginTop: 0,
   },
 
   scrollContent: {
@@ -103,7 +125,7 @@ const styles = StyleSheet.create({
   },
 
   img: {
-    top: 50,
+    // top: 50,
     width: "100%",
     height: "100%",
   },
@@ -117,11 +139,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
+  socialLandscape: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
   socialBlock: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
+  },
+
+  socialBlockLandscape: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 10,
   },
 
   socialText: {

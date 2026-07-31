@@ -1,27 +1,32 @@
 import Logo from "../assets/svg/logo.svg";
 import { BurgerMenu } from "../components/burger-menu";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, useWindowDimensions } from "react-native";
 
 export default function HeaderLog() {
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+
   return (
-    <View style={styles.pageTitle}>
+    <View style={[styles.pageTitle, isLandscape && styles.pageTitleLandscape]}>
       <BurgerMenu />
-      <View>
-        <Logo style={styles.logo} />
-      </View>
+
+      <Logo style={styles.logo} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   pageTitle: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
+    alignItems: "center",
     backgroundColor: "#111",
     padding: 10,
-    alignItems: "center",
     marginTop: 50,
+  },
+
+  pageTitleLandscape: {
+    marginTop: 0,
   },
 
   logo: {
