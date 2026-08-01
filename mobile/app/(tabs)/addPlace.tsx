@@ -1,4 +1,3 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import React, { useState } from "react";
 import {
@@ -150,11 +149,6 @@ export default function AddPlaceScreen() {
 
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-      headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-      headerHeight={50}
-      headerImage={<View />}
-    > */}
       <View style={[styles.header, isLandscape && styles.headerLandscape]}>
         <HeaderHatContent
           containerStyle={{
@@ -284,7 +278,6 @@ export default function AddPlaceScreen() {
           </Text>
         </Pressable>
       </ScrollView>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }

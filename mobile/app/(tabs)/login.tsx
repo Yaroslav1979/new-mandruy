@@ -358,7 +358,6 @@ export default function LoginScreen() {
           </View>
         </View>
       </Modal>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }

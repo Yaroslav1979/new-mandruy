@@ -1,10 +1,4 @@
-// import { useColorScheme } from "@/hooks/use-color-scheme";
 import { View } from "react-native";
-// import {
-//   DarkTheme,
-//   DefaultTheme,
-//   ThemeProvider,
-// } from "@react-navigation/native";
 import * as Font from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -21,8 +15,6 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  // const colorScheme = useColorScheme();
-
   const [fontsLoaded, fontError] = Font.useFonts({
     "Ukrainian-Medium": require("../assets/fonts/e-Ukraine-Medium.otf"),
     "Ukrainian-Regular": require("../assets/fonts/e-Ukraine-Regular.otf"),
@@ -44,9 +36,6 @@ export default function RootLayout() {
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <AuthProvider>
-        {/* <ThemeProvider
-          value={colorScheme === "light" ? DarkTheme : DefaultTheme}
-        > */}
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
@@ -55,7 +44,6 @@ export default function RootLayout() {
           />
         </Stack>
         <StatusBar style="auto" />
-        {/* </ThemeProvider> */}
       </AuthProvider>
     </View>
   );

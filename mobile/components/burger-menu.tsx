@@ -12,10 +12,7 @@ export function BurgerMenu() {
         flexDirection: "row",
       }}
     >
-      <Pressable
-        // style={styles.reactBoxMenu}
-        onPress={() => setMenuOpen((prev) => !prev)}
-      >
+      <Pressable onPress={() => setMenuOpen((prev) => !prev)}>
         <Image
           source={require("@/assets/images/burger-menu-67.png")}
           style={styles.reactMenu}

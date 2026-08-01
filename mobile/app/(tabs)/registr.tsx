@@ -1,4 +1,3 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/api";
 import HeaderLog from "../../components/HeaderLog";
@@ -17,7 +16,6 @@ import {
   Modal,
   Image,
 } from "react-native";
-
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { PortalProvider } from "@gorhom/portal";
@@ -116,11 +114,6 @@ export default function RegistrScreen() {
 
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-        headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-        headerHeight={35}
-        headerImage={<View />}
-      > */}
       <HeaderLog />
       <ScrollView>
         <View style={{ position: "relative" }}>
@@ -276,7 +269,6 @@ export default function RegistrScreen() {
           </View>
         </View>
       </Modal>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }

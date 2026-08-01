@@ -11,7 +11,6 @@ import { HeaderHero } from "@/components/HeaderHero";
 import { router } from "expo-router";
 import { InfoFlags } from "@/components/IhfoFlags";
 import { PopularQuestions } from "@/components/PopularQuestions";
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import ArrowMore from "../../assets/svg/arrow-more.svg";
 import { PortalProvider } from "@gorhom/portal";
 
@@ -22,17 +21,6 @@ export default function HomeScreen() {
 
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-      headerBackgroundColor={{ light: "#d7b8b8ff", dark: "#1D3D47" }}
-      headerHeight={currentHeaderHeight} // Передає мо висоту сюди!
-      headerImage={
-        <HeaderHero
-          isLandscape={isLandscape}
-          screenHeight={currentHeaderHeight}
-        />
-      }
-    > */}
-
       <HeaderHero
         isLandscape={isLandscape}
         screenHeight={currentHeaderHeight}
@@ -74,7 +62,6 @@ export default function HomeScreen() {
           <PopularQuestions />
         </View>
       </ScrollView>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }

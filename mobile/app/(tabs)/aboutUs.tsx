@@ -1,4 +1,3 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import IconMail from "../../assets/svg/iconMail.svg";
 import IconSite from "../../assets/svg/iconSite.svg";
 import IconTele from "../../assets/svg/iconTele.svg";
@@ -21,11 +20,6 @@ export default function LoginScreen() {
   const isLandscape = width > height;
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-      headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-      headerHeight={50}
-      headerImage={<View />}
-    > */}
       <View style={[styles.header, isLandscape && styles.headerLandscape]}>
         <HeaderHatContent
           containerStyle={{
@@ -87,7 +81,6 @@ export default function LoginScreen() {
           </View>
         </ScrollView>
       </ImageBackground>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }

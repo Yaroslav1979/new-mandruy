@@ -334,15 +334,10 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
     marginTop: 50,
-    // backgroundColor: "#111",
-    // padding: 10,
-    // marginTop: 20,
   },
-
   headerLandscape: {
     marginTop: 0,
   },
-
   bgd: {
     backgroundColor: "#eee",
     zIndex: 0,

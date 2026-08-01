@@ -92,8 +92,6 @@ const styles = StyleSheet.create({
     right: 0,
   },
 
-  reactBoxAcount: {},
-
   reactAcount: {
     fontFamily: "Ukrainian-Regular",
     color: "#fff",

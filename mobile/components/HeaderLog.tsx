@@ -9,7 +9,6 @@ export default function HeaderLog() {
   return (
     <View style={[styles.pageTitle, isLandscape && styles.pageTitleLandscape]}>
       <BurgerMenu />
-
       <Logo style={styles.logo} />
     </View>
   );
