@@ -8,6 +8,7 @@ import {
   Dimensions,
   Modal,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 
 import { Image } from "expo-image";
@@ -24,6 +25,9 @@ import { Review } from "../../components/reviews/reviewItem/typesReviews";
 const { width } = Dimensions.get("window");
 
 export default function PlaceDetails() {
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+
   const { id } = useLocalSearchParams<{ id?: string }>();
   const placeId = Array.isArray(id) ? id[0] : id;
 
@@ -72,8 +76,8 @@ export default function PlaceDetails() {
   }
 
   return (
-    <View style={{ flex: 1, marginTop: 30 }}>
-      <View style={styles.header}>
+    <View style={{ flex: 1 }}>
+      <View style={[styles.header, isLandscape && styles.headerLandscape]}>
         <HeaderHatContent
           containerStyle={{
             gap: 50,
@@ -180,11 +184,24 @@ export default function PlaceDetails() {
 }
 
 const styles = StyleSheet.create({
+  // header: {
+  //   backgroundColor: "#111",
+  //   padding: 10,
+  //   marginTop: 20,
+  // },
   header: {
+    flexDirection: "row",
+    justifyContent: "space-around",
     backgroundColor: "#111",
     padding: 10,
-    marginTop: 20,
+    alignItems: "center",
+    marginTop: 50,
   },
+
+  headerLandscape: {
+    marginTop: 0,
+  },
+
   container: {
     flex: 1,
     backgroundColor: "#fff",

@@ -1,4 +1,3 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/api";
 import HeaderLog from "../../components/HeaderLog";
@@ -17,7 +16,6 @@ import {
   Modal,
   Image,
 } from "react-native";
-
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { PortalProvider } from "@gorhom/portal";
@@ -116,11 +114,6 @@ export default function RegistrScreen() {
 
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-        headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-        headerHeight={35}
-        headerImage={<View />}
-      > */}
       <HeaderLog />
       <ScrollView>
         <View style={{ position: "relative" }}>
@@ -276,7 +269,6 @@ export default function RegistrScreen() {
           </View>
         </View>
       </Modal>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }
@@ -292,7 +284,6 @@ const styles = StyleSheet.create({
   },
 
   bgd: {
-    // flex: 1,
     width: "100%",
     height: 800,
   },
@@ -333,13 +324,6 @@ const styles = StyleSheet.create({
     gap: 20,
     marginTop: 20,
   },
-
-  // title: {
-  //   fontFamily: "Ukrainian-Bold",
-  //   fontSize: 28,
-  //   textAlign: "center",
-  //   marginBottom: 20,
-  // },
 
   input: {
     width: "100%",
@@ -394,6 +378,7 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
     fontSize: 18,
+    paddingLeft: 20,
   },
 
   text: {

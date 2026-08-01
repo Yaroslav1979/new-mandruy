@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
   },
-
   avatarCircleSmall: {
     width: 32,
     height: 32,
@@ -145,7 +144,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   avatarLetterSmall: {
     color: "#fff",
     fontSize: 14,

@@ -1,4 +1,3 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/api";
 import HeaderLog from "../../components/HeaderLog";
@@ -86,12 +85,6 @@ export default function LoginScreen() {
 
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-        headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-        headerHeight={35}
-        headerImage={<View />}
-      > */}
-
       <HeaderLog />
       <ScrollView>
         <View style={{ position: "relative" }}>
@@ -365,7 +358,6 @@ export default function LoginScreen() {
           </View>
         </View>
       </Modal>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }
@@ -377,7 +369,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
-    top: 50,
+    top: 30,
   },
 
   bgd: {
@@ -427,17 +419,11 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 
-  // formBlockLandscape: {
-  //   display: "flex",
-  //   flex: 1,
-  //   width: 200,
-  //   gap: 10,
-  // },
-
   label: {
     fontFamily: "Ukrainian-Regular",
     color: "#eee",
     fontSize: 18,
+    paddingLeft: 20,
   },
 
   input: {

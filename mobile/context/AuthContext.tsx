@@ -31,9 +31,12 @@ export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    initAuth();
-  }, []);
+  useEffect(
+    () => {
+      initAuth();
+    },
+    // []
+  );
 
   const initAuth = async () => {
     const storedToken = await AsyncStorage.getItem("token");

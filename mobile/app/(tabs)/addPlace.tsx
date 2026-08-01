@@ -1,4 +1,3 @@
-// import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import React, { useState } from "react";
 import {
@@ -8,6 +7,7 @@ import {
   Pressable,
   Image,
   ScrollView,
+  useWindowDimensions,
   StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -28,6 +28,9 @@ const categories = [
 ];
 
 export default function AddPlaceScreen() {
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+
   const { token } = useAuth();
 
   const [title, setTitle] = useState("");
@@ -146,12 +149,7 @@ export default function AddPlaceScreen() {
 
   return (
     <PortalProvider>
-      {/* <ParallaxScrollView
-      headerBackgroundColor={{ light: "#fff", dark: "#1D3D47" }}
-      headerHeight={50}
-      headerImage={<View />}
-    > */}
-      <View style={styles.header}>
+      <View style={[styles.header, isLandscape && styles.headerLandscape]}>
         <HeaderHatContent
           containerStyle={{
             gap: 50,
@@ -165,6 +163,7 @@ export default function AddPlaceScreen() {
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>ДОДАТИ МІСЦЕ</Text>
         </View>
+
         {/* 📸 ФОТО */}
         <View style={styles.uploadBox}>
           <Pressable onPress={pickImages} style={styles.uploadArea}>
@@ -234,6 +233,13 @@ export default function AddPlaceScreen() {
         />
 
         {/* 🏷 КАТЕГОРІЇ */}
+
+        <View style={styles.titleWrapper}>
+          <Text style={styles.titleCategory}>
+            Виберіть відповідні категорії:
+          </Text>
+        </View>
+
         <View style={styles.categories}>
           {categories.map((cat) => (
             <Pressable
@@ -272,14 +278,13 @@ export default function AddPlaceScreen() {
           </Text>
         </Pressable>
       </ScrollView>
-      {/* </ParallaxScrollView> */}
     </PortalProvider>
   );
 }
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    top: 50,
+    // top: 50,
   },
 
   uploadBox: {
@@ -297,6 +302,7 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Regular",
     textAlign: "center",
     marginBottom: 10,
+    color: "#ccc",
   },
 
   imagesGrid: {
@@ -352,6 +358,12 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     marginBottom: 20,
   },
+  titleCategory: {
+    fontFamily: "Ukrainian-Regular",
+    // marginBottom: 20,
+    color: "#111",
+    fontSize: 16,
+  },
 
   categories: {
     flexDirection: "row",
@@ -382,15 +394,18 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    fontFamily: "Ukrainian-Regular",
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "#111",
     padding: 10,
     alignItems: "center",
-    top: 50,
+    marginTop: 50,
   },
+
+  headerLandscape: {
+    marginTop: 0,
+  },
+
   titleWrapper: {
     alignItems: "center",
     marginVertical: 20,
