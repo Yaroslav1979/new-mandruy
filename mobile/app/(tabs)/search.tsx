@@ -106,29 +106,28 @@ export default function LoginScreen() {
 
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
-  // const [place, setPlace] = useState<any>(null);
-
   const [visibleCount, setVisibleCount] = useState(10);
 
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
+
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [searchQuery, category, region, sortedby]);
+
   const processedPlaces = places
-    // 🔎 1. Пошук по назві
     .filter((place) =>
       place.title.toLowerCase().includes(searchQuery.toLowerCase()),
     )
-
-    // 🏷️ 2. Фільтр по категорії
     .filter((place) =>
       category === "Без категорії"
         ? true
         : place.categoryIds?.includes(category),
     )
-
-    // 🌍 3. Фільтр по області
     .filter((place) =>
       region === "Вся Україна" ? true : place.location?.region === region,
     )
-
-    // 🔃 4. Сортування
     .sort((a, b) => {
       if (sortedby === "За назвою") {
         return a.title.localeCompare(b.title);
@@ -140,13 +139,14 @@ export default function LoginScreen() {
           new Date(a.createdAt || "").getTime()
         );
       }
-
-      return 0; // За замовчуванням
+      return 0;
     });
+
+  const visiblePlaces = processedPlaces.slice(0, visibleCount);
 
   return (
     <PortalProvider>
-      <View>
+      <View style={styles.container}>
         <View style={[styles.header, isLandscape && styles.headerLandscape]}>
           <HeaderHatContent
             containerStyle={{
@@ -157,112 +157,106 @@ export default function LoginScreen() {
           />
         </View>
 
+        <View style={styles.searchHeader}>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>ПОШУК МІСЦЬ</Text>
+          </View>
+
+          <View style={styles.form}>
+            <View style={styles.formBlock}>
+              <TextInput
+                style={styles.input}
+                textAlign="center"
+                placeholder="Введіть назву"
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+
+              <Image
+                source={require("../../assets/images/iconSearch.png")}
+                style={styles.searchBtn}
+              />
+            </View>
+
+            <View style={styles.pickerWrapper}>
+              {/* Категорія */}
+              <View style={styles.pickerBlock}>
+                <Text style={styles.label}>Категорія:</Text>
+
+                <DropDownPicker
+                  open={categoryOpen}
+                  value={category}
+                  items={categoryItems}
+                  setOpen={setCategoryOpen}
+                  setValue={setCategory}
+                  setItems={setCategoryItems}
+                  placeholder="Категорія"
+                  style={styles.dropdown}
+                  textStyle={styles.dropdownText}
+                  listMode="SCROLLVIEW"
+                  dropDownContainerStyle={styles.dropdownContainer}
+                />
+              </View>
+
+              {/* Область */}
+              <View style={styles.pickerBlock}>
+                <Text style={styles.label}>Область:</Text>
+
+                <DropDownPicker
+                  open={regionOpen}
+                  value={region}
+                  items={regionItems}
+                  setOpen={setRegionOpen}
+                  setValue={setRegion}
+                  setItems={setRegionItems}
+                  placeholder="Область"
+                  style={styles.dropdown}
+                  textStyle={styles.dropdownText}
+                  listMode="SCROLLVIEW"
+                  dropDownContainerStyle={styles.dropdownContainer}
+                />
+              </View>
+
+              {/* Сортування */}
+              <View style={styles.pickerBlock}>
+                <Text style={styles.label}>Сортувати:</Text>
+
+                <DropDownPicker
+                  open={sortedbyOpen}
+                  value={sortedby}
+                  items={sortedbyItems}
+                  setOpen={setSortedbyOpen}
+                  setValue={setSortedby}
+                  setItems={setSortedbyItems}
+                  placeholder="Сортувати"
+                  style={styles.dropdown}
+                  textStyle={styles.dropdownText}
+                  listMode="SCROLLVIEW"
+                  dropDownContainerStyle={styles.dropdownContainer}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Список місць */}
         <FlatList<Place>
-          data={processedPlaces.slice(0, visibleCount)}
+          data={visiblePlaces}
           style={styles.bgd}
           key={isLandscape ? "landscape" : "portrait"}
           numColumns={isLandscape ? 2 : 1}
           columnWrapperStyle={
             isLandscape ? { justifyContent: "space-between" } : undefined
           }
-          contentContainerStyle={{ paddingBottom: 20 }}
+          contentContainerStyle={{
+            paddingBottom: 20,
+          }}
           keyExtractor={(item) => item._id}
-          ListHeaderComponent={
-            <>
-              <View style={styles.titleWrapper}>
-                <Text style={styles.title}>ПОШУК МІСЦЬ</Text>
-              </View>
-
-              <View style={styles.form}>
-                <View style={styles.formBlock}>
-                  <TextInput
-                    style={styles.input}
-                    textAlign="center"
-                    placeholder="Введіть назву"
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                  />
-                  <Image
-                    source={require("../../assets/images/iconSearch.png")}
-                    style={styles.searchBtn}
-                  />
-                </View>
-
-                <View style={styles.pickerWrapper}>
-                  <View
-                    style={{
-                      width: "33%",
-                      gap: 5,
-                    }}
-                  >
-                    <Text style={styles.label}>Категорія:</Text>
-                    <DropDownPicker
-                      open={categoryOpen}
-                      value={category}
-                      items={categoryItems}
-                      setOpen={setCategoryOpen}
-                      setValue={setCategory}
-                      setItems={setCategoryItems}
-                      placeholder="Категорія"
-                      style={styles.dropdown}
-                      textStyle={styles.dropdownText}
-                      listMode="SCROLLVIEW"
-                      dropDownContainerStyle={styles.dropdownContainer}
-                    />
-                  </View>
-
-                  <View
-                    style={{
-                      width: "33%",
-                      gap: 5,
-                    }}
-                  >
-                    <Text style={styles.label}>Область:</Text>
-                    <DropDownPicker
-                      open={regionOpen}
-                      value={region}
-                      items={regionItems}
-                      setOpen={setRegionOpen}
-                      setValue={setRegion}
-                      setItems={setRegionItems}
-                      placeholder="Область"
-                      style={styles.dropdown}
-                      textStyle={styles.dropdownText}
-                      listMode="SCROLLVIEW"
-                      dropDownContainerStyle={styles.dropdownContainer}
-                    />
-                  </View>
-
-                  <View
-                    style={{
-                      width: "33%",
-                      gap: 5,
-                    }}
-                  >
-                    <Text style={styles.label}>Сортувати:</Text>
-                    <DropDownPicker
-                      open={sortedbyOpen}
-                      value={sortedby}
-                      items={sortedbyItems}
-                      setOpen={setSortedbyOpen}
-                      setValue={setSortedby}
-                      setItems={setSortedbyItems}
-                      placeholder="Сортувати"
-                      style={styles.dropdown}
-                      textStyle={styles.dropdownText}
-                      listMode="SCROLLVIEW"
-                      dropDownContainerStyle={styles.dropdownContainer}
-                    />
-                  </View>
-                </View>
-              </View>
-            </>
-          }
-          renderItem={({ item, index }: { item: Place; index: number }) => {
+          renderItem={({ item, index }) => {
             const isLastOdd =
               isLandscape &&
-              places.length % 2 !== 0 &&
-              index === places.length - 1;
+              visiblePlaces.length % 2 !== 0 &&
+              index === visiblePlaces.length - 1;
 
             return (
               <TouchableOpacity
@@ -270,7 +264,10 @@ export default function LoginScreen() {
                   styles.placeCard,
                   isLandscape && !isLastOdd ? { width: "48%" } : undefined,
                   isLandscape && isLastOdd
-                    ? { width: "48%", alignSelf: "flex-start" }
+                    ? {
+                        width: "48%",
+                        alignSelf: "flex-start",
+                      }
                     : undefined,
                 ]}
                 activeOpacity={0.9}
@@ -283,40 +280,47 @@ export default function LoginScreen() {
               >
                 {item.imgUrls?.length > 0 && (
                   <Image
-                    source={{ uri: `${API_URL}${item.imgUrls[0]}` }}
+                    source={{
+                      uri: `${API_URL}${item.imgUrls[0]}`,
+                    }}
                     style={styles.placeImage}
                   />
                 )}
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "flex-end",
-                    gap: 10,
-                  }}
-                >
-                  <Text style={styles.placeTitle}>{item.title}</Text>
+
+                <Text style={styles.placeTitle}>{item.title}</Text>
+
+                <View style={styles.regionWrapper}>
+                  <Text style={styles.placeRegion}>
+                    {item.location?.region}
+                  </Text>
+
                   <StarRating rating={Number(item.rating) || 0} />
                 </View>
-
-                <Text style={styles.placeRegion}>{item.location?.region}</Text>
               </TouchableOpacity>
             );
           }}
-          ListEmptyComponent={() =>
+          ListEmptyComponent={
             !loading ? (
-              <Text style={{ textAlign: "center", marginTop: 40 }}>
-                Місця не знайдені
-              </Text>
+              <Text style={styles.emptyText}>Місця не знайдені</Text>
             ) : null
           }
           ListFooterComponent={
-            visibleCount < processedPlaces.length ? (
+            processedPlaces.length > 10 ? (
               <TouchableOpacity
                 style={styles.loadMoreBtn}
-                onPress={() => setVisibleCount((prev) => prev + 10)}
+                onPress={() => {
+                  if (visibleCount < processedPlaces.length) {
+                    setVisibleCount((prev) => prev + 10);
+                  } else {
+                    setVisibleCount(10);
+                  }
+                }}
               >
-                <Text style={styles.loadMoreText}>Показати ще</Text>
+                <Text style={styles.loadMoreText}>
+                  {visibleCount < processedPlaces.length
+                    ? "Показати ще"
+                    : "Згорнути"}
+                </Text>
               </TouchableOpacity>
             ) : null
           }
@@ -327,6 +331,10 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    gap: 10,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -338,13 +346,16 @@ const styles = StyleSheet.create({
   headerLandscape: {
     marginTop: 0,
   },
+  searchHeader: {
+    backgroundColor: "#eee",
+  },
   bgd: {
     backgroundColor: "#eee",
-    zIndex: 0,
   },
   titleWrapper: {
     alignItems: "center",
     marginTop: 20,
+    marginBottom: 10,
   },
   title: {
     fontFamily: "Ukrainian-Bold",
@@ -352,8 +363,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   form: {
-    fontFamily: "Ukrainian-Bold",
-    display: "flex",
     gap: 20,
     marginTop: 30,
     marginHorizontal: 30,
@@ -370,6 +379,7 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Regular",
     color: "#111",
     fontSize: 15,
+    left: 8,
   },
   subtitle: {
     fontFamily: "Ukrainian-Bold",
@@ -387,9 +397,12 @@ const styles = StyleSheet.create({
     minWidth: 300,
   },
   pickerWrapper: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 5,
+  },
+  pickerBlock: {
+    width: "33%",
     gap: 5,
   },
   searchBtn: {
@@ -423,7 +436,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     borderWidth: 1,
     borderColor: "#ddd",
-    zIndex: -1,
   },
   placeImage: {
     width: "100%",
@@ -435,10 +447,21 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Bold",
     marginTop: 8,
   },
+  regionWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    justifyContent: "space-between",
+  },
   placeRegion: {
     fontSize: 14,
     color: "#555",
-    marginTop: 4,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    fontFamily: "Ukrainian-Regular",
+    fontSize: 16,
   },
   loadMoreBtn: {
     marginVertical: 20,
@@ -448,7 +471,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     borderRadius: 8,
   },
-
   loadMoreText: {
     color: "#fff",
     fontSize: 16,

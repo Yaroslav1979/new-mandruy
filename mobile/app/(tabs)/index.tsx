@@ -90,9 +90,10 @@ export default function HomeScreen() {
                 </Pressable>
 
                 <Pressable style={styles.link} onPress={handleMorePress}>
-                  <Text style={styles.linkText}>
-                    Дізнатися більше <ArrowMore />
-                  </Text>
+                  <View style={styles.linkContent}>
+                    <Text style={styles.linkText}>Дізнатися більше</Text>
+                    <ArrowMore />
+                  </View>
                 </Pressable>
               </View>
             </View>
@@ -149,6 +150,12 @@ const styles = StyleSheet.create({
 
   link: {
     alignItems: "center",
+  },
+
+  linkContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: "6",
   },
 
   linkText: {

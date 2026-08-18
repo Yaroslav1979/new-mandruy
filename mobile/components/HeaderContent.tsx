@@ -65,9 +65,10 @@ export function HeaderContent({
         </Pressable>
 
         <Pressable style={styles.link} onPress={onMorePress}>
-          <Text style={styles.linkText}>
-            Дізнатися більше <ArrowMore />
-          </Text>
+          <View style={styles.linkContent}>
+            <Text style={styles.linkText}>Дізнатися більше</Text>
+            <ArrowMore />
+          </View>
         </Pressable>
       </View>
     </View>
@@ -147,6 +148,12 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Bold",
     color: "#eee",
     fontSize: 20,
+  },
+
+  linkContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: "6",
   },
 
   avatarSmall: {
