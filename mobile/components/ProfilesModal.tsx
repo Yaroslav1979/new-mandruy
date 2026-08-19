@@ -7,11 +7,13 @@ import {
   Image,
   Modal,
   TextInput,
+  useWindowDimensions,
 } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { API_URL } from "@/constants/api";
 import * as ImagePicker from "expo-image-picker";
+import { CloseButton } from "..//components/close-btn";
 
 type Props = {
   visible: boolean;
@@ -21,6 +23,9 @@ type Props = {
 export function ProfilesModal({ visible, setVisible }: Props) {
   const { user, logout, token } = useAuth();
   const userInitial = user?.name?.[0]?.toUpperCase() || "";
+
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
 
   const [nameModal, setNameModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
@@ -100,9 +105,21 @@ export function ProfilesModal({ visible, setVisible }: Props) {
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      supportedOrientations={["portrait", "landscape"]}
+    >
       <Pressable style={styles.modalOverlay} onPress={() => setVisible(false)}>
-        <View style={styles.modalContent}>
+        <View
+          style={[
+            styles.modalContent,
+            isLandscape && styles.modalContentLandscape,
+          ]}
+        >
+          <CloseButton onPress={() => setVisible(false)} />
+
           {user?.avatar ? (
             <Image source={{ uri: user.avatar }} style={styles.avatarBig} />
           ) : (
@@ -143,9 +160,15 @@ export function ProfilesModal({ visible, setVisible }: Props) {
 
       {/* Модалка встановлення та зміни аватара */}
 
-      <Modal visible={avatarModal} transparent animationType="slide">
+      <Modal
+        visible={avatarModal}
+        transparent
+        animationType="slide"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            <CloseButton onPress={() => setAvatarModal(false)} />
             <Pressable style={styles.button} onPress={pickAvatar}>
               <Text>Вибрати фото</Text>
             </Pressable>
@@ -163,9 +186,15 @@ export function ProfilesModal({ visible, setVisible }: Props) {
 
       {/* Модалка зміни імені */}
 
-      <Modal visible={nameModal} transparent animationType="slide">
+      <Modal
+        visible={nameModal}
+        transparent
+        animationType="slide"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            <CloseButton onPress={() => setNameModal(false)} />
             <Text>Нове імʼя</Text>
 
             <TextInput
@@ -183,9 +212,15 @@ export function ProfilesModal({ visible, setVisible }: Props) {
 
       {/* Модалка зміни паролю */}
 
-      <Modal visible={passwordModal} transparent animationType="slide">
+      <Modal
+        visible={passwordModal}
+        transparent
+        animationType="slide"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            <CloseButton onPress={() => setPasswordModal(false)} />
             <TextInput
               placeholder="Поточний пароль"
               secureTextEntry
@@ -225,6 +260,12 @@ const styles = StyleSheet.create({
     padding: 25,
     alignItems: "center",
     gap: 10,
+  },
+
+  modalContentLandscape: {
+    width: "50%",
+    padding: 15,
+    borderRadius: 25,
   },
 
   avatarBig: {
@@ -291,5 +332,23 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 32,
     fontWeight: "bold",
+  },
+
+  closeBtn: {
+    position: "absolute",
+    top: 8,
+    right: 10,
+    width: 35,
+    height: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
+  },
+
+  closeText: {
+    fontSize: 30,
+    lineHeight: 32,
+    color: "#111",
+    fontFamily: "Ukrainian-Regular",
   },
 });

@@ -154,7 +154,12 @@ export default function LoginScreen() {
 
       {/* SUCCESS MODAL */}
 
-      <Modal visible={successModal} transparent animationType="fade">
+      <Modal
+        visible={successModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <Pressable style={styles.modal} onPress={() => setSuccessModal(false)}>
           <View style={styles.modalContent}>
             <Text style={styles.success}>{successMessage || "Успішно!"}</Text>
@@ -181,7 +186,12 @@ export default function LoginScreen() {
 
       {/* ERROR MODAL */}
 
-      <Modal visible={errorModal} transparent animationType="fade">
+      <Modal
+        visible={errorModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.error}>{"Невірний email або пароль"}</Text>
@@ -208,7 +218,12 @@ export default function LoginScreen() {
 
       {/* EMAIL MODAL */}
 
-      <Modal visible={emailModal} transparent animationType="fade">
+      <Modal
+        visible={emailModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.modalLabel}>
@@ -256,7 +271,12 @@ export default function LoginScreen() {
 
       {/* CODE MODAL */}
 
-      <Modal visible={forgotModal} transparent animationType="fade">
+      <Modal
+        visible={forgotModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.modalLabel}>
@@ -292,7 +312,12 @@ export default function LoginScreen() {
 
       {/* NEW PASSWORD MODAL */}
 
-      <Modal visible={resetModal} transparent animationType="fade">
+      <Modal
+        visible={resetModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.success}>Пароль успішно скинуто!</Text>

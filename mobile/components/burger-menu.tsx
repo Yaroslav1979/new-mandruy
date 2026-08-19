@@ -20,7 +20,11 @@ export function BurgerMenu() {
       </Pressable>
 
       {menuOpen && (
-        <Modal transparent animationType="fade">
+        <Modal
+          transparent
+          animationType="fade"
+          supportedOrientations={["portrait", "landscape"]}
+        >
           <Pressable style={styles.overlay} onPress={() => setMenuOpen(false)}>
             <View style={styles.dropdown}>
               <Pressable
