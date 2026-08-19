@@ -160,7 +160,11 @@ export default function PlaceDetails() {
           totalRating={Number(place.rating) || 0}
         />
 
-        <Modal visible={fullscreen} transparent>
+        <Modal
+          visible={fullscreen}
+          transparent
+          supportedOrientations={["portrait", "landscape"]}
+        >
           <View style={styles.fullscreenContainer}>
             <Image
               source={{

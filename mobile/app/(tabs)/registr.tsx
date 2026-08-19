@@ -197,7 +197,12 @@ export default function RegistrScreen() {
 
       {/* MODAL CONFIRM CODE */}
 
-      <Modal visible={confirmModal} transparent animationType="fade">
+      <Modal
+        visible={confirmModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Введіть код з email</Text>
@@ -223,7 +228,12 @@ export default function RegistrScreen() {
 
       {/* SUCCESS MODAL */}
 
-      <Modal visible={successModal} transparent animationType="fade">
+      <Modal
+        visible={successModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <Pressable style={styles.modal} onPress={() => setSuccessModal(false)}>
           <View style={styles.modalContent}>
             <Text style={styles.success}>Вітаємо з успішною реєстрацією!</Text>
@@ -244,7 +254,12 @@ export default function RegistrScreen() {
 
       {/* ERROR MODAL */}
 
-      <Modal visible={errorModal} transparent animationType="fade">
+      <Modal
+        visible={errorModal}
+        transparent
+        animationType="fade"
+        supportedOrientations={["portrait", "landscape"]}
+      >
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.error}>
