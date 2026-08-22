@@ -2,13 +2,17 @@ import { ImageBackground, Text, View } from "react-native";
 import { HeaderContent } from "./HeaderContent";
 import { HeaderHatContent } from "./HeaderHatContent";
 
+type HeaderHeroProps = {
+  isLandscape: boolean;
+  screenHeight: number;
+  onMorePress: () => void;
+};
+
 export function HeaderHero({
   isLandscape,
   screenHeight,
-}: {
-  isLandscape: boolean;
-  screenHeight: number;
-}) {
+  onMorePress,
+}: HeaderHeroProps) {
   if (isLandscape) {
     return (
       <ImageBackground
@@ -16,7 +20,7 @@ export function HeaderHero({
         style={{ height: screenHeight, width: "100%" }}
         resizeMode="cover"
       >
-        <HeaderContent overlay />
+        <HeaderContent overlay onMorePress={onMorePress} />
       </ImageBackground>
     );
   }

@@ -2,20 +2,25 @@ import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function PasswordInput() {
-  const [password, setPassword] = useState("");
+interface PasswordInputProps {
+  value: string;
+  onChangeText: (text: string) => void;
+}
+
+export default function PasswordInput({
+  value,
+  onChangeText,
+}: PasswordInputProps) {
   const [secure, setSecure] = useState(true);
 
   return (
     <View style={styles.inputContainer}>
       <TextInput
         textAlign="center"
-        autoFocus={false}
         textContentType="password"
         style={styles.input}
-        // placeholder="Пароль"
-        value={password}
-        onChangeText={setPassword}
+        value={value}
+        onChangeText={onChangeText}
         secureTextEntry={secure}
       />
 
@@ -25,6 +30,7 @@ export default function PasswordInput() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   inputContainer: {
     position: "relative",
@@ -32,6 +38,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    width: "100%",
     borderWidth: 2,
     borderColor: "#111",
     height: 60,
@@ -41,7 +48,7 @@ const styles = StyleSheet.create({
     color: "#111",
     backgroundColor: "#eeeeee90",
     padding: 12,
-    paddingRight: 40, // місце для іконки
+    paddingRight: 40,
   },
 
   icon: {

@@ -19,7 +19,6 @@ const HomeScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-     
       <ImageBackground
         source={require("@/assets/images/synevir.jpg")}
         style={styles.hero}

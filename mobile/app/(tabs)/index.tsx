@@ -1,10 +1,5 @@
-import { HeaderHero } from "@/components/HeaderHero";
-import { router } from "expo-router";
-import { InfoFlags } from "@/components/IhfoFlags";
-import { PopularQuestions } from "@/components/PopularQuestions";
-import ParallaxScrollView from "@/components/parallax-scroll-view";
-import ArrowMore from "../../assets/svg/arrow-more.svg";
 import {
+  ScrollView,
   ImageBackground,
   Pressable,
   StyleSheet,
@@ -12,61 +7,111 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useRef, useState } from "react";
+import { HeaderHero } from "@/components/HeaderHero";
+import { router } from "expo-router";
+import { InfoFlags } from "@/components/IhfoFlags";
+import { PopularQuestions } from "@/components/PopularQuestions";
+import ArrowMore from "../../assets/svg/arrow-more.svg";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
+
   const isLandscape = width > height;
   const currentHeaderHeight = isLandscape ? height : 250;
 
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [popularQuestionsY, setPopularQuestionsY] = useState(0);
+
+  const handleMorePress = () => {
+    scrollViewRef.current?.scrollTo({
+      y: popularQuestionsY,
+      animated: true,
+    });
+  };
+
+  if (isLandscape) {
+    return (
+      <PortalProvider>
+        <ScrollView ref={scrollViewRef}>
+          <HeaderHero
+            isLandscape={isLandscape}
+            screenHeight={currentHeaderHeight}
+            onMorePress={handleMorePress}
+          />
+
+          <View
+            onLayout={(event) => {
+              setPopularQuestionsY(event.nativeEvent.layout.y);
+            }}
+          >
+            <PopularQuestions />
+          </View>
+        </ScrollView>
+      </PortalProvider>
+    );
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#d7b8b8ff", dark: "#1D3D47" }}
-      headerHeight={currentHeaderHeight} // Передає мо висоту сюди!
-      headerImage={
+    <PortalProvider>
+      <View style={{ flex: 1 }}>
         <HeaderHero
           isLandscape={isLandscape}
           screenHeight={currentHeaderHeight}
+          onMorePress={handleMorePress}
         />
-      }
-    >
-      {!isLandscape && (
-        <ImageBackground
-          source={require("../../assets/images/Map.jpg")}
-          style={{ width: "100%", height: 600 }}
-        >
-          <View style={styles.container}>
-            <Text style={styles.title}>Вітаємо вас на «МАНДРУЙ»</Text>
 
-            <View style={styles.buttons}>
-              <Pressable
-                style={styles.button}
-                onPress={() => router.push("/search")}
-              >
-                <Text style={styles.buttonText}>Розпочати пошук</Text>
-              </Pressable>
-              <Pressable style={styles.link}>
-                <Text style={styles.linkText}>
-                  Дізнатися більше <ArrowMore />
-                </Text>
-              </Pressable>
-            </View>
+        <ScrollView ref={scrollViewRef}>
+          <ImageBackground
+            source={require("../../assets/images/Map.jpg")}
+            style={{
+              width: "100%",
+              height: 600,
+            }}
+          >
+            <View style={styles.container}>
+              <Text style={styles.title}>Вітаємо вас на «МАНДРУЙ»</Text>
 
-            <View style={{ padding: 50 }}>
-              <InfoFlags
-                containerStyle={{
-                  gap: 50,
-                }}
-              />
+              <View style={{ paddingBottom: 30 }}>
+                <InfoFlags
+                  containerStyle={{
+                    gap: 50,
+                  }}
+                />
+              </View>
+
+              <View style={styles.buttons}>
+                <Pressable
+                  style={styles.button}
+                  onPress={() => router.push("/search")}
+                >
+                  <Text style={styles.buttonText}>Розпочати пошук</Text>
+                </Pressable>
+
+                <Pressable style={styles.link} onPress={handleMorePress}>
+                  <View style={styles.linkContent}>
+                    <Text style={styles.linkText}>Дізнатися більше</Text>
+                    <ArrowMore />
+                  </View>
+                </Pressable>
+              </View>
             </View>
+          </ImageBackground>
+
+          <View
+            onLayout={(event) => {
+              setPopularQuestionsY(event.nativeEvent.layout.y);
+            }}
+          >
+            <PopularQuestions />
           </View>
-        </ImageBackground>
-      )}
-      <View>
-        <PopularQuestions />
+        </ScrollView>
       </View>
-    </ParallaxScrollView>
+    </PortalProvider>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     padding: 20,
@@ -81,14 +126,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 60,
   },
-  overlayText: {
-    color: "#eee",
-  },
+
   buttons: {
     display: "flex",
     flexDirection: "column",
     gap: 40,
   },
+
   button: {
     backgroundColor: "#9370db99",
     borderWidth: 2,
@@ -97,14 +141,23 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 30,
   },
+
   buttonText: {
     fontFamily: "Ukrainian-Bold",
     color: "#eee",
     fontSize: 20,
   },
+
   link: {
     alignItems: "center",
   },
+
+  linkContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: "6",
+  },
+
   linkText: {
     fontFamily: "Ukrainian-Bold",
     color: "#111",
