@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons"; // Для іконок
-import { Image } from "expo-image";
+// import { Image } from "expo-image";
 import Logo from "../../assets/svg/logo.svg";
 import React, { useState } from "react";
 import {

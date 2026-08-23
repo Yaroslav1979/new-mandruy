@@ -60,12 +60,15 @@ export default function PlaceDetails() {
     }
   };
 
-  useEffect(() => {
-    if (placeId) {
-      fetchPlace();
-      fetchReviews();
-    }
-  }, [id]);
+  useEffect(
+    () => {
+      if (placeId) {
+        fetchPlace();
+        fetchReviews();
+      }
+    },
+    // [id]
+  );
 
   if (loading || !place) {
     return (
