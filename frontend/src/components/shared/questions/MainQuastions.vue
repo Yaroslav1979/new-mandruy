@@ -14,7 +14,7 @@
 
 <script>
 import QuestionItem from "./QuestionItem.vue";
-import { questions } from "./popularQuestions.js";
+import { questions } from "./popularQuestions";
 
 export default {
   name: "MainQuastions",

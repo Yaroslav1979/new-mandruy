@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   author: {
-    fontWeight: "bold",
+    fontFamily: "Ukrainian-Bold",
+    fontSize: 18,
   },
 });

@@ -16,7 +16,7 @@
 
 <script>
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
-import LoginForm from "../components/auth/login.js";
+import LoginForm from "../components/auth/login";
 import AuthSection from "../components/auth/AuthSection.vue";
 export default {
   name: "LoginPage",

@@ -16,7 +16,7 @@
 
 <script>
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
-import RegisterForm from "../components/auth/registration.js";
+import RegisterForm from "../components/auth/registration";
 import AuthSection from "../components/auth/AuthSection.vue";
 export default {
   name: "RegistrationPage",
@@ -50,13 +50,14 @@ export default {
   z-index: 1000;
 
   &__content {
-    background: #fff;
-    width: 450px;
-    height: auto;
-    max-height: 90vh;
-    padding: 24px;
-    border-radius: 12px;
-    overflow-y: auto;
-  }
+  background: #fff;
+  width: 450px;
+  height: auto;
+  max-height: 90vh;
+  padding: 24px;
+  border-radius: 12px;
+  overflow-y: auto;
 }
+}
+
 </style>

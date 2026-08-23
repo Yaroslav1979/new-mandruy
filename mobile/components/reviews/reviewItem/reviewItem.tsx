@@ -22,11 +22,13 @@ export default ReviewItem;
 
 const styles = StyleSheet.create({
   container: {
+    fontFamily: "Ukrainian-Regular",
     backgroundColor: "#fff",
     padding: 20,
     marginBottom: 2,
   },
   content: {
+    fontFamily: "Ukrainian-Regular",
     marginTop: 20,
     lineHeight: 20,
   },

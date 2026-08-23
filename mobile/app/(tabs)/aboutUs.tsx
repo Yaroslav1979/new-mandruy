@@ -1,7 +1,6 @@
 import IconMail from "../../assets/svg/iconMail.svg";
 import IconSite from "../../assets/svg/iconSite.svg";
 import IconTele from "../../assets/svg/iconTele.svg";
-
 import {
   ScrollView,
   StyleSheet,
@@ -11,7 +10,6 @@ import {
   ImageBackground,
   useWindowDimensions,
 } from "react-native";
-
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import { PortalProvider } from "@gorhom/portal";
 
@@ -84,7 +82,6 @@ export default function LoginScreen() {
     </PortalProvider>
   );
 }
-
 const styles = StyleSheet.create({
   header: {
     display: "flex",
@@ -118,7 +115,6 @@ const styles = StyleSheet.create({
   },
 
   img: {
-    // top: 50,
     width: "100%",
     height: "100%",
   },

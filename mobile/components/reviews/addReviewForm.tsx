@@ -53,9 +53,9 @@ const AddReviewForm: React.FC<Props> = ({
   if (!isAuthenticated) {
     return (
       <View style={styles.form}>
-        <Text>Зареєструйтесь щоб залишати відгуки</Text>
+        <Text style={styles.txt}>Зареєструйтесь щоб залишати відгуки</Text>
         <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
-          <Text>Закрити</Text>
+          <Text style={styles.txt}>Закрити</Text>
         </TouchableOpacity>
       </View>
     );
@@ -81,17 +81,26 @@ const AddReviewForm: React.FC<Props> = ({
       />
 
       <View style={styles.ratingContainer}>
-        <Text>Оцінка: </Text>
+        <Text style={styles.txt}>Оцінка: </Text>
         <Rating rating={rating} mode="input" onChange={setRating} />
       </View>
 
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-          <Text style={{ color: "red" }}>Скасувати</Text>
+          <Text style={{ fontFamily: "Ukrainian-Medium", color: "red" }}>
+            Скасувати
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.submitButton} onPress={submitReview}>
-          <Text style={{ color: "#fff", fontWeight: "bold" }}>Надіслати</Text>
+          <Text
+            style={{
+              fontFamily: "Ukrainian-Medium",
+              color: "#fff",
+            }}
+          >
+            Надіслати
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -105,23 +114,32 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   input: {
+    fontFamily: "Ukrainian-Regular",
     borderWidth: 1,
     padding: 8,
     borderRadius: 6,
   },
   textarea: {
+    fontFamily: "Ukrainian-Regular",
     borderWidth: 1,
     padding: 8,
     borderRadius: 6,
     minHeight: 80,
   },
   button: {
+    fontFamily: "Ukrainian-Medium",
     backgroundColor: "#000",
     padding: 12,
     borderRadius: 6,
     alignItems: "center",
   },
-  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 15 },
+  modalTitle: {
+    fontFamily: "Ukrainian-Bold",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -147,5 +165,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 10,
+  },
+  txt: {
+    fontFamily: "Ukrainian-Medium",
   },
 });

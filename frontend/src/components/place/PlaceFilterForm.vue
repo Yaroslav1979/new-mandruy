@@ -1,32 +1,35 @@
 <template>
   <section class="form-container">
-    <h2 class="section__title">ПОШУК МІСЦЬ</h2>
+    <h2 class="section__title" >ПОШУК МІСЦЬ</h2>
 
     <form class="form" @submit.prevent="handleSubmit">
+
       <div class="form__wrapper">
+
         <CustomInput
           v-model="title"
           placeholder="Введіть назву місця"
           errorMessage="Не повинно бути пустим"
           class="search-input"
         />
-        <SubmitButon @click="handleSubmit" type="submit" class="search-btn">
-          <img
-            src="../../assets/png/iconSearch.png"
-            alt=""
-            class="search-icon"
-          />
+        <SubmitButon 
+        @click="handleSubmit" 
+        type="submit" 
+        class="search-btn"
+        >
+          <img src="../../assets/png/iconSearch.png" alt="" class="search-icon" />
         </SubmitButon>
+
       </div>
 
       <div class="form__select">
-        <span>КАТЕГОРІЯ:</span>
-        <CustomSelect
-          :items="categories"
-          v-model="categoryIds"
-          class="form__select--item"
-        />
-
+      <span>КАТЕГОРІЯ:</span>
+      <CustomSelect
+        :items="categories"
+        v-model="categoryIds"
+        class="form__select--item"
+      />
+   
         <span>ОБЛАСТЬ:</span>
         <CustomSelect
           :items="regions"
@@ -35,26 +38,20 @@
         />
 
         <span>СОРТУВАТИ:</span>
-        <CustomSelect
-          :items="sorts"
-          v-model="sortBy"
-          class="form__select--item"
-        />
+      <CustomSelect
+        :items="sorts"
+        v-model="sortBy"
+        class="form__select--item"
+      />
 
-        <div class="form__toggle">
-          <img
-            src="../../assets/png/icon-grid-fill.png"
-            alt=""
-            class="form__toggle--grid"
-          />
-          <img
-            src="../../assets/png/icon-agenda.png"
-            alt=""
-            class="form__toggle--gallery"
-          />
-        </div>
-      </div>
+      <div class="form__toggle">
+          <img src="../../assets/png/icon-grid-fill.png" alt="" class="form__toggle--grid">
+          <img src="../../assets/png/icon-agenda.png" alt="" class="form__toggle--gallery">
+                    </div>
+    </div>     
+
     </form>
+
   </section>
 </template>
 
@@ -62,7 +59,7 @@
 import CustomInput from "../shared/CustomInput.vue";
 import CustomSelect from "../shared/CustomSelect.vue";
 import SubmitButon from "../mainButton.vue";
-import { isRequired } from "../../utils/validationRules.js";
+import { isRequired } from '../../utils/validationRules';
 
 export default {
   name: "FilterForm",
@@ -76,13 +73,13 @@ export default {
       title: "",
       region: "",
       categoryIds: "",
-      sortBy: "",
+      sortBy: '',      
     };
   },
   computed: {
     rules() {
-      return [isRequired];
-    },
+            return [isRequired]
+        },
 
     categories() {
       return [
@@ -130,15 +127,16 @@ export default {
       // .map(this.formatItem);
     },
     sorts() {
-      return [
-        { value: "", label: "за замовчуванням", isLabel: true },
-        { value: "title", label: "за назвою" },
-        { value: "date", label: "за датою" },
-      ];
-    },
+  return [
+    { value: "", label: "за замовчуванням", isLabel: true },
+    { value: "title", label: "за назвою" },
+    { value: "date", label: "за датою" },
+  ];
+},
+    
   },
 
-  methods: {
+  methods: {    
     handleSubmit() {
       this.$emit("submit", {
         title: this.title,
@@ -147,9 +145,10 @@ export default {
         sortBy: this.sortBy,
       });
     },
-  },
+    },
 };
 </script>
+
 
 <style lang="scss" scoped>
 @import "../../assets/scss/variables";
@@ -188,7 +187,7 @@ export default {
   margin-bottom: 52px;
 }
 .search-input {
-  border: none;
+border: none;
 }
 .search-icon {
   display: flex;
@@ -198,7 +197,7 @@ export default {
   cursor: pointer;
 }
 .search-icon:hover {
-  border: 2px solid grey;
+  border: 2px solid grey; 
   border-radius: 8px;
 }
 
@@ -210,25 +209,27 @@ export default {
   font-family: e-Ukraine, sans-serif;
 }
 .form__select span {
-  font-weight: 600;
+font-weight: 600;
 }
 
 .form__toggle {
   display: flex;
-  cursor: pointer;
+  cursor: pointer;  
 }
 .form__toggle:hover {
   opacity: 60%;
 }
 
-.form__toggle--grid,
-.form__toggle--gallery {
+.form__toggle--grid, .form__toggle--gallery {
   display: flex;
   width: 32px;
   height: 32px;
-  opacity: 40%;
+  opacity: 40%;  
 }
-.form__select--item:first-child {
-  color: #a9a9a9;
+.form__select--item:first-child{
+color: #A9A9A9
 }
 </style>
+
+
+

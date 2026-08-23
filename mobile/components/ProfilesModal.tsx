@@ -135,25 +135,25 @@ export function ProfilesModal({ visible, setVisible }: Props) {
             style={styles.optionBtn}
             onPress={() => setNameModal(true)}
           >
-            <Text>Змінити імʼя</Text>
+            <Text style={styles.optionText}>Змінити імʼя</Text>
           </Pressable>
 
           <Pressable
             style={styles.optionBtn}
             onPress={() => setPasswordModal(true)}
           >
-            <Text>Змінити пароль</Text>
+            <Text style={styles.optionText}>Змінити пароль</Text>
           </Pressable>
 
           <Pressable
             style={styles.optionBtn}
             onPress={() => setAvatarModal(true)}
           >
-            <Text>Змінити аватар</Text>
+            <Text style={styles.optionText}>Змінити аватар</Text>
           </Pressable>
 
-          <Pressable style={styles.logoutBtn} onPress={handleLogout}>
-            <Text style={styles.logoutText}>Вийти</Text>
+          <Pressable style={styles.button} onPress={handleLogout}>
+            <Text style={styles.textBtn}>Вийти</Text>
           </Pressable>
         </View>
       </Pressable>
@@ -167,11 +167,13 @@ export function ProfilesModal({ visible, setVisible }: Props) {
         supportedOrientations={["portrait", "landscape"]}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View
+            style={[
+              styles.modalContent,
+              isLandscape && styles.modalContentLandscape,
+            ]}
+          >
             <CloseButton onPress={() => setAvatarModal(false)} />
-            <Pressable style={styles.button} onPress={pickAvatar}>
-              <Text>Вибрати фото</Text>
-            </Pressable>
 
             {avatar ? (
               <Image source={{ uri: avatar }} style={styles.avatarBig} />
@@ -180,6 +182,9 @@ export function ProfilesModal({ visible, setVisible }: Props) {
                 <Text style={styles.avatarLetter}>{userInitial}</Text>
               </View>
             )}
+            <Pressable style={styles.button} onPress={pickAvatar}>
+              <Text style={styles.textBtn}>Вибрати фото</Text>
+            </Pressable>
           </View>
         </View>
       </Modal>
@@ -193,18 +198,24 @@ export function ProfilesModal({ visible, setVisible }: Props) {
         supportedOrientations={["portrait", "landscape"]}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View
+            style={[
+              styles.modalContent,
+              isLandscape && styles.modalContentLandscape,
+            ]}
+          >
             <CloseButton onPress={() => setNameModal(false)} />
-            <Text>Нове імʼя</Text>
 
-            <TextInput
-              style={styles.input}
-              value={newName}
-              onChangeText={setNewName}
-            />
-
+            <View style={styles.blockContent}>
+              <TextInput
+                placeholder="Нове імʼя"
+                style={styles.input}
+                value={newName}
+                onChangeText={setNewName}
+              />
+            </View>
             <Pressable style={styles.button} onPress={changeName}>
-              <Text>Зберегти</Text>
+              <Text style={styles.textBtn}>Змінити імʼя</Text>
             </Pressable>
           </View>
         </View>
@@ -219,24 +230,32 @@ export function ProfilesModal({ visible, setVisible }: Props) {
         supportedOrientations={["portrait", "landscape"]}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View
+            style={[
+              styles.modalContent,
+              isLandscape && styles.modalContentLandscape,
+            ]}
+          >
             <CloseButton onPress={() => setPasswordModal(false)} />
-            <TextInput
-              placeholder="Поточний пароль"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
+            <View style={styles.blockContent}>
+              <TextInput
+                style={[styles.optionText, styles.input]}
+                placeholder="Поточний пароль"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+              />
 
-            <TextInput
-              placeholder="Новий пароль"
-              secureTextEntry
-              value={newPassword}
-              onChangeText={setNewPassword}
-            />
-
+              <TextInput
+                style={[styles.optionText, styles.input]}
+                placeholder="Новий пароль"
+                secureTextEntry
+                value={newPassword}
+                onChangeText={setNewPassword}
+              />
+            </View>
             <Pressable style={styles.button} onPress={changePassword}>
-              <Text>Змінити пароль</Text>
+              <Text style={styles.textBtn}>Змінити пароль</Text>
             </Pressable>
           </View>
         </View>
@@ -261,9 +280,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
+  blockContent: {
+    width: "100%",
+    gap: 20,
+    marginTop: 30,
+  },
 
   modalContentLandscape: {
-    width: "50%",
+    width: "40%",
     padding: 15,
     borderRadius: 25,
   },
@@ -275,16 +299,18 @@ const styles = StyleSheet.create({
   },
 
   name: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 20,
     fontWeight: "600",
   },
 
   email: {
+    fontFamily: "Ukrainian-Regular",
     fontSize: 16,
     color: "#666",
   },
 
-  logoutBtn: {
+  button: {
     marginTop: 10,
     backgroundColor: "#9370db",
     paddingHorizontal: 20,
@@ -292,7 +318,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
-  logoutText: {
+  textBtn: {
+    fontFamily: "Ukrainian-Regular",
     color: "#fff",
     fontSize: 16,
   },
@@ -305,20 +332,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  optionText: {
+    fontFamily: "Ukrainian-Regular",
+    fontSize: 16,
+  },
+
   input: {
+    fontFamily: "Ukrainian-Regular",
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 10,
-    borderRadius: 8,
+    borderRadius: 20,
     width: "100%",
   },
 
-  button: {
-    marginTop: 10,
-    backgroundColor: "#9370db",
-    padding: 10,
-    borderRadius: 8,
-  },
   avatarCircle: {
     width: 90,
     height: 90,

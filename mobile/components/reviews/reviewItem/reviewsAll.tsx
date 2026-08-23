@@ -57,10 +57,10 @@ const ReviewsAll: React.FC<Props> = ({
     <View style={styles.container}>
       <Text style={styles.title}>Відгуки</Text>
 
-      <Text>Кількість: {localReviews.length}</Text>
+      <Text style={styles.txt}>Кількість: {localReviews.length}</Text>
 
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text>Рейтинг: </Text>
+        <Text style={styles.txt}>Рейтинг: </Text>
         <Rating rating={Number(totalRating)} mode="display" />
       </View>
 
@@ -76,16 +76,17 @@ const ReviewsAll: React.FC<Props> = ({
           </Text>
         </TouchableOpacity>
       ) : (
-        <Text style={{ marginVertical: 10 }}>
+        <Text style={{ marginVertical: 10, fontFamily: "Ukrainian-Medium" }}>
           Зареєструйтесь щоб залишити відгук
         </Text>
       )}
 
       <Modal
         visible={showModal}
-        transparent
+        transparent={false}
         animationType="fade"
         onRequestClose={() => setShowModal(false)}
+        supportedOrientations={["portrait", "landscape"]}
       >
         <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
           <View style={styles.modalOverlay}>
@@ -110,7 +111,7 @@ const ReviewsAll: React.FC<Props> = ({
 
       <TouchableOpacity onPress={toggleReviews}>
         <Text style={styles.showMore}>
-          {limit >= localReviews.length ? "Згорнути" : "Читати більше"}
+          {limit >= localReviews.length ? "Згорнути" : "Читати більше..."}
         </Text>
       </TouchableOpacity>
     </View>
@@ -126,14 +127,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   title: {
-    fontSize: 18,
+    fontFamily: "Ukrainian-Bold",
+    fontSize: 20,
     fontWeight: "bold",
   },
+  txt: {
+    fontFamily: "Ukrainian-Medium",
+  },
   button: {
+    fontFamily: "Ukrainian-Medium",
     marginVertical: 12,
+    fontSize: 16,
     color: "blue",
   },
   showMore: {
+    fontSize: 16,
+    fontFamily: "Ukrainian-Medium",
     textAlign: "center",
     padding: 12,
   },
@@ -144,6 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
+    fontFamily: "Ukrainian-Regular",
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 12,

@@ -1,41 +1,32 @@
 <template>
   <div class="header-top">
-    <div class="burger" @click="burgerOpen = !burgerOpen">☰</div>
-
-    <div v-if="burgerOpen" class="mobile-menu">
-      <router-link :to="{ name: 'home' }">Про сервіс</router-link>
-      <router-link :to="{ name: 'SearchPlacePage' }">Пошук місць</router-link>
-      <router-link :to="{ name: 'MapPage' }">Мапа</router-link>
-      <router-link :to="{ name: 'ContactPage' }">Контакти</router-link>
-
-      <div v-if="isAuthenticated">
-        <button @click="$emit('openAddModal')">Додати місце</button>
-        <button @click="handleLogout">Вийти</button>
-      </div>
-
-      <div v-else>
-        <router-link :to="{ name: 'registration-page' }"
-          >Реєстрація</router-link
-        >
-        <router-link :to="{ name: 'login-page' }">Вхід</router-link>
-      </div>
-    </div>
-
     <LogoType />
     <span>
-      <router-link :to="{ name: 'home' }" class="header-top__nav">
+      <router-link
+        :to="{ name: 'home'}"
+        class="header-top__nav"
+      >
         Про сервіс
       </router-link>
 
-      <router-link :to="{ name: 'SearchPlacePage' }" class="header-top__nav">
+      <router-link
+        :to="{ name: 'SearchPlacePage'}"
+        class="header-top__nav"
+      >
         Пошук місць
       </router-link>
 
-      <router-link :to="{ name: 'MapPage' }" class="header-top__nav">
+      <router-link
+        :to="{ name: 'MapPage'}"
+        class="header-top__nav"
+      >
         Мапа
       </router-link>
 
-      <router-link :to="{ name: 'ContactPage' }" class="header-top__nav">
+      <router-link
+        :to="{ name: 'ContactPage'}"
+        class="header-top__nav"
+      >
         Контакти
       </router-link>
 
@@ -60,7 +51,13 @@
             @close="showProfileModal = false"
             @logout="handleLogout"
           />
+
+          <!-- <span v-if="user" class="header-top__username">{{ user.name }}</span> -->
         </div>
+
+        <!-- <span>
+          <button class="header-top__logout" @click="handleLogout">Вийти</button>
+        </span> -->
       </div>
 
       <div v-else class="header-top__block">
@@ -72,7 +69,7 @@
         </router-link>
         /
         <router-link
-          :to="{ name: 'login-page' }"
+          :to="{ name: 'login-page'}"
           class="header-top__block-login"
         >
           Вхід
@@ -92,13 +89,12 @@ export default {
     LogoType,
     ProfileModal,
   },
-  emits: ["openAddModal"],
+   emits: ["openAddModal"],
   data() {
     return {
       showProfileModal: false,
-      burgerOpen: false,
     };
-  },
+  }, 
 
   computed: {
     user() {
@@ -111,7 +107,6 @@ export default {
       return this.user?.name?.[0]?.toUpperCase() || "";
     },
   },
-
   methods: {
     handleLogout() {
       this.$store.dispatch("auth/logout");
@@ -127,25 +122,24 @@ export default {
 .header-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 16px clamp(16px, 5vw, 50px); // адаптивні відступи
+  /* gap: 50px; */
+  /* margin: 10px; */
+  padding: 16px 50px;
   background: #212126;
   opacity: 0.7;
 
   &__nav {
-    display: flex;
-    align-items: center; // вертикальне центрування
-    justify-content: center; // горизонтальне центрування
-
-    height: 52px; // залишаєш висоту
-    padding: 0 16px; // тільки горизонтальні відступи
-    width: 140px;
     color: #fff;
+    text-align: center;
     font-size: 14px;
+    font-style: normal;
     font-weight: 500;
-    line-height: 1; // важливо
+    line-height: 150%;
     font-family: e-Ukraine, sans-serif;
     text-decoration: none;
+    padding: 16px 0;
+    width: 140px;
+    height: 52px;
     border-radius: 30px;
     border: 1px solid #fafafa;
     box-shadow: 0px 4px 99px 0px #454753;
@@ -183,10 +177,8 @@ export default {
 
 .header-top > span {
   display: flex;
-  gap: clamp(10px, 3vw, 40px); // замість 5em
+  gap: 5em;
   justify-content: center;
-  align-items: center;
-  flex-wrap: nowrap;
 }
 .header-top__wrapper {
   display: flex;
@@ -233,48 +225,6 @@ export default {
     /* color: bisque; */
     /* border: 2px solid bisque; */
     opacity: 80%;
-  }
-}
-
-.burger {
-  display: none;
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-}
-
-/* мобільне меню */
-.mobile-menu {
-  position: absolute;
-  top: 70px;
-  right: 20px;
-  background: #212126;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  z-index: 1000;
-
-  a,
-  button {
-    color: white;
-    text-decoration: none;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-  }
-}
-
-/* 🔻 breakpoint */
-@media (max-width: 1200px) {
-  .header-top > span {
-    display: none; // ховаємо меню
-  }
-
-  .burger {
-    display: block;
   }
 }
 </style>
