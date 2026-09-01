@@ -14,7 +14,7 @@
 
 <script>
 import QuestionItem from "./QuestionItem.vue";
-import { questions } from "./popularQuestions";
+import { questions } from "./popularQuestions.js";
 
 export default {
   name: "MainQuastions",
@@ -37,19 +37,25 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  padding: 40px 0;
+
+  gap: clamp(12px, 1.5vw, 20px);
+  padding: clamp(25px, 3vw, 40px) 0;
+
   background-color: #fff;
 
   &__title {
     color: #111;
     text-align: center;
     font-family: e-Ukraine, sans-serif;
-    font-size: 24px;
+
+    font-size: clamp(18px, 2vw, 24px);
     font-weight: 700;
-    line-height: 18px;
+    line-height: 1.2;
+
     text-transform: uppercase;
-    padding: 20px 0;
+
+    padding: clamp(12px, 1.5vw, 20px) 0;
+    margin: 0;
   }
 }
 </style>

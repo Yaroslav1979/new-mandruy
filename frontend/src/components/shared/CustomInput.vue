@@ -18,7 +18,9 @@
         @click="togglePasswordVisibility"
       >
         <img
-          :src="currentType === 'password' ? hidePasswordIcon : showPasswordIcon"
+          :src="
+            currentType === 'password' ? hidePasswordIcon : showPasswordIcon
+          "
           alt="toggle password"
         />
       </button>
@@ -29,15 +31,15 @@
 </template>
 
 <script>
-import hidePasswordIcon from '../../assets/svg/hide.svg';
-import showPasswordIcon from '../../assets/svg/eye.svg';
+import hidePasswordIcon from "../../assets/svg/hide.svg";
+import showPasswordIcon from "../../assets/svg/eye.svg";
 
 export default {
   name: "CustomInput",
   data() {
     return {
       isValid: true,
-      error: '',
+      error: "",
       isFirstInput: true,
       showPassword: false,
       hidePasswordIcon,
@@ -46,36 +48,36 @@ export default {
   },
   computed: {
     currentType() {
-      if (this.$attrs.type === 'password') {
-        return this.showPassword ? 'text' : 'password';
+      if (this.$attrs.type === "password") {
+        return this.showPassword ? "text" : "password";
       }
-      return this.$attrs.type || 'text';
-    }
+      return this.$attrs.type || "text";
+    },
   },
   inject: {
-    form: { default: null }
+    form: { default: null },
   },
   inheritAttrs: false,
   props: {
     modelValue: String,
     errorMessage: {
       type: String,
-      default: '',
+      default: "",
     },
     rules: {
       type: Array,
       default: () => [],
-    }
+    },
   },
   watch: {
     modelValue(value) {
       if (!value) {
         this.isValid = true;
-        this.error = '';
+        this.error = "";
         return;
       }
       this.validate();
-    }
+    },
   },
   mounted() {
     if (this.form) this.form.registerInput(this);
@@ -89,11 +91,11 @@ export default {
     },
     validate(value = this.modelValue) {
       this.isValid = true;
-      this.error = '';
+      this.error = "";
 
       for (const rule of this.rules) {
         const result = rule(value);
-        if (typeof result === 'object') {
+        if (typeof result === "object") {
           if (!result.hasPassed) {
             this.isValid = false;
             this.error = result.message || this.errorMessage;
@@ -120,10 +122,10 @@ export default {
     reset() {
       this.isFirstInput = true;
       this.isValid = true;
-      this.error = '';
-      this.$emit('update:modelValue', '');
-    }
-  }
+      this.error = "";
+      this.$emit("update:modelValue", "");
+    },
+  },
 };
 </script>
 
@@ -145,14 +147,20 @@ export default {
 .custom-input {
   display: flex;
   align-items: center;
-  background-color: white;
-  border-radius: 8px;
-  border: 2px solid $main-color;
-  font-family: e-Ukraine, sans-serif;
+
   width: 100%;
-  height: 54px;
-  font-size: 16px;
-  padding: 0 50px 0 20px;
+  height: clamp(38px, 3.5vw, 54px);
+
+  padding: 0 clamp(35px, 4vw, 50px) 0 clamp(12px, 1.5vw, 20px);
+
+  background-color: white;
+  border-radius: clamp(6px, 0.6vw, 8px);
+  border: 2px solid $main-color;
+
+  font-family: e-Ukraine, sans-serif;
+  font-size: clamp(11px, 1.2vw, 16px);
+
+  box-sizing: border-box;
 
   &::placeholder {
     color: gray;
@@ -164,7 +172,7 @@ export default {
 }
 
 .custom-input__error {
-  font-size: 12px;
+  font-size: clamp(9px, 0.9vw, 12px);
   color: red;
   line-height: 1.3;
   margin-top: 4px;
@@ -172,19 +180,75 @@ export default {
 
 .password-toggle {
   position: absolute;
+
   top: 50%;
-  right: 15px;
+  right: clamp(8px, 1.2vw, 15px);
+
   transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   background: transparent;
   border: none;
   padding: 0;
+
   cursor: pointer;
 
   img {
-    width: 20px;
-    height: 20px;
+    width: clamp(16px, 1.5vw, 20px);
+    height: clamp(16px, 1.5vw, 20px);
+  }
+}
+
+/* =========================================
+   СМАРТФОН
+   ========================================= */
+
+@media (max-width: 600px) {
+  .custom-input {
+    height: 40px;
+
+    padding-left: 12px;
+    padding-right: 40px;
+
+    font-size: 11px;
+
+    border-radius: 6px;
+  }
+
+  .password-toggle {
+    right: 10px;
+
+    img {
+      width: 17px;
+      height: 17px;
+    }
+  }
+
+  .custom-input__error {
+    font-size: 9px;
+  }
+}
+
+/* =========================================
+   ДУЖЕ МАЛИЙ СМАРТФОН
+   ========================================= */
+
+@media (max-width: 450px) {
+  .custom-input {
+    height: 38px;
+    font-size: 10px;
+  }
+
+  .password-toggle {
+    right: 8px;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
   }
 }
 </style>
-
-
