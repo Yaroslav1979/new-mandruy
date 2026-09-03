@@ -1,13 +1,13 @@
 <template>
-  <button 
+  <button
     v-bind="attrs"
     :type="type"
     :class="['btn', { 'btn--outlined': outlined }]"
     @click="$emit('click')"
     :disabled="loading"
-  > 
+  >
     <div class="btn__inner">
-      <CircleLoader v-if="loading" width="24" height="24" class="btn__loader"/>
+      <CircleLoader v-if="loading" width="24" height="24" class="btn__loader" />
       <span v-if="!loading" class="btn__content">
         <slot></slot>
       </span>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import CircleLoader from './loaders/CircleLoader.vue'
+import CircleLoader from "./loaders/CircleLoader.vue";
 
 export default {
   name: "MainButton",
@@ -34,15 +34,15 @@ export default {
     },
     loading: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   inheritAttrs: false,
   computed: {
     attrs() {
       return this.$attrs;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -55,8 +55,8 @@ export default {
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  min-width: 150px;
-  padding: 10px 20px;
+  // min-width: 150px;
+  // padding: 10px 20px;
   font-size: 16px;
   transition: all 0.2s ease;
   border-radius: 6px;
@@ -68,7 +68,7 @@ export default {
 
   &--outlined {
     background: none;
-    border: 1px solid #ff662d;  
+    border: 1px solid #ff662d;
     color: #ff662d;
   }
 
@@ -90,4 +90,3 @@ export default {
   }
 }
 </style>
-

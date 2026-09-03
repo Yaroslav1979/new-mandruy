@@ -106,18 +106,20 @@ export default {
 .head {
   background-color: black;
 }
+
 .place-page {
   &__content {
     display: flex;
     align-items: flex-start;
+    gap: 30px;
   }
 
   &__additional-info {
-    margin-left: 30px;
+    // width: 30%;
     max-width: 350px;
-    flex-grow: 0;
-    flex-shrink: 1;
+    flex: 0 0 30%;
   }
+
   .modal-overlay {
     position: fixed;
     top: 0;
@@ -144,6 +146,7 @@ export default {
     overflow-y: auto;
     max-height: 90vh;
   }
+
   .success-message {
     text-align: center;
     font-family: e-Ukraine, sans-serif;
@@ -160,4 +163,166 @@ export default {
     cursor: pointer;
   }
 }
+
+@media (max-width: 900px) {
+  .place-page {
+    &__content {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 30px;
+    }
+
+    &__additional-info {
+      width: 100%;
+      max-width: 100%;
+      flex: none;
+      margin: 0;
+    }
+  }
+}
+
+/* =========================
+   СМАРТФОН
+   ========================= */
+
+@media (max-width: 600px) {
+  .place-page {
+    &__content {
+      width: 100%;
+    }
+
+    &__additional-info {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .modal-content {
+    padding: 1rem;
+  }
+}
 </style>
+
+<!-- <style lang="scss" scoped>
+.head {
+  background-color: black;
+}
+
+.place-page {
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+  }
+
+  &__additional-info {
+    max-width: 350px;
+
+    flex-grow: 0;
+    flex-shrink: 1;
+  }
+
+  /* =========================
+     МОДАЛЬНЕ ВІКНО
+     ========================= */
+
+  .modal-overlay {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999;
+
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  .modal-content {
+    background: #fff;
+
+    padding: 2rem;
+
+    border-radius: 16px;
+
+    max-width: 1300px;
+    width: 100%;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+
+    overflow-y: auto;
+    max-height: 90vh;
+  }
+
+  .success-message {
+    text-align: center;
+
+    font-family: e-Ukraine, sans-serif;
+    font-size: 18px;
+  }
+
+  .success-message button {
+    margin-top: 20px;
+
+    padding: 12px 24px;
+
+    background-color: black;
+    color: white;
+
+    border-radius: 5px;
+    border: none;
+
+    cursor: pointer;
+  }
+}
+
+/* =========================================
+   ПЛАНШЕТ
+   ========================================= */
+
+@media (max-width: 900px) {
+  .place-page {
+    &__content {
+      gap: 20px;
+    }
+
+    &__additional-info {
+      max-width: 30%;
+    }
+  }
+}
+
+/* =========================================
+   СМАРТФОН
+   ========================================= */
+
+@media (max-width: 600px) {
+  .place-page {
+    &__content {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+
+      gap: 30px;
+    }
+
+    &__additional-info {
+      width: 100%;
+      max-width: 100%;
+
+      margin-left: 0;
+    }
+  }
+}
+</style> -->

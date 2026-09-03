@@ -45,7 +45,6 @@
           зручності для прокладання маршрутів.
         </p>
       </a>
-
     </div>
   </section>
 </template>
@@ -59,109 +58,212 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/scss/variables.scss";
 
-.about-service__title {
-  color: #000;
-  text-align: center;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 18px;
-  text-transform: uppercase;
-  margin-bottom: 28px;
-}
-
 .about-service {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px; 
-  flex-shrink: 0; 
-  padding: 20px 0; 
+  gap: clamp(25px, 3vw, 40px);
+  flex-shrink: 0;
+  padding: clamp(20px, 2vw, 30px) 0;
 
+  &__title {
+    color: #000;
+    text-align: center;
+    font-family: e-Ukraine, sans-serif;
+    font-size: clamp(20px, 2vw, 24px);
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin: 0;
+  }
 
   &__cont {
     display: flex;
     justify-content: center;
     flex-direction: row;
+    align-items: stretch;
+
     width: 75%;
-    gap: 100px;
+    gap: clamp(40px, 7vw, 100px);
+  }
+
+  &__link {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+
+    /*
+     * Замість width: 16%
+     * картка має власну адаптивну ширину
+     */
+    width: clamp(180px, 18vw, 260px);
+
+    cursor: pointer;
+    text-decoration: none;
   }
 
   &__empty {
     display: flex;
     position: absolute;
-    background-color: white;
-    width: 260px;
-    height: 292px;
+
+    /*
+     * 260 × 292 на великому ПК,
+     * плавне зменшення на планшеті
+     */
+    width: clamp(180px, 18vw, 260px);
+    height: clamp(205px, 20.3vw, 292px);
+
     flex-shrink: 0;
-    border-radius: 10px;
+
+    top: clamp(25px, 2.2vw, 32px);
+
+    border-radius: clamp(7px, 0.7vw, 10px);
+
     background: #fff;
     box-shadow: 0px 4px 150px 0px rgba(130, 130, 130, 0.2);
-    top: 32px;
   }
 
-&__link {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  width: 16%;
-  align-items: center;
-  cursor: pointer;
-  text-decoration: none;
+  &__img {
+    display: block;
+
+    /*
+     * 132 × 112 на ПК
+     */
+    width: clamp(90px, 9.2vw, 132px);
+    height: clamp(76px, 7.8vw, 112px);
+
+    margin-bottom: clamp(30px, 3.3vw, 48px);
+
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  &__slogan {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin: 0;
+
+    color: #000;
+    text-align: center;
+    font-family: e-Ukraine, sans-serif;
+
+    font-size: clamp(13px, 1.1vw, 16px);
+    font-weight: 700;
+    line-height: 1.2;
+
+    z-index: 1;
+  }
+
+  &__descr {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin: 0;
+
+    color: #000;
+    text-align: center;
+    font-family: e-Ukraine, sans-serif;
+
+    font-size: clamp(10px, 0.85vw, 12px);
+    font-weight: 400;
+    line-height: 1.5;
+
+    z-index: 1;
+  }
+
+  &__link:hover &__empty {
+    border: 2px solid #6b75ff;
+    opacity: 80%;
+  }
+
+  &__link:hover &__slogan {
+    font-size: clamp(14px, 1.15vw, 17px);
+  }
+
+  &__link:hover &__descr {
+    font-size: clamp(11px, 0.9vw, 13px);
+  }
 }
 
-&__link:hover &__empty {
-  border: 2px solid #6b75ff;
-  opacity: 80%;
-}
-/* &__link:hover &__img {
-  width: 148px;
-  height: 124px;
-} */
+/* =========================
+   ПЛАНШЕТ
+   ========================= */
 
-&__link:hover &__slogan {
-  /* opacity: 70%; */
-  font-size: 17px;
-}
-&__link:hover &__descr {
-  /* opacity: 70%; */
-  font-size: 13px;
-}
+@media (max-width: 900px) {
+  .about-service {
+    &__cont {
+      width: 90%;
+      gap: clamp(20px, 4vw, 50px);
+    }
 
-&__img {
-  display: flex;
-  margin-bottom: 48px;
-  width: 132px;
-  height: 112px;
-  z-index: 1;
+    &__link {
+      width: clamp(160px, 25vw, 220px);
+    }
+
+    &__empty {
+      width: clamp(160px, 25vw, 220px);
+      height: clamp(190px, 30vw, 250px);
+    }
+  }
 }
 
-&__slogan {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: #000;
-  text-align: center;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 18px;
-  z-index: 1;
-}
+/* =========================
+   СМАРТФОН
+   ========================= */
 
-&__descr {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #000;
-  text-align: center;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  z-index: 1;
-}
+@media (max-width: 600px) {
+  .about-service {
+    gap: 25px;
+    padding: 20px 0;
+
+    &__title {
+      font-size: 20px;
+    }
+
+    &__cont {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 40px;
+    }
+
+    &__link {
+      width: 260px;
+      min-height: 292px;
+    }
+
+    &__empty {
+      width: 260px;
+      height: 292px;
+      top: 32px;
+    }
+
+    &__img {
+      width: 132px;
+      height: 112px;
+      margin-bottom: 48px;
+    }
+
+    &__slogan {
+      font-size: 16px;
+    }
+
+    &__descr {
+      font-size: 12px;
+    }
+
+    &__link:hover &__slogan {
+      font-size: 17px;
+    }
+
+    &__link:hover &__descr {
+      font-size: 13px;
+    }
+  }
 }
 </style>

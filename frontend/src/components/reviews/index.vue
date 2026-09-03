@@ -3,15 +3,15 @@
     <div class="reviews__heading">
       <h2 class="reviews__title">Відгуки</h2>
       <div class="reviews__rating">
-        <div> Кількість відгуків: {{ amountOfReviews }} </div>
+        <div>Кількість відгуків: {{ amountOfReviews }}</div>
         <div>Підсумковий рейтинг: <Rating :rating="totalRating" /></div>
       </div>
       <!-- Кнопка для виклику форми -->
-     <button class="leave-review-button" @click="toggleModal">
-      {{ showModal ? "Приховати" : "Залишити відгук" }}
-    </button>
+      <button class="leave-review-button" @click="toggleModal">
+        {{ showModal ? "Приховати" : "Залишити відгук" }}
+      </button>
     </div>
-     
+
     <!-- Модальне вікно з формою -->
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-content">
@@ -78,7 +78,7 @@ export default {
       if (!this.localReviews.length) return 0;
       const total = this.localReviews.reduce(
         (acc, review) => acc + review.rating,
-        0
+        0,
       );
       return (total / this.localReviews.length).toFixed(1); // округлимо до 1 знаку
     },
@@ -103,12 +103,12 @@ export default {
       this.reviewsLimit = this.reviews.length;
     },
     toggleModal() {
-  this.showModal = !this.showModal;
-},
-    handleAdded() {     
+      this.showModal = !this.showModal;
+    },
+    handleAdded() {
       this.showModal = false;
       this.$emit("review-added"); // кидаємо подію нагору
-    },    
+    },
   },
 };
 </script>
@@ -120,30 +120,37 @@ export default {
   margin-top: 20px;
   background: $card-bg;
   padding: 0 20px;
-  width: 300px;
+  width: 100%;
+  box-sizing: border-box;
 
   &__heading {
-    display: flex;    
+    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 20px 20px 10px;
+    gap: clamp(6px, 0.7vw, 8px);
+
+    padding: clamp(14px, 1.5vw, 20px) clamp(12px, 1.5vw, 20px)
+      clamp(8px, 1vw, 10px);
   }
 
   &__title {
     font-family: e-Ukraine, sans-serif;
     text-transform: uppercase;
-    font-size: 20px;
+    font-size: clamp(16px, 1.4vw, 20px);
     font-weight: 700;
-    margin-bottom: 10px;
+
+    margin-bottom: clamp(6px, 0.8vw, 10px);
   }
 
   &__rating {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: clamp(5px, 0.6vw, 8px);
     align-items: center;
     justify-content: space-between;
+
+    font-size: clamp(11px, 1vw, 14px);
+    text-align: center;
   }
 
   &__show-more {
@@ -151,16 +158,60 @@ export default {
     border: none;
     cursor: pointer;
     width: 100%;
-    padding: 12px;
+
+    padding: clamp(8px, 1vw, 12px);
+
     font-family: inherit;
-    font-size: 16px;
+    font-size: clamp(13px, 1.1vw, 16px);
   }
 }
+
 .leave-review-button {
   display: block;
+
   font-family: e-Ukraine, sans-serif;
-  margin: 20px 0;
+
+  margin: clamp(12px, 1.5vw, 20px) 0;
+
   border-radius: 8px;
-  padding: 4px;
+
+  padding: clamp(4px, 0.5vw, 8px) clamp(8px, 0.8vw, 12px);
+
+  font-size: clamp(11px, 1vw, 14px);
+
+  cursor: pointer;
+}
+
+/* =========================
+   СМАРТФОН
+   ========================= */
+
+@media (max-width: 600px) {
+  .reviews {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 20px;
+    padding: 0 12px;
+
+    &__heading {
+      padding: 16px 10px 10px;
+    }
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__rating {
+      font-size: 12px;
+    }
+
+    &__show-more {
+      font-size: 14px;
+    }
+  }
+
+  .leave-review-button {
+    font-size: 12px;
+  }
 }
 </style>

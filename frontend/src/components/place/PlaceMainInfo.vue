@@ -14,7 +14,11 @@
           :src="`http://localhost:3000${img}`"
           alt="Place photo"
           class="place-main-info__photo"
-          @dblclick="enterFullscreen((index - 1 + place.imgUrls.length) % place.imgUrls.length)"
+          @dblclick="
+            enterFullscreen(
+              (index - 1 + place.imgUrls.length) % place.imgUrls.length,
+            )
+          "
         />
       </div>
       <button @click="prevSlide" class="slider-btn left">❮</button>
@@ -47,18 +51,23 @@
         />
         <span>{{ getCategoryTitle(categoryId) }}</span>
       </div>
-    </div><div v-if="isFullscreen" class="fullscreen-overlay" @click.self="exitFullscreen">
-  <div class="fullscreen-content">
-    <img
-      :src="`http://localhost:3000${place.imgUrls[fullscreenIndex]}`"
-      alt="Fullscreen photo"
-      class="fullscreen-image"
-    />
-    <button @click="prevFullscreen" class="slider-btn left">❮</button>
-    <button @click="nextFullscreen" class="slider-btn right">❯</button>
-    <button class="close-btn" @click="exitFullscreen">×</button>
-  </div>
-</div>
+    </div>
+    <div
+      v-if="isFullscreen"
+      class="fullscreen-overlay"
+      @click.self="exitFullscreen"
+    >
+      <div class="fullscreen-content">
+        <img
+          :src="`http://localhost:3000${place.imgUrls[fullscreenIndex]}`"
+          alt="Fullscreen photo"
+          class="fullscreen-image"
+        />
+        <button @click="prevFullscreen" class="slider-btn left">❮</button>
+        <button @click="nextFullscreen" class="slider-btn right">❯</button>
+        <button class="close-btn" @click="exitFullscreen">×</button>
+      </div>
+    </div>
   </article>
 </template>
 
@@ -180,28 +189,28 @@ export default {
       requestAnimationFrame(check);
     },
     enterFullscreen(index) {
-  this.fullscreenIndex = index;
-  this.isFullscreen = true;
-  document.body.style.overflow = 'hidden'; // блокує прокрутку
-},
-exitFullscreen() {
-  this.isFullscreen = false;
-  document.body.style.overflow = ''; // повертає прокрутку
-},
-nextFullscreen() {
-  if (this.fullscreenIndex < this.place.imgUrls.length - 1) {
-    this.fullscreenIndex++;
-  } else {
-    this.fullscreenIndex = 0;
-  }
-},
-prevFullscreen() {
-  if (this.fullscreenIndex > 0) {
-    this.fullscreenIndex--;
-  } else {
-    this.fullscreenIndex = this.place.imgUrls.length - 1;
-  }
-},
+      this.fullscreenIndex = index;
+      this.isFullscreen = true;
+      document.body.style.overflow = "hidden"; // блокує прокрутку
+    },
+    exitFullscreen() {
+      this.isFullscreen = false;
+      document.body.style.overflow = ""; // повертає прокрутку
+    },
+    nextFullscreen() {
+      if (this.fullscreenIndex < this.place.imgUrls.length - 1) {
+        this.fullscreenIndex++;
+      } else {
+        this.fullscreenIndex = 0;
+      }
+    },
+    prevFullscreen() {
+      if (this.fullscreenIndex > 0) {
+        this.fullscreenIndex--;
+      } else {
+        this.fullscreenIndex = this.place.imgUrls.length - 1;
+      }
+    },
   },
 };
 </script>
@@ -214,19 +223,41 @@ strong {
 }
 
 .place-main-info {
+  width: 100%;
+  min-width: 0;
+
   &__heading {
     display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 100%;
+    min-width: 0;
+
+    gap: clamp(8px, 1.5vw, 20px);
+
+    margin-bottom: 20px;
   }
 
   &__title {
-    font-size: 20px;
+    font-size: clamp(16px, 1.8vw, 20px);
     font-weight: 700;
-    margin-bottom: 20px;
-    margin-right: 20px;
+
+    margin: 0;
+
+    min-width: 0;
+
+    /*
+     * Заголовок може займати доступний простір,
+     * але не буде виштовхувати рейтинг
+     */
+    flex: 1 1 auto;
   }
 
   &__photo {
     max-width: 100%;
+    border-radius: 12px;
+    scroll-snap-align: start;
   }
 
   &__description {
@@ -234,42 +265,41 @@ strong {
     margin-top: 30px;
   }
 
-  &__btn {
-    margin-top: 20px;
-    text-align: center;
-  }
-
   &__categories {
     display: flex;
     justify-content: left;
-    flex-wrap: wrap; /* Додає перенесення на новий рядок */    
+    flex-wrap: wrap;
+
     gap: 12px;
+
     align-items: center;
+
     padding: 50px 0;
   }
-
   &__category {
     display: flex;
     align-items: center;
+
     gap: 10px;
+
     padding: 8px 20px;
+
     border-radius: 100px;
     border: 2px solid #e7e6ed;
+
     min-width: 132px;
+
     color: #000;
     text-align: center;
+
     font-family: e-Ukraine, sans-serif;
     font-size: 14px;
     font-weight: 500;
     line-height: 18px;
-    background-color: white;
-    transition: background-color 0.3s, color 0.3s;   
-  }
 
-  &__photo {
-    max-width: 800px;
-    border-radius: 12px;
-    scroll-snap-align: start;
+    background-color: white;
+
+    transition: background-color 0.3s, color 0.3s;
   }
 }
 
@@ -278,80 +308,154 @@ strong {
   height: 24px;
 }
 
+/* =========================
+   СЛАЙДЕР
+   ========================= */
+
 .slider-container {
   position: relative;
   overflow: hidden;
-  width: 650px;
+
+  width: 100%;
+  max-width: 100%;
+
   margin-bottom: 20px;
 }
 
 .slider {
   display: flex;
+
   gap: 10px;
+
   overflow-x: auto;
+
   scroll-snap-type: x mandatory;
+
   width: 100%;
 
-  &-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #000;
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 8px 12px;
-    z-index: 10;
-    border-radius: 50%;
-  }
+  min-width: 0;
 }
+
+// .place-main-info__photo {
+//   display: block;
+
+//   width: 100%;
+//   max-width: 650px;
+
+//   flex: 0 0 100%;
+
+//   border-radius: 12px;
+
+//   object-fit: cover;
+
+//   scroll-snap-align: start;
+// }
+
+/* =========================
+   КНОПКИ СЛАЙДЕРА
+   ========================= */
+
+.slider-btn {
+  position: absolute;
+
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(30px, 3vw, 40px);
+  height: clamp(30px, 3vw, 40px);
+
+  padding: 0;
+
+  background: #000;
+  color: white;
+
+  border: none;
+  border-radius: 50%;
+
+  font-size: clamp(14px, 1.5vw, 20px);
+
+  cursor: pointer;
+
+  z-index: 10;
+}
+
 .left {
-  left: 10px;
+  left: clamp(6px, 1vw, 10px);
 }
 
 .right {
-  right: 10px;
+  right: clamp(6px, 1vw, 10px);
 }
+
+/* =========================
+   FULLSCREEN
+   ========================= */
 
 .fullscreen {
   &-overlay {
     position: fixed;
+
     top: 0;
     left: 0;
+
     width: 100vw;
     height: 100vh;
+
     background: rgba(0, 0, 0, 0.85);
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     z-index: 9999;
+
     backdrop-filter: blur(10px);
   }
+
   &-content {
     position: relative;
+
     max-width: 100vw;
     max-height: 100vh;
+
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   &-image {
+    max-width: 100vw;
     max-height: 100vh;
-    height: 100vh;
+
+    width: auto;
+    height: auto;
+
     object-fit: contain;
+
     border-radius: 12px;
   }
 }
+
 .close-btn {
   position: absolute;
+
   top: 15px;
   right: 20px;
+
   width: 40px;
+
   font-size: 30px;
   color: white;
+
   background: grey;
+
   border-radius: 20px;
   border: 1px solid white;
+
   cursor: pointer;
   z-index: 10;
 }
@@ -359,5 +463,54 @@ strong {
 .fullscreen-overlay .slider-btn {
   background: rgba(0, 0, 0, 0.6);
   font-size: 24px;
+}
+
+/* =========================
+   СМАРТФОН
+   ========================= */
+
+@media (max-width: 600px) {
+  .place-main-info {
+    width: 100%;
+
+    &__heading {
+      flex-wrap: wrap;
+    }
+
+    &__title {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    &__description {
+      font-size: 13px;
+      margin-top: 20px;
+    }
+
+    &__categories {
+      gap: 8px;
+      padding: 30px 0;
+    }
+
+    &__category {
+      min-width: auto;
+      padding: 6px 12px;
+      font-size: 11px;
+    }
+
+    &__category img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .slider-container {
+    width: 100%;
+  }
+
+  .place-main-info__photo {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 </style>

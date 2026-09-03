@@ -23,7 +23,7 @@
 
   <main class="homepage">
     <SectionWithHeaderSpacer>
-    <AboutService />
+      <AboutService />
     </SectionWithHeaderSpacer>
     <MainQuastions />
   </main>
