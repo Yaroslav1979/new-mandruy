@@ -42,7 +42,6 @@ export default {
 
 <style lang="scss" scoped>
 .contacts {
-  /* background-color: #111; */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -50,68 +49,212 @@ export default {
   height: 200px;
 }
 
+/* =========================
+   ФОНОВИЙ БЛОК
+   ========================= */
+
 .contacts__bgd {
-  display: flex;
   position: absolute;
+
   background: #f5f4f4;
-  transform: skewY(+3deg);
+
+  transform: skewY(3deg);
+
   top: 60px;
-  bottom: 100px;
-  height: 560px;
+  height: clamp(400px, 45vw, 560px);
+
   width: 100%;
 }
 
+/* =========================
+   ЗАГОЛОВОК
+   ========================= */
+
 .contacts__title {
-  display: flex;
   position: absolute;
-  left: 47%;
-  top: 35%;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  top: 25px;
+
+  margin: 0;
+
   color: #000;
   text-align: center;
+
   font-family: e-Ukraine, sans-serif;
-  font-size: 24px;
-  font-style: normal;
+  font-size: clamp(18px, 2vw, 24px);
   font-weight: 700;
-  line-height: 18px;
+  line-height: 1.2;
+
   text-transform: uppercase;
+  white-space: nowrap;
 }
+
+/* =========================
+   КОНТАКТИ
+   ========================= */
 
 .contacts-cont {
   display: flex;
   position: absolute;
+
   justify-content: space-between;
-  width: 1000px;
-  left: 25%;
-  top: 45%;
+  align-items: center;
+
+  width: min(100% - 40px, 1000px);
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  top: 100px;
+
+  gap: clamp(10px, 2vw, 30px);
 }
+
+/* =========================
+   КОНТАКТ
+   ========================= */
 
 .contacts__link-block {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 12px 10px;
+
+  gap: clamp(8px, 1.5vw, 20px);
+
+  padding: clamp(8px, 1vw, 12px) clamp(8px, 1vw, 10px);
+
   background: #fff;
+
   color: #000;
+
   font-family: e-Ukraine, sans-serif;
-  font-size: 16px;
+  font-size: clamp(10px, 1.3vw, 16px);
   font-weight: 400;
-  line-height: 18px;
+  line-height: 1.2;
+
   text-decoration: none;
+
+  white-space: nowrap;
+
+  flex: 1;
+}
+
+.contacts__icon {
+  width: clamp(24px, 3vw, 40px);
+  height: clamp(24px, 3vw, 40px);
+
+  flex-shrink: 0;
 }
 
 .contacts__link-block:hover {
   border-radius: 5px;
   border: 2px solid #a5aeff;
+
   box-shadow: 0px 4px 190px 0px rgba(130, 130, 130, 0.25);
-  padding: 8px;
-  opacity: 80%;
+
+  opacity: 0.8;
 }
 
-/* .contacts__icon {
-  display: block;
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-} */
+/* =========================
+   ПЛАНШЕТ
+   ========================= */
+
+@media (max-width: 900px) {
+  .contacts {
+    height: 180px;
+  }
+
+  .contacts__bgd {
+    height: 420px;
+  }
+
+  .contacts-cont {
+    width: calc(100% - 40px);
+
+    gap: 12px;
+  }
+
+  .contacts__link-block {
+    font-size: clamp(9px, 1.5vw, 13px);
+    gap: 8px;
+  }
+
+  .contacts__icon {
+    width: clamp(24px, 4vw, 34px);
+    height: clamp(24px, 4vw, 34px);
+  }
+}
+
+/* =========================
+   СМАРТФОН
+   ========================= */
+
+@media (max-width: 600px) {
+  .contacts {
+    height: auto;
+
+    padding-bottom: 40px;
+  }
+
+  .contacts__bgd {
+    top: 30px;
+
+    height: 600px;
+
+    transform: skewY(3deg);
+  }
+
+  .contacts__title {
+    position: relative;
+
+    left: auto;
+    transform: none;
+
+    top: auto;
+
+    margin: 40px 0 30px;
+
+    font-size: 20px;
+  }
+
+  .contacts-cont {
+    position: relative;
+
+    top: auto;
+    left: auto;
+    transform: none;
+
+    width: calc(100% - 32px);
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 15px;
+  }
+
+  .contacts__link-block {
+    width: 100%;
+    box-sizing: border-box;
+
+    justify-content: flex-start;
+
+    padding: 12px 16px;
+
+    font-size: 12px;
+
+    white-space: normal;
+  }
+
+  .contacts__icon {
+    width: 32px;
+    height: 32px;
+  }
+}
 </style>

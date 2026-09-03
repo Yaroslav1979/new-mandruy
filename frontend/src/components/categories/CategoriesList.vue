@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import CategoryItem from './CategoryItem.vue';
+import CategoryItem from "./CategoryItem.vue";
 
 export default {
-  name: 'CategoriesList',
+  name: "CategoriesList",
   components: {
     CategoryItem,
   },
@@ -41,7 +41,7 @@ export default {
       } else {
         updated.push(categoryId);
       }
-      this.$emit('update:modelValue', updated); // для v-model
+      this.$emit("update:modelValue", updated); // для v-model
     },
   },
 };
@@ -52,16 +52,22 @@ export default {
   display: flex;
   position: relative;
   flex-direction: column;
-  align-items: center;
-  /* margin: 20px 0; */
+  align-items: stretch;
+  width: 100%;
 }
 
 .categories__block {
   display: flex;
-  justify-content: left;
-  /* flex-wrap: wrap; */
-  gap: 12px;
+  justify-content: flex-start;
   align-items: center;
-  /* padding: 8px 0; */
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .categories__block {
+    gap: 8px;
+  }
 }
 </style>
