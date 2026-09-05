@@ -26,18 +26,37 @@
 
       <p v-if="!filteredPlaces.length">Нічого не знайдено</p>
 
-      <PlacesList v-else :items="filteredPlaces">
+      <PlacesList v-else :items="visiblePlaces">
         <template v-slot:place="{ place }">
           <PlacesItem
             :key="place._id"
             :id="place._id"
             :descr="place.descr"
-            :rating="place.rating"  
+            :rating="place.rating"
             :imgSrc="place.imgUrls"
             :title="place.title"
           />
         </template>
       </PlacesList>
+      <div v-if="filteredPlaces.length > 10" class="places-pagination">
+        <button
+          v-if="visiblePlaces.length < filteredPlaces.length"
+          class="places-pagination__button"
+          type="button"
+          @click="showMore"
+        >
+          Показати більше
+        </button>
+
+        <button
+          v-else
+          class="places-pagination__button"
+          type="button"
+          @click="collapsePlaces"
+        >
+          Згорнути
+        </button>
+      </div>
     </SectionWithHeaderSpacer>
   </main>
 </template>
@@ -65,6 +84,9 @@ export default {
     return {
       places: [],
       isModalOpen: false,
+
+      displayedCount: 10,
+
       filters: {
         title: "",
         region: "",
@@ -85,10 +107,16 @@ export default {
 
       return result;
     },
+
+    visiblePlaces() {
+      return this.filteredPlaces.slice(0, this.displayedCount);
+    },
   },
   async created() {
     try {
-      const placesResponse = await axios.get("http://localhost:3000/api/places/approved");
+      const placesResponse = await axios.get(
+        "http://localhost:3000/api/places/approved",
+      );
       const places = placesResponse.data;
 
       // Вже використовується рейтинг, що приходить з сервера
@@ -102,34 +130,41 @@ export default {
     filter({ region, title, categoryIds, sortBy }) {
       if (region !== undefined) this.filters.region = region;
       if (title !== undefined) this.filters.title = title;
-      if (Array.isArray(categoryIds)) this.filters.categoryIds = categoryIds;
+      if (Array.isArray(categoryIds)) {
+        this.filters.categoryIds = categoryIds;
+      }
       if (sortBy !== undefined) this.filters.sortBy = sortBy;
+
+      this.displayedCount = 10;
     },
 
     filterByRegionName(places) {
       if (!this.filters.region) return places;
+
       return places.filter(
         (place) =>
           place.location?.region &&
-          place.location.region === this.filters.region
+          place.location.region === this.filters.region,
       );
     },
 
     filterByTitle(places) {
       if (!this.filters.title) return places;
+
       return places.filter((place) =>
-        place.title.toLowerCase().includes(this.filters.title.toLowerCase())
+        place.title.toLowerCase().includes(this.filters.title.toLowerCase()),
       );
     },
 
     filterByCategory(places) {
       if (!this.filters.categoryIds.length) return places;
+
       return places.filter(
         (place) =>
           Array.isArray(place.categoryIds) &&
           place.categoryIds.some((cat) =>
-            this.filters.categoryIds.includes(cat)
-          )
+            this.filters.categoryIds.includes(cat),
+          ),
       );
     },
 
@@ -137,14 +172,20 @@ export default {
       return [...places].sort((a, b) => a.title.localeCompare(b.title));
     },
 
+    showMore() {
+      this.displayedCount += 10;
+    },
+
+    collapsePlaces() {
+      this.displayedCount = 10;
+    },
+
     handleNewPlace(newPlace) {
-      this.places.unshift(newPlace); // або this.places.push(newPlace), якщо хочеш додати в кінець списку
+      this.places.unshift(newPlace);
     },
   },
 };
 </script>
-
-
 
 <style lang="scss" scoped>
 .head {
@@ -162,6 +203,35 @@ export default {
     flex-grow: 0;
     flex-shrink: 1;
   }
+
+  .places-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    padding-bottom: 30px;
+
+    &__button {
+      padding: 12px 30px;
+
+      border: none;
+      border-radius: 6px;
+
+      background-color: #111;
+      color: #fff;
+
+      font-family: e-Ukraine, sans-serif;
+      font-size: 16px;
+
+      cursor: pointer;
+
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
   .modal-overlay {
     position: fixed;
     top: 0;
@@ -189,19 +259,19 @@ export default {
     max-height: 90vh;
   }
   .success-message {
-  text-align: center;
-  font-family: e-Ukraine, sans-serif;
-  font-size: 18px;
-}
+    text-align: center;
+    font-family: e-Ukraine, sans-serif;
+    font-size: 18px;
+  }
 
-.success-message button {
-  margin-top: 20px;
-  padding: 12px 24px;
-  background-color: black;
-  color: white;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
+  .success-message button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
 }
 </style>
