@@ -30,24 +30,15 @@ export default {
 .places-list {
   display: flex;
   flex-wrap: wrap;
-
   width: 100%;
-
-  max-height: 1200px;
-
-  overflow-y: auto;
-
   margin-top: clamp(20px, 3vw, 40px);
-
   box-sizing: border-box;
 }
 
 @media (max-width: 600px) {
   .places-list {
     max-height: none;
-
     overflow-y: visible;
-
     margin-top: 20px;
   }
 }
