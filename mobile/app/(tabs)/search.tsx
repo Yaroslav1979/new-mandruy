@@ -42,6 +42,7 @@ export default function LoginScreen() {
     { label: "Мандрівка", value: "Мандрівка" },
     { label: "Питна вода", value: "Питна вода" },
     { label: "Пам'ятка", value: "Пам'ятка" },
+    { label: "Героїка", value: "Героїка" },
     { label: "Музей", value: "Музей" },
     { label: "Водойма", value: "Водойма" },
     { label: "Автомобіль", value: "Автомобіль" },
@@ -355,7 +356,7 @@ export default function LoginScreen() {
               >
                 <Text style={styles.loadMoreText}>
                   {visibleCount < processedPlaces.length
-                    ? "Показати ще"
+                    ? "Показати більше"
                     : "Згорнути"}
                 </Text>
               </TouchableOpacity>
