@@ -34,7 +34,7 @@ import MainHeader from "../components/shared/MainHeader";
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
 import AboutService from "../components/shared/AboutService.vue";
 import SectionWithHeaderSpacer from "../components/shared/SectionWithHeaderSpacer";
-import MainQuastions from "../components/shared/questions/MainQuastions.vue";
+import MainQuastions from "../components/questions/MainQuastions.vue";
 
 export default {
   name: "HomePage",

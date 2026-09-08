@@ -19,26 +19,25 @@
         :rules="passwordRules"
         class="login__input"
       />
-      <Button type="submit" class="login__btn" :loading="loading">Увійти</Button>
-      <span> 
+      <Button type="submit" class="login__btn" :loading="loading"
+        >Увійти</Button
+      >
+      <span>
         Забули пароль?
-      <RouterLink      
-      :to="{ name: 'recovery-password-page', params: { token: 'init' } }"
-    >
-      <span class="login__btn--fogot">Відновити </span> 
-    </RouterLink>
+        <RouterLink
+          :to="{ name: 'recovery-password-page', params: { token: 'init' } }"
+        >
+          <span class="login__btn--fogot">Відновити </span>
+        </RouterLink>
       </span>
-      
-
-      
     </Form>
   </AuthContainer>
 </template>
 
 <script>
-import Form from "../../shared/form";
+import Form from "../../form";
 import CustomInput from "../../shared/CustomInput";
-import Button from "../../mainButton";
+import Button from "../../shared/mainButton.vue";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
 import {
@@ -85,21 +84,21 @@ export default {
       const { form } = this.$refs;
       // const isFormValid = await form.validate();
       // const isFormValid = form.validate();
-      const isFormValid = await form.validate?.() ?? true;
+      const isFormValid = (await form.validate?.()) ?? true;
 
       if (!isFormValid || this.loading) return;
 
       try {
         this.loading = true;
-console.log('Submitting login form', this.formData);
+        console.log("Submitting login form", this.formData);
 
         await this.$store.dispatch("auth/login", this.formData); // 👈 Vuex login
-       const role = this.$store.state.auth.user.role;
-if (role === 'admin') {
-  this.$router.push({ name: 'admin' }); // наприклад
-} else {
-  this.$router.push({ name: 'home' });
-}
+        const role = this.$store.state.auth.user.role;
+        if (role === "admin") {
+          this.$router.push({ name: "admin" }); // наприклад
+        } else {
+          this.$router.push({ name: "home" });
+        }
 
         form.reset();
       } catch (error) {
@@ -116,7 +115,6 @@ if (role === 'admin') {
   },
 };
 </script>
-
 
 <style lang="scss" scoped>
 @import "../../../assets/scss/variables";
@@ -146,12 +144,10 @@ if (role === 'admin') {
     border-radius: 12px;
     margin-top: 15px;
     width: 100%;
-   
   }
 }
-.login__btn--fogot {  
-      text-decoration: none;
-      color: #111;
-    }
-
+.login__btn--fogot {
+  text-decoration: none;
+  color: #111;
+}
 </style>

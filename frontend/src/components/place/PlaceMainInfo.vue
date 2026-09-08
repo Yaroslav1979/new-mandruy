@@ -21,20 +21,26 @@
           "
         />
       </div>
+
       <button @click="prevSlide" class="slider-btn left">❮</button>
       <button @click="nextSlide" class="slider-btn right">❯</button>
     </div>
 
-    <p class="place-main-info__description">{{ place.descr }}</p>
+    <p class="place-main-info__description">
+      {{ place.descr }}
+    </p>
+
     <p class="place-main-info__description">
       <strong>Місце розташування:</strong>
       {{ place.location?.city }}, {{ place.location?.region }}
     </p>
+
     <p class="place-main-info__description">
-      <strong>Координати:</strong> {{ place.location?.coordinate }}
+      <strong>Координати:</strong>
+      {{ place.location?.coordinate }}
     </p>
 
-    <!-- Відображення категорій -->
+    <!-- Категорії -->
     <div
       class="place-main-info__categories"
       v-if="place.categoryIds && place.categoryIds.length"
@@ -49,9 +55,12 @@
           alt="Category icon"
           class="icon-ctg"
         />
+
         <span>{{ getCategoryTitle(categoryId) }}</span>
       </div>
     </div>
+
+    <!-- FULLSCREEN -->
     <div
       v-if="isFullscreen"
       class="fullscreen-overlay"
@@ -63,8 +72,11 @@
           alt="Fullscreen photo"
           class="fullscreen-image"
         />
+
         <button @click="prevFullscreen" class="slider-btn left">❮</button>
+
         <button @click="nextFullscreen" class="slider-btn right">❯</button>
+
         <button class="close-btn" @click="exitFullscreen">×</button>
       </div>
     </div>
@@ -72,32 +84,29 @@
 </template>
 
 <script>
-import Rating from "../StarRating.vue";
+import Rating from "../shared/StarRating.vue";
 import categories from "../categories/categories.js";
 
 export default {
   name: "PlaceMainInfo",
+
   components: {
     Rating,
   },
+
   props: {
     place: {
       type: Object,
       required: true,
     },
+
     rating: {
       type: Number,
       required: false,
       default: 0,
     },
   },
-  computed: {
-    loopedImages() {
-      if (!this.place?.imgUrls?.length) return [];
-      const imgs = this.place.imgUrls;
-      return [imgs[imgs.length - 1], ...imgs, imgs[0]]; // [останнє, ...реальні, перше]
-    },
-  },
+
   data() {
     return {
       currentIndex: 1,
@@ -105,76 +114,144 @@ export default {
       fullscreenIndex: 0,
     };
   },
+
+  computed: {
+    loopedImages() {
+      if (!this.place?.imgUrls?.length) {
+        return [];
+      }
+
+      const imgs = this.place.imgUrls;
+
+      return [imgs[imgs.length - 1], ...imgs, imgs[0]];
+    },
+  },
+
   mounted() {
     this.$nextTick(() => {
-      this.scrollToIndex(1, "auto"); // без анімації одразу на перший справжній слайд
-      this.currentIndex = 1; // не забудь оновити індекс
+      if (!this.$refs.slider) return;
+
+      this.scrollToIndex(1, "auto");
+
+      this.currentIndex = 1;
+
       this.$refs.slider.addEventListener("scroll", this.handleScroll);
     });
   },
+
   beforeUnmount() {
     this.$refs.slider?.removeEventListener("scroll", this.handleScroll);
   },
+
   methods: {
+    // =========================
+    // КАТЕГОРІЇ
+    // =========================
+
     getCategoryIcon(categoryId) {
       const category = categories.find((cat) => cat.id === categoryId);
+
       return category ? category.svgUrl : "";
     },
+
     getCategoryTitle(categoryId) {
       const category = categories.find((cat) => cat.id === categoryId);
+
       return category ? category.title : "";
     },
+
+    // =========================
+    // СЛАЙДЕР
+    // =========================
+
+    getSlideWidth() {
+      const slider = this.$refs.slider;
+
+      if (!slider || !slider.children.length) {
+        return 0;
+      }
+
+      const slide = slider.children[0];
+
+      return slide.offsetWidth + 10;
+    },
+
     scrollToIndex(index, behavior = "smooth") {
       const slider = this.$refs.slider;
-      const slideWidth = slider.children[0].offsetWidth + 10; // gap
+      const slideWidth = this.getSlideWidth();
+
+      if (!slider || !slideWidth) {
+        return;
+      }
+
       slider.scrollTo({
         left: index * slideWidth,
         behavior,
       });
     },
+
     nextSlide() {
       this.currentIndex++;
       this.scrollToIndex(this.currentIndex);
     },
+
     prevSlide() {
       this.currentIndex--;
       this.scrollToIndex(this.currentIndex);
     },
+
     handleScroll() {
       const slider = this.$refs.slider;
-      const slideWidth = slider.children[0].offsetWidth + 10;
+      const slideWidth = this.getSlideWidth();
+
+      if (!slider || !slideWidth) {
+        return;
+      }
+
       const scrollLeft = slider.scrollLeft;
       const totalSlides = this.loopedImages.length;
 
       const index = Math.round(scrollLeft / slideWidth);
 
-      // Якщо клон останнього (тобто після реального останнього)
+      // Перейшли на клон першої картинки
       if (index === totalSlides - 1) {
-        // Чекаємо закінчення scroll анімації
         this.waitForScrollEnd(() => {
           this.currentIndex = 1;
-          this.scrollToIndex(1, "auto"); // Миттєво без анімації
+
+          this.scrollToIndex(1, "auto");
         });
+
+        return;
       }
 
-      // Якщо клон першого (перед реальним першим)
-      else if (index === 0) {
+      // Перейшли на клон останньої картинки
+      if (index === 0) {
         this.waitForScrollEnd(() => {
           this.currentIndex = totalSlides - 2;
+
           this.scrollToIndex(this.currentIndex, "auto");
         });
-      } else {
-        this.currentIndex = index;
+
+        return;
       }
+
+      this.currentIndex = index;
     },
+
     waitForScrollEnd(callback) {
-      let lastScrollLeft = this.$refs.slider.scrollLeft;
+      const slider = this.$refs.slider;
+
+      if (!slider) return;
+
+      let lastScrollLeft = slider.scrollLeft;
       let sameCount = 0;
 
       const check = () => {
-        const currentScrollLeft = this.$refs.slider.scrollLeft;
+        const currentScrollLeft = slider.scrollLeft;
+
         if (currentScrollLeft === lastScrollLeft) {
           sameCount++;
+
           if (sameCount > 2) {
             callback();
             return;
@@ -183,20 +260,30 @@ export default {
           sameCount = 0;
           lastScrollLeft = currentScrollLeft;
         }
+
         requestAnimationFrame(check);
       };
 
       requestAnimationFrame(check);
     },
+
+    // =========================
+    // FULLSCREEN
+    // =========================
+
     enterFullscreen(index) {
       this.fullscreenIndex = index;
       this.isFullscreen = true;
-      document.body.style.overflow = "hidden"; // блокує прокрутку
+
+      document.body.style.overflow = "hidden";
     },
+
     exitFullscreen() {
       this.isFullscreen = false;
-      document.body.style.overflow = ""; // повертає прокрутку
+
+      document.body.style.overflow = "";
     },
+
     nextFullscreen() {
       if (this.fullscreenIndex < this.place.imgUrls.length - 1) {
         this.fullscreenIndex++;
@@ -204,6 +291,7 @@ export default {
         this.fullscreenIndex = 0;
       }
     },
+
     prevFullscreen() {
       if (this.fullscreenIndex > 0) {
         this.fullscreenIndex--;
@@ -247,16 +335,24 @@ strong {
 
     min-width: 0;
 
-    /*
-     * Заголовок може займати доступний простір,
-     * але не буде виштовхувати рейтинг
-     */
     flex: 1 1 auto;
   }
 
+  /*
+   * КОЖНА КАРТИНКА = ОДИН ПОВНИЙ СЛАЙД
+   */
   &__photo {
+    display: block;
+
+    width: 100%;
     max-width: 100%;
+
+    flex: 0 0 100%;
+
     border-radius: 12px;
+
+    object-fit: cover;
+
     scroll-snap-align: start;
   }
 
@@ -276,6 +372,7 @@ strong {
 
     padding: 50px 0;
   }
+
   &__category {
     display: flex;
     align-items: center;
@@ -314,6 +411,7 @@ strong {
 
 .slider-container {
   position: relative;
+
   overflow: hidden;
 
   width: 100%;
@@ -334,22 +432,13 @@ strong {
   width: 100%;
 
   min-width: 0;
+
+  scrollbar-width: none;
 }
 
-// .place-main-info__photo {
-//   display: block;
-
-//   width: 100%;
-//   max-width: 650px;
-
-//   flex: 0 0 100%;
-
-//   border-radius: 12px;
-
-//   object-fit: cover;
-
-//   scroll-snap-align: start;
-// }
+.slider::-webkit-scrollbar {
+  display: none;
+}
 
 /* =========================
    КНОПКИ СЛАЙДЕРА
@@ -359,6 +448,7 @@ strong {
   position: absolute;
 
   top: 50%;
+
   transform: translateY(-50%);
 
   display: flex;
@@ -457,11 +547,13 @@ strong {
   border: 1px solid white;
 
   cursor: pointer;
+
   z-index: 10;
 }
 
 .fullscreen-overlay .slider-btn {
   background: rgba(0, 0, 0, 0.6);
+
   font-size: 24px;
 }
 
@@ -511,6 +603,7 @@ strong {
   .place-main-info__photo {
     width: 100%;
     max-width: 100%;
+    flex: 0 0 100%;
   }
 }
 </style>

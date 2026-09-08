@@ -4,11 +4,7 @@
       Підтвердження вашого email
     </MainTitle>
 
-    <Form
-      ref="form"
-      class="registration__form"
-      @submit.prevent="submitCode"
-    >
+    <Form ref="form" class="registration__form" @submit.prevent="submitCode">
       <CustomInput
         v-model="code"
         class="registration__input"
@@ -37,23 +33,21 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
 
-import Form from "../../shared/form";
+import Form from "../../form";
 import CustomInput from "../../shared/CustomInput";
-import Button from "../../mainButton";
+import Button from "../../shared/mainButton.vue";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-import SuccessModal from '../../SuccessModal.vue';
+import SuccessModal from "../../shared/SuccessModal.vue";
 
-import { 
-  isRequired,
-} from "../../../utils/validationRules";
+import { isRequired } from "../../../utils/validationRules";
 
 export default {
-  name: 'ConfirmEmail',
+  name: "ConfirmEmail",
 
   components: {
     Form,
@@ -66,22 +60,22 @@ export default {
 
   setup() {
     // Composition‑API усередині Options‑компонента
-    const route  = useRoute();
+    const route = useRoute();
     // const router = useRouter();
-    const store  = useStore();
+    const store = useStore();
     const router = useRouter();
-    const email  = route.query.email || '';   // e‑mail із query‑рядка
-    const code   = ref('');
+    const email = route.query.email || ""; // e‑mail із query‑рядка
+    const code = ref("");
     const loading = ref(false);
     const showSuccessModal = ref(false);
-    const errorMessage = ref('');
+    const errorMessage = ref("");
 
     async function submitCode() {
       if (loading.value) return;
       loading.value = true;
 
       try {
-        await store.dispatch('auth/confirmEmail', {
+        await store.dispatch("auth/confirmEmail", {
           email,
           code: code.value.trim(),
         });
@@ -89,7 +83,7 @@ export default {
         // показуємо модалку «Вітаємо! Реєстрація успішна!»
         showSuccessModal.value = true;
       } catch (err) {
-        errorMessage.value = err.response?.data?.message || 'Сталася помилка';
+        errorMessage.value = err.response?.data?.message || "Сталася помилка";
         // повідомлення про помилку
         // this.$notify або будь‑який ваш toast
         console.error(err);
@@ -100,16 +94,16 @@ export default {
 
     function handleSuccessModalClose() {
       showSuccessModal.value = false;
-      // router.push('/'); 
-      const returnRoute = localStorage.getItem('preRegistrationRoute') || '/';
-localStorage.removeItem('preRegistrationRoute');
+      // router.push('/');
+      const returnRoute = localStorage.getItem("preRegistrationRoute") || "/";
+      localStorage.removeItem("preRegistrationRoute");
 
-// Перевірка безпеки (щоб не перейти кудись зовні)
-if (!returnRoute.startsWith('/')) {
-  router.push('/');
-} else {
-  router.push(returnRoute);
-}     
+      // Перевірка безпеки (щоб не перейти кудись зовні)
+      if (!returnRoute.startsWith("/")) {
+        router.push("/");
+      } else {
+        router.push(returnRoute);
+      }
     }
 
     return {
@@ -136,12 +130,10 @@ if (!returnRoute.startsWith('/')) {
   }
 
   &__title {
-    
     text-align: center;
   }
 
   &__input {
-   
     margin-bottom: 20px;
     width: 100%;
   }
@@ -158,5 +150,4 @@ if (!returnRoute.startsWith('/')) {
     width: 100%;
   }
 }
-
 </style>

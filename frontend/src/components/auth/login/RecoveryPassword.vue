@@ -1,7 +1,7 @@
 <template>
   <AuthContainer>
     <MainTitle class="login__title">
-      {{ stage === 'email' ? 'Вкажіть ваш email' : 'Зміна пароля' }}
+      {{ stage === "email" ? "Вкажіть ваш email" : "Зміна пароля" }}
     </MainTitle>
 
     <Form ref="form" class="login__form" @submit.prevent="handleSubmit">
@@ -14,7 +14,10 @@
           :rules="emailRules"
           class="registration__input"
         />
-        <p>*На вашу електронну пошту буде надіслано лист з кодом для відновлення пароля</p>
+        <p>
+          *На вашу електронну пошту буде надіслано лист з кодом для відновлення
+          пароля
+        </p>
       </template>
 
       <template v-else>
@@ -36,7 +39,7 @@
       </template>
 
       <Button type="submit" class="login__btn" :loading="loading">
-        {{ stage === 'email' ? 'Надіслати' : 'Змінити пароль' }}
+        {{ stage === "email" ? "Надіслати" : "Змінити пароль" }}
       </Button>
     </Form>
 
@@ -49,16 +52,16 @@
 </template>
 
 <script>
-import Form from "../../shared/form";
+import Form from "../../form";
 import CustomInput from "../../shared/CustomInput";
-import Button from "../../mainButton";
+import Button from "../../shared/mainButton.vue";
 import AuthContainer from "../AuthContainer.vue";
 import MainTitle from "../../shared/MainTitle";
-import SuccessModal from '../../SuccessModal.vue';
+import SuccessModal from "../../shared/SuccessModal.vue";
 import {
   isRequired,
   emailValidation,
-  passwordValidation
+  passwordValidation,
 } from "../../../utils/validationRules";
 import { mapActions } from "vuex";
 
@@ -91,34 +94,34 @@ export default {
     ...mapActions("auth", ["requestPasswordReset", "resetPassword", "login"]),
 
     async handleSubmit() {
-  if (this.loading) return;
-  this.loading = true;
-  try {
-    if (this.stage === "email") {
-      await this.requestPasswordReset({ email: this.formData.email });
-      this.stage = "reset";
-    } else {
-      const token = this.formData.code.trim();
+      if (this.loading) return;
+      this.loading = true;
+      try {
+        if (this.stage === "email") {
+          await this.requestPasswordReset({ email: this.formData.email });
+          this.stage = "reset";
+        } else {
+          const token = this.formData.code.trim();
 
-      await this.resetPassword({
-        token,
-        password: this.formData.newPassword,
-      });
+          await this.resetPassword({
+            token,
+            password: this.formData.newPassword,
+          });
 
-      await this.login({
-        email: this.formData.email,
-        password: this.formData.newPassword,
-      });
+          await this.login({
+            email: this.formData.email,
+            password: this.formData.newPassword,
+          });
 
-      this.showSuccess = true;
-    }
-  } catch (err) {
-    console.error("Помилка відновлення пароля:", err);
-    alert(err.response?.data?.message || "Сталася помилка");
-  } finally {
-    this.loading = false;
-  }
-},
+          this.showSuccess = true;
+        }
+      } catch (err) {
+        console.error("Помилка відновлення пароля:", err);
+        alert(err.response?.data?.message || "Сталася помилка");
+      } finally {
+        this.loading = false;
+      }
+    },
 
     goToAccount() {
       this.$router.push("/"); // Змініть маршрут за потреби

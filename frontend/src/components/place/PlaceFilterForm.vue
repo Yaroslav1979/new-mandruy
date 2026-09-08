@@ -40,19 +40,6 @@
           v-model="sortBy"
           class="form__select--item"
         />
-
-        <div class="form__toggle">
-          <img
-            src="../../assets/png/icon-grid-fill.png"
-            alt=""
-            class="form__toggle--grid"
-          />
-          <img
-            src="../../assets/png/icon-agenda.png"
-            alt=""
-            class="form__toggle--gallery"
-          />
-        </div>
       </div>
     </form>
   </section>
@@ -61,7 +48,7 @@
 <script>
 import CustomInput from "../shared/CustomInput.vue";
 import CustomSelect from "../shared/CustomSelect.vue";
-import SubmitButon from "../mainButton.vue";
+import SubmitButon from "../shared/mainButton.vue";
 import { isRequired } from "../../utils/validationRules";
 
 export default {
@@ -92,6 +79,7 @@ export default {
         "Питна вода",
         "Пам'ятка",
         "Музей",
+        "Героїка",
         "Водойма",
         "Автомобіль",
       ];
@@ -127,7 +115,6 @@ export default {
         "Чернігівська область",
         "Крим автономна республіка",
       ];
-      // .map(this.formatItem);
     },
     sorts() {
       return [
@@ -178,9 +165,7 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
     gap: clamp(8px, 1.2vw, 20px);
-
     font-family: e-Ukraine, sans-serif;
     font-size: clamp(10px, 1vw, 14px);
 
@@ -199,11 +184,9 @@ export default {
   color: #000;
   text-align: center;
   font-family: e-Ukraine, sans-serif;
-
   font-size: clamp(18px, 1.7vw, 24px);
   font-weight: 700;
   line-height: 1.2;
-
   text-transform: uppercase;
   margin-top: 0;
   margin-bottom: clamp(25px, 3.5vw, 52px);
@@ -246,10 +229,8 @@ export default {
   &--grid,
   &--gallery {
     display: flex;
-
     width: clamp(22px, 2.2vw, 32px);
     height: clamp(22px, 2.2vw, 32px);
-
     opacity: 40%;
   }
 }
@@ -264,7 +245,7 @@ export default {
 
 @media (max-width: 900px) {
   .form-container {
-    width: 85%;
+    width: 80%;
   }
 
   .form__select {
@@ -286,7 +267,7 @@ export default {
 
 @media (max-width: 700px) {
   .form-container {
-    width: calc(100% - 32px);
+    width: calc(100% - 100px);
   }
 
   .section__title {
@@ -311,15 +292,9 @@ export default {
 
     grid-template-columns: 95px minmax(0, 1fr);
     grid-template-rows: repeat(3, auto) auto;
-
-    // grid-template-columns: auto minmax(150px, 1fr);
-    // grid-template-rows: repeat(3, auto) auto;
-
     justify-content: stretch;
     align-items: center;
-
     gap: 12px 10px;
-
     width: 100%;
 
     span {
@@ -336,7 +311,6 @@ export default {
   .form__toggle {
     grid-column: 1 / -1;
     grid-row: 4;
-
     justify-content: center;
   }
 

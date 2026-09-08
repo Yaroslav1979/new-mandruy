@@ -16,16 +16,18 @@ import { useAuth } from "../../context/AuthContext";
 import { API_URL } from "@/constants/api";
 import * as ImageManipulator from "expo-image-manipulator";
 import { PortalProvider } from "@gorhom/portal";
+import categories from "../../constants/categories";
 
-const categories = [
-  { id: "Табір", title: "Табір" },
-  { id: "Мандрівка", title: "Мандрівка" },
-  { id: "Питна вода", title: "Питна вода" },
-  { id: "Памʼятка", title: "Памʼятка" },
-  { id: "Музей", title: "Музей" },
-  { id: "Водойма", title: "Водойма" },
-  { id: "Автомобіль", title: "Автомобіль" },
-];
+// const categories = [
+//   { id: "Табір", title: "Табір" },
+//   { id: "Мандрівка", title: "Мандрівка" },
+//   { id: "Питна вода", title: "Питна вода" },
+//   { id: "Памʼятка", title: "Памʼятка" },
+//   { id: "Музей", title: "Музей" },
+//   { id: "Героїка", title: "Героїка" },
+//   { id: "Водойма", title: "Водойма" },
+//   { id: "Автомобіль", title: "Автомобіль" },
+// ];
 
 export default function AddPlaceScreen() {
   const { width, height } = useWindowDimensions();
@@ -235,12 +237,12 @@ export default function AddPlaceScreen() {
         {/* 🏷 КАТЕГОРІЇ */}
 
         <View style={styles.titleWrapper}>
-          <Text style={styles.titleCategory}>
+          <Text style={styles.categoryTitle}>
             Виберіть відповідні категорії:
           </Text>
         </View>
 
-        <View style={styles.categories}>
+        {/* <View style={styles.categories}>
           {categories.map((cat) => (
             <Pressable
               key={cat.id}
@@ -258,8 +260,33 @@ export default function AddPlaceScreen() {
               >
                 {cat.title}
               </Text>
-            </Pressable>
-          ))}
+            </Pressable> */}
+        <View style={styles.categories}>
+          {categories.map((cat) => {
+            const isSelected = categoryIds.includes(cat.id);
+            const Icon = isSelected ? cat.iconWhite : cat.icon;
+
+            return (
+              <Pressable
+                key={cat.id}
+                onPress={() => toggleCategory(cat.id)}
+                style={[styles.category, isSelected && styles.categorySelected]}
+              >
+                <View style={styles.categoryContent}>
+                  <Icon width={20} height={20} />
+
+                  <Text
+                    style={[
+                      styles.categoryText,
+                      isSelected && styles.categoryTextSelected,
+                    ]}
+                  >
+                    {cat.title}
+                  </Text>
+                </View>
+              </Pressable>
+            );
+          })}
         </View>
 
         {/* 📝 ОПИС */}
@@ -358,7 +385,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     marginBottom: 20,
   },
-  titleCategory: {
+  categoryTitle: {
     fontFamily: "Ukrainian-Regular",
     // marginBottom: 20,
     color: "#111",
@@ -372,8 +399,23 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
-  category: {
+  categoryContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+  },
+
+  categoryText: {
     fontFamily: "Ukrainian-Regular",
+    color: "#000",
+  },
+
+  categoryTextSelected: {
+    fontFamily: "Ukrainian-Regular",
+    color: "#fff",
+  },
+
+  category: {
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 10,
@@ -381,7 +423,6 @@ const styles = StyleSheet.create({
   },
 
   categorySelected: {
-    fontFamily: "Ukrainian-Regular",
     backgroundColor: "#000",
   },
 

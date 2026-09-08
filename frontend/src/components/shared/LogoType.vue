@@ -1,22 +1,18 @@
 <template>
-    <!-- <img  src="../../assets/svg/logo.svg" alt="logo" class="logo" /> -->
-    <router-link
-        :to="{ name: 'home', query: { name: 'Yarik' } }"        
-      >
-      <img  src="../../assets/svg/logo.svg" alt="logo" class="logo" />
-      </router-link>
+  <router-link :to="{ name: 'home', query: { name: 'Yarik' } }">
+    <img src="../../assets/svg/logo.svg" alt="logo" class="logo" />
+  </router-link>
 </template>
 
 <script>
-    export default {
-        name: "LogoType",
-    }
+export default {
+  name: "LogoType",
+};
 </script>
 
 <style lang="scss" scoped>
 .logo {
   padding: 4px 16px 4px 16px;
-  /* border: 1px solid white; */
   border-radius: 16px;
   cursor: pointer;
 }

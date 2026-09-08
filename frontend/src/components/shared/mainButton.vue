@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import CircleLoader from "./loaders/CircleLoader.vue";
+import CircleLoader from "../loaders/CircleLoader.vue";
 
 export default {
   name: "MainButton",

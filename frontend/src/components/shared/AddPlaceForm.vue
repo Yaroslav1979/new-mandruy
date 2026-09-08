@@ -1,7 +1,7 @@
 <template>
   <section class="add-place">
     <h2 class="add-place__title">Додати місце</h2>
-    <SuccessMessageModal v-if="successMessageVisible" @close="closeModal" />
+    <SuccessModal v-if="successMessageVisible" @close="closeModal" />
 
     <form v-else class="add-place__form" @submit.prevent="handleSubmit">
       <div class="add-place__form-wrapper">
@@ -124,9 +124,9 @@ import CircleLoader from "../loaders/CircleLoader.vue";
 import CustomInput from "./CustomInput.vue";
 import CustomTextArea from "./CustomTextArea.vue";
 import CategoriesList from "../categories/CategoriesList.vue";
-import SuccessMessageModal from "../SuccessMessageModal.vue";
+import SuccessModal from "./SuccessModal.vue";
 import categories from "../categories/categories.js";
-import SubmitButon from "../mainButton.vue";
+import SubmitButon from "./mainButton.vue";
 
 export default {
   name: "AddPlaceForm",
@@ -134,7 +134,7 @@ export default {
     CustomInput,
     CustomTextArea,
     CategoriesList,
-    SuccessMessageModal,
+    SuccessModal,
     SubmitButon,
     CircleLoader,
   },
@@ -152,6 +152,7 @@ export default {
       rules: [],
       fileInputKey: 0,
       successMessageVisible: false,
+      successMessage: "",
     };
   },
   computed: {
@@ -184,7 +185,9 @@ export default {
     },
 
     closeModal() {
-      this.$emit("close"); // Закриває модалку, наприклад у батьківському компоненті
+      this.successMessageVisible = false;
+      this.successMessage = "";
+      this.$emit("close");
     },
 
     // Функція для вибору категорій
@@ -248,6 +251,7 @@ export default {
         console.log("Успішно збережено:", result);
 
         this.$emit("added", result);
+        this.successMessage = "Місце успішно додано!";
         this.successMessageVisible = true;
       } catch (error) {
         alert("Помилка при збереженні місця: " + error.message);
@@ -625,201 +629,4 @@ export default {
     }
   }
 }
-
-// .add-place {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   font-family: e-Ukraine, sans-serif;
-//   margin: 100px 0;
-
-//   &__title {
-//     color: #000;
-//     text-align: center;
-//     font-family: e-Ukraine, sans-serif;
-//     font-size: 24px;
-//     font-style: normal;
-//     font-weight: 700;
-//     line-height: 18px;
-//     text-transform: uppercase;
-//   }
-
-//   &__form {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 12px;
-//     align-items: stretch;
-//     padding: 50px 0;
-
-//     &-wrapper {
-//       display: flex;
-//       width: 100%;
-//       justify-content: space-between;
-//       gap: 12px;
-//     }
-//   }
-
-//   .add-place__btn {
-//     display: flex;
-//     flex-direction: row;
-//     justify-content: space-around;
-//     align-items: center;
-//     width: 186px;
-//     height: 47px;
-//     border-radius: 5px;
-//     background: #000;
-//     color: #fff;
-//     text-align: center;
-//     font-family: e-Ukraine, sans-serif;
-//     font-size: 16px;
-//     font-weight: 500;
-//     line-height: 140%;
-//   }
-//   &__btn:hover {
-//     opacity: 80%;
-//   }
-
-//   .add-place__buttons {
-//     display: flex;
-//     justify-content: right;
-//     gap: 8px;
-//   }
-
-//   .add-place__button-trash {
-//     position: relative;
-//     width: 48px;
-//     height: 48px;
-//     border-radius: 5px;
-//     border-color: #ff7878;
-//     background: #ff7878;
-//   }
-
-//   .icon-trash {
-//     width: 18px;
-//     height: 21px;
-//     position: absolute;
-//     left: 14px;
-//     top: 14px;
-//   }
-
-//   .add-place__button-trash:hover {
-//     background-color: red;
-//     border-color: red;
-//     opacity: 80%;
-//   }
-
-//   .icon-google-map__arrow {
-//     align-self: center;
-//     justify-content: center;
-//     width: 16px;
-//     height: 16px;
-//     margin-left: 12px;
-//     margin-top: 4px;
-//   }
-
-//   .upload-cont {
-//     display: flex;
-//     flex-direction: row;
-//     justify-content: space-around;
-//     gap: 8px;
-//     align-items: center;
-//   }
-
-//   .upload {
-//     background-color: #f5f4fa;
-//     width: 400px;
-//     height: 312px;
-//     border: 1px solid #f5f4fa;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-//     cursor: pointer;
-
-//     &-label {
-//       display: flex;
-//     justify-content: center;
-//     font-size: 16px;
-//     color: #a3a3a3;
-//     text-align: center;
-//     font-family: e-Ukraine, sans-serif;
-//     font-style: normal;
-//     font-weight: 400;
-//     line-height: 18px;
-//     cursor: pointer;
-//     z-index: 1;
-//     }
-//   }
-
-//   .image-thumbnails {
-//     display: grid;
-//     grid-template-columns: repeat(2, 1fr); /* 2 колонки */
-//     grid-gap: 8px;
-//     margin-top: 10px;
-//     max-width: 400px;
-//     width: 100%;
-//   }
-
-//   .thumbnail-wrapper {
-//     position: relative;
-//     width: 100%;
-//     height: 100%;
-//     border-radius: 5px;
-//     overflow: hidden;
-//     border: 1px solid #ccc;
-//   }
-
-//   .thumbnail {
-//     width: 100%;
-//     height: 100%;
-//     object-fit: cover;
-//   }
-
-//   .delete-btn {
-//     position: absolute;
-//     top: 42.5%;
-//     right: 45%;
-//     background: rgba(222, 217, 217, 0.845);
-//     color: black;
-//     border: 1px solid black;
-//     border-radius: 50%;
-//     font-size: 14px;
-//     width: 20px;
-//     height: 20px;
-//     cursor: pointer;
-//     opacity: 0.5;
-//   }
-
-//   .more-count {
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     background: #ddd;
-//     font-size: 16px;
-//     font-weight: bold;
-//   }
-
-//   input[type="file"] {
-//     display: none;
-//   }
-
-//   .category {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 20px;
-//     flex-wrap: wrap;
-//     width: 100%;
-//     max-width: 800px;
-//   }
-
-//   /* Стилі для вибраної категорії */
-//   .selected {
-//     background-color: black;
-//     color: white;
-//   }
-
-//   .selected .icon-ctg {
-//     filter: invert(1);
-//   }
-// }
 </style>
