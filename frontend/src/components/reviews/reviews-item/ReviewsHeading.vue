@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Rating from "../../StarRating.vue";
+import Rating from "../../shared/StarRating.vue";
 import Avatar from "./ReviewsAvatar.vue";
 export default {
   name: "ReviewsHeading",

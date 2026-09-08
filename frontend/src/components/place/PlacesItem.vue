@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Rating from "../StarRating.vue";
+import Rating from "../shared/StarRating.vue";
 export default {
   name: "PlacesItem",
   components: {
@@ -85,25 +85,19 @@ export default {
   &__photo-container {
     width: 100%;
     aspect-ratio: 5 / 3;
-
     border-radius: clamp(8px, 1.3vw, 16px);
     overflow: hidden;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background-color: #f5f5f5;
   }
 
   &__photo {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     border-radius: clamp(8px, 1.3vw, 16px);
-
     display: block;
   }
 
@@ -115,27 +109,17 @@ export default {
 
     width: 100%;
     height: 100%;
-
     box-sizing: border-box;
-
     padding: clamp(20px, 3vw, 40px);
-
     border-radius: clamp(8px, 1.3vw, 16px);
-
     opacity: 0;
-
     transition: opacity 0.4s;
-
     background: rgba(#0f1d2d, 0.7);
-
     color: #fff;
     text-align: left;
-
     font-size: clamp(11px, 1.1vw, 16px);
     line-height: 1.4;
-
     cursor: pointer;
-
     z-index: 1;
 
     &:hover {
@@ -145,44 +129,30 @@ export default {
 
   &__description {
     margin-top: clamp(25px, 3.5vw, 50px);
-
     max-height: calc(1em * 1.4 * 3);
-
     overflow: hidden;
-
     font-size: clamp(11px, 1.1vw, 16px);
     line-height: 1.4;
   }
 
   &__title {
     position: absolute;
-
     color: #fff;
-
     background-color: rgba(68, 68, 68, 0.5);
-
     display: inline-block;
-
     clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
-
     padding: clamp(6px, 0.8vw, 10px) clamp(12px, 1.5vw, 20px);
-
     left: clamp(15px, 3vw, 40px);
     top: clamp(10px, 1.5vw, 20px);
-
     font-size: clamp(13px, 1.5vw, 20px);
     font-weight: 400;
     font-style: italic;
-
     z-index: 1;
-
     /*
-     * Щоб довгий заголовок не вилазив
-     * за межі картки.
+     * Щоб довгий заголовок не вилазив за межі картки.
      */
     max-width: calc(100% - 60px);
     box-sizing: border-box;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -190,10 +160,8 @@ export default {
 
   &__link {
     position: absolute;
-
     top: 0;
     left: 0;
-
     width: 100%;
     height: 100%;
   }
@@ -203,12 +171,10 @@ export default {
    СМАРТФОН
    ========================= */
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .places-item {
     width: 100%;
-
     padding: 0 8px;
-
     margin-bottom: 20px;
   }
 
@@ -223,26 +189,20 @@ export default {
 
   .places-item__content {
     padding: 20px;
-
     border-radius: 10px;
-
     font-size: 12px;
   }
 
   .places-item__description {
     margin-top: 35px;
-
     font-size: 12px;
   }
 
   .places-item__title {
     left: 15px;
     top: 10px;
-
     padding: 6px 12px;
-
     font-size: 14px;
-
     max-width: calc(100% - 30px);
   }
 }

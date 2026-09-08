@@ -39,7 +39,7 @@
 <script>
 import AddReviewForm from "./AddReviewForm.vue";
 import ReviewItem from "./reviews-item/ReviewItem.vue";
-import Rating from "../StarRating";
+import Rating from "../shared/StarRating.vue";
 
 export default {
   name: "ReviewsAll",

@@ -1,7 +1,7 @@
 <template>
   <section class="add-place">
     <h2 class="add-place__title">Додати місце</h2>
-    <SuccessMessageModal v-if="successMessageVisible" @close="closeModal" />
+    <SuccessModal v-if="successMessageVisible" @close="closeModal" />
 
     <form v-else class="add-place__form" @submit.prevent="handleSubmit">
       <div class="add-place__form-wrapper">
@@ -124,9 +124,9 @@ import CircleLoader from "../loaders/CircleLoader.vue";
 import CustomInput from "./CustomInput.vue";
 import CustomTextArea from "./CustomTextArea.vue";
 import CategoriesList from "../categories/CategoriesList.vue";
-import SuccessMessageModal from "../SuccessMessageModal.vue";
+import SuccessModal from "./SuccessModal.vue";
 import categories from "../categories/categories.js";
-import SubmitButon from "../mainButton.vue";
+import SubmitButon from "./mainButton.vue";
 
 export default {
   name: "AddPlaceForm",
@@ -134,7 +134,7 @@ export default {
     CustomInput,
     CustomTextArea,
     CategoriesList,
-    SuccessMessageModal,
+    SuccessModal,
     SubmitButon,
     CircleLoader,
   },
@@ -152,6 +152,7 @@ export default {
       rules: [],
       fileInputKey: 0,
       successMessageVisible: false,
+      successMessage: "",
     };
   },
   computed: {
@@ -184,7 +185,9 @@ export default {
     },
 
     closeModal() {
-      this.$emit("close"); // Закриває модалку, наприклад у батьківському компоненті
+      this.successMessageVisible = false;
+      this.successMessage = "";
+      this.$emit("close");
     },
 
     // Функція для вибору категорій
@@ -248,6 +251,7 @@ export default {
         console.log("Успішно збережено:", result);
 
         this.$emit("added", result);
+        this.successMessage = "Місце успішно додано!";
         this.successMessageVisible = true;
       } catch (error) {
         alert("Помилка при збереженні місця: " + error.message);

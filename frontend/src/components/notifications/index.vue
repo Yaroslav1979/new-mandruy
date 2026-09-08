@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <notifications classes="vue-notification" />   
 </template>
 
@@ -41,4 +41,4 @@
     border-left-color: #42a85f;
   }
 }
-</style>
+</style> -->
