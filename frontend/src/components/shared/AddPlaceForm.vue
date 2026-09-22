@@ -57,13 +57,25 @@
             errorMessage="Не повинно бути пустим"
             :rules="rules"
           />
-          <CustomInput
-            v-model="coordinate"
-            class="add"
-            placeholder="Введіть координати місця"
-            errorMessage="Не повинно бути пустим"
-            :rules="rules"
-          />
+
+          <!-- Поле координат та кнопка вибору на мапі -->
+          <div class="coordinate-field-wrapper">
+            <CustomInput
+              v-model="coordinate"
+              class="add"
+              placeholder="Введіть координати місця"
+              errorMessage="Не повинно бути пустим"
+              :rules="rules"
+            />
+            <button
+              type="button"
+              class="map-select-btn"
+              @click="isMapModalOpen = true"
+            >
+              Вибрати на мапі
+            </button>
+          </div>
+
           <CustomInput
             v-model="region"
             class="add"
@@ -82,6 +94,7 @@
       </div>
 
       <!-- Категорії -->
+      <p class="add-place__add-ctg">Виберіть категорії що відповідають місцю</p>
 
       <CategoriesList v-model="categoryIds" :items="localCategories" />
 
@@ -116,6 +129,14 @@
         <CircleLoader v-if="isLoading" class="mt-4 mx-auto" />
       </div>
     </form>
+
+    <!-- Підключений компонент карти -->
+    <AddCoordinate
+      v-if="isMapModalOpen"
+      :initialCoordinate="coordinate"
+      @close="isMapModalOpen = false"
+      @confirm="handleCoordinateSelected"
+    />
   </section>
 </template>
 
@@ -125,6 +146,7 @@ import CustomInput from "./CustomInput.vue";
 import CustomTextArea from "./CustomTextArea.vue";
 import CategoriesList from "../categories/CategoriesList.vue";
 import SuccessModal from "./SuccessModal.vue";
+import AddCoordinate from "./add.Coordinate.vue";
 import categories from "../categories/categories.js";
 import SubmitButon from "./mainButton.vue";
 
@@ -137,6 +159,7 @@ export default {
     SuccessModal,
     SubmitButon,
     CircleLoader,
+    AddCoordinate,
   },
   data() {
     return {
@@ -153,6 +176,7 @@ export default {
       fileInputKey: 0,
       successMessageVisible: false,
       successMessage: "",
+      isMapModalOpen: false,
     };
   },
   computed: {
@@ -190,6 +214,11 @@ export default {
       this.$emit("close");
     },
 
+    // Обробник отриманих координат з дочірнього компонента
+    handleCoordinateSelected(coords) {
+      this.coordinate = coords;
+    },
+
     // Функція для вибору категорій
 
     async handleSubmit() {
@@ -214,6 +243,8 @@ export default {
       }
       this.isLoading = true;
 
+      // об'єкт для дебагу в консолі:
+
       const placeData = {
         title: this.title,
         coordinate: this.coordinate,
@@ -224,6 +255,7 @@ export default {
         // інші дані, як файли — окремо
       };
       console.log("Готові дані до надсилання:", placeData);
+
       try {
         const formData = new FormData();
         formData.append("title", this.title);
@@ -304,6 +336,13 @@ export default {
       align-items: flex-start;
       gap: clamp(20px, 3vw, 40px);
     }
+  }
+
+  .add-place__add-ctg {
+    font-size: 16px;
+    font-family: e-Ukraine, sans-serif;
+    padding-left: 20px;
+    color: gray;
   }
 
   /* =========================
@@ -410,12 +449,31 @@ export default {
     line-height: 140%;
   }
 
+  .coordinate-field-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .map-select-btn {
+    font-family: e-Ukraine, sans-serif;
+    color: #ddd;
+    background-color: #000;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 20px;
+    line-height: 30px;
+    &:hover {
+      opacity: 0.8;
+      color: #fff;
+    }
+  }
+
   .add-place__button-trash {
     position: relative;
-
     width: 48px;
     height: 48px;
-
     border-radius: 5px;
     border-color: #ff7878;
     background: #ff7878;
@@ -424,7 +482,6 @@ export default {
   .icon-trash {
     width: 18px;
     height: 21px;
-
     position: absolute;
     left: 14px;
     top: 14px;
@@ -433,7 +490,6 @@ export default {
   .icon-google-map__arrow {
     width: 16px;
     height: 16px;
-
     margin-left: 12px;
     margin-top: 4px;
   }
@@ -444,10 +500,8 @@ export default {
 
   .thumbnail-wrapper {
     position: relative;
-
     width: 100%;
     height: 100%;
-
     border-radius: 5px;
     overflow: hidden;
     border: 1px solid #ccc;
@@ -461,18 +515,13 @@ export default {
 
   .delete-btn {
     position: absolute;
-
     top: 42.5%;
     right: 45%;
-
     background: rgba(222, 217, 217, 0.845);
     color: black;
-
     border: 1px solid black;
     border-radius: 50%;
-
     font-size: 14px;
-
     width: 20px;
     height: 20px;
 
@@ -484,9 +533,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: #ddd;
-
     font-size: 16px;
     font-weight: bold;
   }
@@ -515,6 +562,10 @@ export default {
     .category {
       gap: 15px;
     }
+
+    .map-select-btn {
+      font-size: 12px;
+    }
   }
 
   /* =========================
@@ -537,6 +588,11 @@ export default {
       flex-direction: column;
       align-items: stretch;
       gap: 20px;
+    }
+
+    .map-select-btn {
+      font-size: 12px;
+      border-radius: 15px;
     }
 
     /*
