@@ -1,4 +1,3 @@
-// components/MapPickerModal.tsx
 import React, { useEffect, useState } from "react";
 import {
   Modal,
