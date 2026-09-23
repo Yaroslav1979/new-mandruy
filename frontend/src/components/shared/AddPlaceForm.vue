@@ -94,7 +94,9 @@
       </div>
 
       <!-- Категорії -->
-      <p class="add-place__add-ctg">Виберіть категорії що відповідають місцю</p>
+      <p class="add-place__add-ctg">
+        Виберіть категорії що відповідають місцю:
+      </p>
 
       <CategoriesList v-model="categoryIds" :items="localCategories" />
 

@@ -34,9 +34,6 @@ export default {
   width: 100%;
   margin: clamp(60px, 8vw, 100px) 0;
 
-  /*
-   * ФОНОВИЙ БЛОК
-   */
   &__bgd {
     width: 100%;
     height: clamp(380px, 38vw, 550px);
@@ -50,21 +47,9 @@ export default {
     margin: 20px 0;
   }
 
-  /*
-   * ТЕЛЕФОН
-   *
-   * Телефон завжди знаходиться:
-   * - зліва;
-   * - вертикально по центру фону.
-   */
   &__picture {
     position: absolute;
-
     left: clamp(30px, 20vw, 300px);
-
-    /*
-     * Центрування відносно висоти .social
-     */
     top: 50%;
     transform: translateY(-50%) rotate(-2deg);
 
@@ -74,43 +59,30 @@ export default {
     z-index: 2;
   }
 
-  /*
-   * ТЕКСТ
-   *
-   * Справа та вертикально по центру фону.
-   */
   &-block {
     position: absolute;
-
     left: 55%;
     top: 50%;
-
     transform: translateY(-50%);
-
     width: clamp(280px, 32vw, 450px);
-
     display: flex;
     flex-direction: column;
 
     &__title {
       color: #000;
-
       font-family: e-Ukraine, sans-serif;
       font-size: clamp(20px, 2.2vw, 28px);
       font-weight: 700;
       line-height: 1.2;
-
       margin: 0 0 clamp(15px, 2vw, 20px);
     }
 
     &__text {
       color: #111;
-
       font-family: e-Ukraine, sans-serif;
-      font-size: clamp(11px, 1.1vw, 14px);
-      font-weight: 400;
-      line-height: 1.4;
-
+      font-size: clamp(14px, 1.2vw, 16px);
+      font-weight: 600;
+      line-height: 1.6;
       margin: 0;
     }
 
