@@ -18,17 +18,6 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { PortalProvider } from "@gorhom/portal";
 import categories from "../../constants/categories";
 
-// const categories = [
-//   { id: "Табір", title: "Табір" },
-//   { id: "Мандрівка", title: "Мандрівка" },
-//   { id: "Питна вода", title: "Питна вода" },
-//   { id: "Памʼятка", title: "Памʼятка" },
-//   { id: "Музей", title: "Музей" },
-//   { id: "Героїка", title: "Героїка" },
-//   { id: "Водойма", title: "Водойма" },
-//   { id: "Автомобіль", title: "Автомобіль" },
-// ];
-
 export default function AddPlaceScreen() {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
@@ -242,25 +231,6 @@ export default function AddPlaceScreen() {
           </Text>
         </View>
 
-        {/* <View style={styles.categories}>
-          {categories.map((cat) => (
-            <Pressable
-              key={cat.id}
-              onPress={() => toggleCategory(cat.id)}
-              style={[
-                styles.category,
-                categoryIds.includes(cat.id) && styles.categorySelected,
-              ]}
-            >
-              <Text
-                style={{
-                  color: categoryIds.includes(cat.id) ? "#fff" : "#000",
-                  fontFamily: "Ukrainian-Regular",
-                }}
-              >
-                {cat.title}
-              </Text>
-            </Pressable> */}
         <View style={styles.categories}>
           {categories.map((cat) => {
             const isSelected = categoryIds.includes(cat.id);
@@ -311,7 +281,6 @@ export default function AddPlaceScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    // top: 50,
   },
 
   uploadBox: {

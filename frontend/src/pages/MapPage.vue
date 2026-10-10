@@ -1,29 +1,26 @@
 <template>
   <div class="head">
-    <HeaderAllPages @openAddModal="isModalOpen = true" />   
+    <HeaderAllPages @openAddModal="isModalOpen = true" />
   </div>
- 
-  <main>
-    <div
-      v-if="isModalOpen"
-      class="modal-overlay"
-      @click.self="isModalOpen = false"
-    >
-    <div class="modal-content">
-      <template v-if="!isSuccess">
-        <AddPlaceForm @added="handleNewPlace" />
-      </template>
 
-      <template v-else>
-        <div class="success-message">
-          <p>Місце успішно додано!</p>
-          <button @click="closeModal">Добре</button>
-        </div>
-      </template>
+  <main>
+    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <template v-if="!isSuccess">
+          <AddPlaceForm @added="handleNewPlace" />
+        </template>
+
+        <template v-else>
+          <div class="success-message">
+            <p>Місце успішно додано!</p>
+            <button @click="closeModal">Добре</button>
+          </div>
+        </template>
+      </div>
     </div>
-    </div>
-    <ActiveMap />
-    
+
+    <!-- Передаємо масив місць у мапу -->
+    <ActiveMap :places="places" />
   </main>
 </template>
 
@@ -31,20 +28,47 @@
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import ActiveMap from "../components/shared/ActiveMap.vue";
+import axios from "axios"; // Додано для запиту на бекенд
 
 export default {
-  name: "PlacePage",  
-  components: {    
+  name: "PlacePage",
+  components: {
     HeaderAllPages,
     ActiveMap,
-    AddPlaceForm,    
+    AddPlaceForm,
   },
   data() {
-    return {  
-      // places: [],    
+    return {
+      places: [], // ✅ Масив оголошено, щоб мапа не падала
       isModalOpen: false, // ДЛЯ МОДАЛКИ
+      isSuccess: false, // ✅ Додано стан успіху для шаблону
     };
-  },  
+  },
+  async created() {
+    // Завантажуємо існуючі місця з бази при завантаженні сторінки
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/places/approved",
+      );
+      this.places = response.data;
+      console.log("📥 Завантажені місця для мапи:", this.places);
+    } catch (error) {
+      console.error("Помилка при завантаженні місць для мапи:", error);
+    }
+  },
+
+  methods: {
+    // ✅ Правильний синтаксис об'єкта methods у Vue.js
+    handleNewPlace(newPlace) {
+      this.places.push(newPlace); // Мапа автоматично поставить мітку
+      this.isSuccess = true; // Перемикаємо модалку на екран успіху
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
+      this.isSuccess = false;
+    },
+  },
 };
 </script>
 
@@ -52,7 +76,7 @@ export default {
 .head {
   background-color: #111;
 }
-  .modal-overlay {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -94,5 +118,4 @@ export default {
   border: none;
   cursor: pointer;
 }
-
 </style>
