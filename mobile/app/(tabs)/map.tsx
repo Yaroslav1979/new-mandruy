@@ -23,9 +23,9 @@ export default function MapScreen() {
 
   const fetchPlaces = async () => {
     try {
-      console.log("🌐 Роблю запит на:", `${API_URL}/api/places/approved`);
+      // console.log("🌐 Роблю запит на:", `${API_URL}/api/places/approved`);
       const res = await axios.get(`${API_URL}/api/places/approved`);
-      console.log("📥 Успішно отримано дані на iOS/Android:", res.data);
+      // console.log("📥 Успішно отримано дані на iOS/Android:", res.data);
       setPlaces(res.data);
     } catch (e) {
       console.log("❌ Помилка завантаження місць на мобільному:", e);
@@ -99,6 +99,7 @@ export default function MapScreen() {
                   coordinate={coords}
                   title={place.title}
                   description={place.descr}
+                  pinColor="blue"
                   onPress={() =>
                     router.push({
                       pathname: "/(tabs)/placeDetails",
@@ -109,14 +110,14 @@ export default function MapScreen() {
               );
             })}
 
-            <Marker
+            {/* <Marker
               coordinate={{
                 latitude: 49.8397,
                 longitude: 24.0297,
               }}
               title="Львів"
               description="Центр міста"
-            />
+            /> */}
           </MapView>
         </View>
 

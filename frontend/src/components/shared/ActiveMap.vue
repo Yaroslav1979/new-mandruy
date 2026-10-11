@@ -113,6 +113,7 @@ export default {
               position,
               map: this.map,
               title: place.title,
+              icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
             });
 
             // Інфо-віконце при кліку
