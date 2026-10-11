@@ -64,6 +64,7 @@ export default {
       region: "",
       categoryIds: "",
       sortBy: "",
+      debounceTimer: null, // Таймер для дебаунсу вводу
     };
   },
   computed: {
@@ -83,7 +84,6 @@ export default {
         "Водойма",
         "Автомобіль",
       ];
-      // .map(this.formatItem);
     },
 
     regions() {
@@ -95,7 +95,7 @@ export default {
         "Донецька область",
         "Житомирська область",
         "Закарпатська область",
-        "Запорізька область",
+        "Запоріжжя область",
         "Івано-Франківська область",
         "Київська область",
         "Кіровоградська область",
@@ -125,6 +125,28 @@ export default {
     },
   },
 
+  watch: {
+    // Автопошук при вводі назви з затримкою (debounce) 400мс
+    title(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(() => {
+          this.handleSubmit();
+        }, 400);
+      }
+    },
+    // Автоматичний пошук при зміні селектів (спрацьовують миттєво)
+    region() {
+      this.handleSubmit();
+    },
+    categoryIds() {
+      this.handleSubmit();
+    },
+    sortBy() {
+      this.handleSubmit();
+    },
+  },
+
   methods: {
     handleSubmit() {
       this.$emit("submit", {
@@ -136,6 +158,96 @@ export default {
     },
   },
 };
+// import CustomInput from "../shared/CustomInput.vue";
+// import CustomSelect from "../shared/CustomSelect.vue";
+// import SubmitButon from "../shared/mainButton.vue";
+// import { isRequired } from "../../utils/validationRules";
+
+// export default {
+//   name: "FilterForm",
+//   components: {
+//     CustomSelect,
+//     CustomInput,
+//     SubmitButon,
+//   },
+//   data() {
+//     return {
+//       title: "",
+//       region: "",
+//       categoryIds: "",
+//       sortBy: "",
+//     };
+//   },
+//   computed: {
+//     rules() {
+//       return [isRequired];
+//     },
+
+//     categories() {
+//       return [
+//         { value: "", label: "Без категорії", isLabel: true },
+//         "Табір",
+//         "Мандрівка",
+//         "Питна вода",
+//         "Пам'ятка",
+//         "Музей",
+//         "Героїка",
+//         "Водойма",
+//         "Автомобіль",
+//       ];
+//       // .map(this.formatItem);
+//     },
+
+//     regions() {
+//       return [
+//         { value: "", label: "Всі області", isLabel: true },
+//         "Вінницька область",
+//         "Волинська область",
+//         "Дніпропетровська область",
+//         "Донецька область",
+//         "Житомирська область",
+//         "Закарпатська область",
+//         "Запорізька область",
+//         "Івано-Франківська область",
+//         "Київська область",
+//         "Кіровоградська область",
+//         "Луганська область",
+//         "Львівська область",
+//         "Миколаївська область",
+//         "Одеська область",
+//         "Полтавська область",
+//         "Рівненська область",
+//         "Сумська область",
+//         "Тернопільська область",
+//         "Харківська область",
+//         "Херсонська область",
+//         "Хмельницька область",
+//         "Черкаська область",
+//         "Чернівецька область",
+//         "Чернігівська область",
+//         "Крим автономна республіка",
+//       ];
+//     },
+//     sorts() {
+//       return [
+//         { value: "", label: "за замовчуванням", isLabel: true },
+//         { value: "title", label: "за назвою" },
+//         { value: "date", label: "за датою" },
+//       ];
+//     },
+//   },
+
+//   methods: {
+//     handleSubmit() {
+//       this.$emit("submit", {
+//         title: this.title,
+//         region: this.region,
+//         categoryIds: this.categoryIds ? [this.categoryIds] : [],
+//         sortBy: this.sortBy,
+//       });
+//     },
+//   },
+// };
 </script>
 
 <style lang="scss" scoped>

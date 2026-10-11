@@ -3,14 +3,8 @@
     <h3 class="map__title">Інтерактивна мапа</h3>
 
     <div class="map__wrapper">
-      <iframe
-        class="map__googl-map"
-        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d111939.82082888731!2d25.89549818429925!3d50.34745209765328!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1suk!2sua!4v1694978416550!5m2!1suk!2sua"
-        allowfullscreen
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      >
-      </iframe>
+      <!-- Контейнер для Google Maps JavaScript API (замість iframe) -->
+      <div id="main-google-map" class="map__googl-map"></div>
 
       <div class="map__btn">
         <a
@@ -28,8 +22,126 @@
 </template>
 
 <script>
+/* global google */
 export default {
   name: "ActiveMap",
+  props: {
+    // Масив місць, які приходять із батьківської сторінки (MapPage)
+    places: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data() {
+    return {
+      map: null,
+      markers: [],
+    };
+  },
+  mounted() {
+    this.initMap();
+  },
+  watch: {
+    // Як тільки масив places змінюється (додається нове місце), мапа оновлює мітки
+    places: {
+      handler(newPlaces) {
+        if (this.map) {
+          this.updateMarkers(newPlaces);
+        }
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    initMap() {
+      if (typeof google === "undefined" || !google.maps) {
+        console.error("Google Maps API не завантажено на сторінці.");
+        return;
+      }
+
+      // Центр України за замовчуванням
+      const defaultCenter = { lat: 50.347452, lng: 25.895498 };
+
+      this.map = new google.maps.Map(
+        document.getElementById("main-google-map"),
+        {
+          center: defaultCenter,
+          zoom: 8,
+        },
+      );
+
+      // Малюємо маркери, якщо місця вже завантажені
+      if (this.places.length > 0) {
+        this.updateMarkers(this.places);
+      }
+    },
+
+    updateMarkers(placesList) {
+      console.log("🗺️ Всі отримані місця у мапі:", placesList);
+
+      // Очищаємо попередні маркери
+      this.markers.forEach((marker) => marker.setMap(null));
+      this.markers = [];
+
+      placesList.forEach((place, index) => {
+        // Пробуємо дістати координати з усіх можливих шляхів у структурі MongoDB
+        const coordString =
+          place.location?.coordinate || place.coordinate || place.coordinates;
+
+        console.log(
+          `🔍 Місце #${index} (${place.title}): знайдені координати ->`,
+          coordString,
+        );
+
+        if (
+          coordString &&
+          typeof coordString === "string" &&
+          coordString.includes(",")
+        ) {
+          const parts = coordString
+            .split(",")
+            .map((item) => parseFloat(item.trim()));
+
+          if (!isNaN(parts[0]) && !isNaN(parts[1])) {
+            const position = { lat: parts[0], lng: parts[1] };
+            console.log(
+              `✅ Створюємо маркер для "${place.title}" на позиції:`,
+              position,
+            );
+
+            const marker = new google.maps.Marker({
+              position,
+              map: this.map,
+              title: place.title,
+              icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+            });
+
+            // Інфо-віконце при кліку
+            const cityName = place.location?.city || place.city || "";
+            const infoWindow = new google.maps.InfoWindow({
+              content: `<div><strong>${place.title}</strong><p>${cityName}</p></div>`,
+            });
+
+            marker.addListener("click", () => {
+              infoWindow.open(this.map, marker);
+            });
+
+            this.markers.push(marker);
+          } else {
+            console.warn(
+              `⚠️ Не вдалося перетворити числа для місця: ${place.title}`,
+              parts,
+            );
+          }
+        } else {
+          console.warn(
+            `⚠️ Пропущено місце "${place.title}" через невірний формат координат:`,
+            coordString,
+          );
+        }
+      });
+    },
+  },
 };
 </script>
 
@@ -58,7 +170,6 @@ export default {
     text-transform: uppercase;
   }
 
-  /* Контейнер самої карти */
   &__wrapper {
     position: relative;
     width: 100%;
@@ -73,7 +184,6 @@ export default {
     border: 0;
   }
 
-  /* Кнопка поверх карти */
   &__btn {
     position: absolute;
     right: clamp(15px, 2vw, 30px);
@@ -111,7 +221,6 @@ export default {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-
     flex-shrink: 0;
   }
 }
@@ -143,15 +252,6 @@ export default {
     align-self: center;
     margin-top: 12px;
     padding: 7px 12px;
-  }
-
-  .map__btn-text {
-    font-size: 11px;
-  }
-
-  .map__btn-arrow {
-    width: 9px;
-    height: 9px;
   }
 }
 </style>

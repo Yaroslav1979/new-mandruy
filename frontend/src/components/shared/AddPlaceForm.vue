@@ -285,7 +285,8 @@ export default {
         console.log("Успішно збережено:", result);
 
         this.$emit("added", result);
-        this.successMessage = "Місце успішно додано!";
+        this.successMessage =
+          "Ваше місце надіслано на розгляд адміністратору. Після підтвердження його достовірності воно зʼявиться на сайті. Дякуємо!";
         this.successMessageVisible = true;
       } catch (error) {
         alert("Помилка при збереженні місця: " + error.message);

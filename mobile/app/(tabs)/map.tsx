@@ -7,7 +7,8 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+
 import IconMapArrow from "../../assets/svg/IconMapArrow.svg";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import { useEffect, useState, useCallback } from "react";
@@ -22,10 +23,12 @@ export default function MapScreen() {
 
   const fetchPlaces = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/places`);
+      // console.log("🌐 Роблю запит на:", `${API_URL}/api/places/approved`);
+      const res = await axios.get(`${API_URL}/api/places/approved`);
+      // console.log("📥 Успішно отримано дані на iOS/Android:", res.data);
       setPlaces(res.data);
     } catch (e) {
-      console.log("Помилка завантаження місць:", e);
+      console.log("❌ Помилка завантаження місць на мобільному:", e);
     }
   };
 
@@ -77,6 +80,7 @@ export default function MapScreen() {
         >
           <MapView
             style={styles.map}
+            provider={PROVIDER_GOOGLE}
             initialRegion={{
               latitude: 49.8397,
               longitude: 24.0297,
@@ -95,6 +99,7 @@ export default function MapScreen() {
                   coordinate={coords}
                   title={place.title}
                   description={place.descr}
+                  pinColor="blue"
                   onPress={() =>
                     router.push({
                       pathname: "/(tabs)/placeDetails",
@@ -105,14 +110,14 @@ export default function MapScreen() {
               );
             })}
 
-            <Marker
+            {/* <Marker
               coordinate={{
                 latitude: 49.8397,
                 longitude: 24.0297,
               }}
               title="Львів"
               description="Центр міста"
-            />
+            /> */}
           </MapView>
         </View>
 
