@@ -3,7 +3,16 @@
     <LogoType />
 
     <!-- Десктопна навігація -->
-    <span class="header-top__desktop">
+    <div class="header-top__desktop">
+      <!-- Адмінсторінка (тільки для адміністратора) -->
+      <router-link
+        v-if="isAdmin"
+        :to="{ name: 'admin' }"
+        class="header-top__nav"
+      >
+        Для адміна
+      </router-link>
+
       <router-link :to="{ name: 'home' }" class="header-top__nav">
         Про сервіс
       </router-link>
@@ -59,7 +68,7 @@
           Вхід
         </router-link>
       </div>
-    </span>
+    </div>
 
     <!-- Кнопка бургеру на смартфоні -->
     <button
@@ -73,6 +82,16 @@
 
     <!-- Мобільне меню -->
     <div v-if="showMenu" class="header-top__mobile-menu">
+      <!-- Адмінсторінка в мобільному меню (тільки для адміністратора) -->
+      <router-link
+        v-if="isAdmin"
+        :to="{ name: 'admin' }"
+        class="header-top__mobile-link"
+        @click="showMenu = false"
+      >
+        Адмінсторінка
+      </router-link>
+
       <router-link
         :to="{ name: 'home' }"
         class="header-top__mobile-link"
@@ -163,6 +182,9 @@ export default {
     },
     isAuthenticated() {
       return !!this.$store.state.auth.token;
+    },
+    isAdmin() {
+      return this.user?.role === "admin";
     },
     userInitial() {
       return this.user?.name?.[0]?.toUpperCase() || "";
