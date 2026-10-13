@@ -282,7 +282,7 @@ export default {
         }
 
         const result = await response.json();
-        console.log("Успішно збережено:", result);
+        console.log("Успішно надіслано:", result);
 
         this.$emit("added", result);
         this.successMessage =

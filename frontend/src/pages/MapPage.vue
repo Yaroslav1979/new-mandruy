@@ -51,7 +51,7 @@ export default {
         "http://localhost:3000/api/places/approved",
       );
       this.places = response.data;
-      console.log("📥 Завантажені місця для мапи:", this.places);
+      // console.log("📥 Завантажені місця для мапи:", this.places);
     } catch (error) {
       console.error("Помилка при завантаженні місць для мапи:", error);
     }
