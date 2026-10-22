@@ -112,7 +112,7 @@ export default function PlaceDetails() {
               }}
             >
               <Image
-                source={{ uri: `${API_URL}${img}` }}
+                source={{ uri: img }}
                 style={styles.image}
                 contentFit="cover"
               />
@@ -171,7 +171,7 @@ export default function PlaceDetails() {
           <View style={styles.fullscreenContainer}>
             <Image
               source={{
-                uri: `${API_URL}${place.imgUrls[currentIndex]}`,
+                uri: place.imgUrls[currentIndex],
               }}
               style={styles.fullscreenImage}
               contentFit="contain"

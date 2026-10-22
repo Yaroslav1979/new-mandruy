@@ -11,7 +11,7 @@
         <img
           v-for="(img, index) in loopedImages"
           :key="index"
-          :src="`http://localhost:3000${img}`"
+          :src="img"
           alt="Place photo"
           class="place-main-info__photo"
           @dblclick="
@@ -68,7 +68,7 @@
     >
       <div class="fullscreen-content">
         <img
-          :src="`http://localhost:3000${place.imgUrls[fullscreenIndex]}`"
+          :src="place.imgUrls[fullscreenIndex]"
           alt="Fullscreen photo"
           class="fullscreen-image"
         />

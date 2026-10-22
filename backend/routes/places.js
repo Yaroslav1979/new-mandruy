@@ -7,6 +7,11 @@ const Review = require("../models/Review");
 const path = require("path");
 const fs = require("fs");
 
+//для обрізування фото:
+const sharp = require("sharp");
+
+const { uploadImage, deleteImageByUrl } = require("../services/imageStorage");
+
 // Створюємо папку uploads, якщо її немає
 const uploadsDir = path.join(__dirname, "..", "uploads");
 if (!fs.existsSync(uploadsDir)) {
@@ -24,48 +29,55 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage, limits: { files: 10 } });
-//---------------------------------------------------------------
-//для обрізування фото:
-const sharp = require("sharp");
+// const upload = multer({ storage, limits: { files: 10 } });
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    files: 10,
+    fileSize: 10 * 1024 * 1024,
+  },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Дозволено завантажувати лише зображення"));
+    }
+
+    cb(null, true);
+  },
+});
+
 //---------------------------------------------------------------------
 // Додавання місця
+
 router.post("/", upload.array("images", 10), async (req, res) => {
-  console.log("req.body:", req.body);
-  console.log("req.files:", req.files);
+  const uploadedUrls = [];
+
   try {
-    const { title, descr, coordinate, region, city, categoryIds } = req.body;
+    const { title, descr, region, city, coordinate, categoryIds } = req.body;
 
-    // Якщо файли не завантажено
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ error: "Не надіслано жодного зображення" });
-    }
-
-    // const imgUrls = req.files.map(file => '/uploads/' + file.filename);
     const imgUrls = [];
 
-    for (const file of req.files) {
-      const inputPath = file.path; // абсолютний шлях
-      const outputFilename = "resized-" + file.filename;
-      const outputPath = path.join(uploadsDir, outputFilename);
-
-      // Масштабуємо фото
-      await sharp(inputPath)
+    for (const file of req.files || []) {
+      const resizedBuffer = await sharp(file.buffer)
+        .rotate()
         .resize(650, 400, {
-          fit: sharp.fit.cover, // заповнити розмір, обрізаючи зайве
+          fit: "cover",
           position: sharp.strategy.entropy,
-        }) // обрізати з неінформативної частини
-        .jpeg({ quality: 60 }) // новий розмір фото - 60% МB від оригіналу
-        .toFile(outputPath);
+        })
+        .jpeg({ quality: 60 })
+        .toBuffer();
 
-      // Додаємо до масиву відносний шлях (для клієнта)
-      imgUrls.push("/uploads/" + outputFilename);
+      const uploaded = await uploadImage(resizedBuffer);
 
-      // За бажанням — можеш видалити оригінальний файл:
-      fs.unlinkSync(inputPath);
+      imgUrls.push(uploaded.url);
+      uploadedUrls.push(uploaded.url);
     }
 
-    const newPlace = new Place({
+    const parsedCategoryIds = Array.isArray(categoryIds)
+      ? categoryIds
+      : JSON.parse(categoryIds || "[]");
+
+    const place = new Place({
       title,
       descr,
       location: {
@@ -74,19 +86,27 @@ router.post("/", upload.array("images", 10), async (req, res) => {
         coordinate,
       },
       imgUrls,
-      categoryIds: Array.isArray(categoryIds)
-        ? categoryIds
-        : JSON.parse(categoryIds), // якщо надходить як рядок
+      categoryIds: parsedCategoryIds,
       isApproved: false,
     });
 
-    await newPlace.save();
-    res.status(201).json(newPlace);
-  } catch (err) {
-    console.error("❌ Помилка при створенні місця:", err);
-    res.status(500).json({ error: "Помилка при створенні місця" });
+    await place.save();
+
+    return res.status(201).json({
+      message: "Місце успішно додано",
+      place,
+    });
+  } catch (error) {
+    console.error("Помилка додавання місця:", error);
+
+    await Promise.allSettled(uploadedUrls.map((url) => deleteImageByUrl(url)));
+
+    return res.status(500).json({
+      message: "Не вдалося додати місце",
+    });
   }
 });
+
 //--------------------------------------------------------------------
 // GET /api/places — отримати всі місця
 router.get("/", async (req, res) => {

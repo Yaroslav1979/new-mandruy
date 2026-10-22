@@ -319,7 +319,7 @@ export default function LoginScreen() {
                 {item.imgUrls?.length > 0 && (
                   <Image
                     source={{
-                      uri: `${API_URL}${item.imgUrls[0]}`,
+                      uri: item.imgUrls[0],
                     }}
                     style={styles.placeImage}
                   />

@@ -4,13 +4,20 @@
       <div class="places-item__photo-container">
         <img
           v-if="imgSrc.length"
+          :src="imgSrc[0]"
+          alt="Place photo"
+          class="places-item__photo"
+        />
+
+        <!-- <img
+          v-if="imgSrc.length"
           :src="`http://localhost:3000/uploads/${imgSrc[0].replace(
             /^.*[\\/]/,
             '',
           )}`"
           alt="Place photo"
           class="place-item__photo"
-        />
+        /> -->
       </div>
       <h2 class="places-item__title">
         {{ title }}
