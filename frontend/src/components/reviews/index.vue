@@ -2,17 +2,28 @@
   <section class="reviews">
     <div class="reviews__heading">
       <h2 class="reviews__title">Відгуки</h2>
+
       <div class="reviews__rating">
         <div>Кількість відгуків: {{ amountOfReviews }}</div>
-        <div>Підсумковий рейтинг: <Rating :rating="totalRating" /></div>
+        <div>
+          Підсумковий рейтинг:
+          <Rating :rating="totalRating" />
+        </div>
       </div>
-      <!-- Кнопка для виклику форми -->
-      <button class="leave-review-button" @click="toggleModal">
+
+      <button
+        v-if="!currentUser?.isBlocked"
+        class="leave-review-button"
+        @click="toggleModal"
+      >
         {{ showModal ? "Приховати" : "Залишити відгук" }}
       </button>
+
+      <p v-else class="reviews__blocked-message">
+        Ваш обліковий запис заблоковано.
+      </p>
     </div>
 
-    <!-- Модальне вікно з формою -->
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-content">
         <AddReviewForm
@@ -23,16 +34,50 @@
         />
       </div>
     </div>
-    <!-- Відгуки -->
+
     <ReviewItem
       v-for="review in currentReviews"
-      :key="review.author"
+      :key="review._id"
       :review="review"
-      @review-added="$emit('review-added')"
+      :isAdmin="isAdmin"
+      @delete-review="handleDeleteReview"
+      @toggle-block="handleToggleBlock"
     />
-    <button @click="toggleReviews" class="reviews__show-more">
+
+    <button
+      v-if="localReviews.length > 2"
+      @click="toggleReviews"
+      class="reviews__show-more"
+    >
       {{ buttonText }}
     </button>
+
+    <div v-if="isAdmin" class="reviews__admin-panel">
+      <h3>Заблоковані користувачі</h3>
+
+      <p v-if="blockedUsers.length === 0">Заблокованих користувачів немає.</p>
+
+      <div
+        v-for="user in blockedUsers"
+        :key="user._id"
+        class="reviews__blocked-user"
+      >
+        <span>{{ user.name }} ({{ user.email }})</span>
+
+        <button
+          type="button"
+          :disabled="actionLoading"
+          @click="
+            handleToggleBlock({
+              userId: user._id,
+              blocked: false,
+            })
+          "
+        >
+          Розблокувати
+        </button>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -41,13 +86,22 @@ import AddReviewForm from "./AddReviewForm.vue";
 import ReviewItem from "./reviews-item/ReviewItem.vue";
 import Rating from "../shared/StarRating.vue";
 
+import {
+  getCurrentUser,
+  deleteReview,
+  setUserBlocked,
+  getBlockedUsers,
+} from "../../services/reviews.service.js";
+
 export default {
   name: "ReviewsAll",
+
   components: {
     ReviewItem,
     AddReviewForm,
     Rating,
   },
+
   props: {
     reviews: {
       type: Array,
@@ -58,13 +112,20 @@ export default {
       required: true,
     },
   },
+
+  emits: ["review-added"],
+
   data() {
     return {
-      localReviews: [], // локальна копія
+      localReviews: [],
       reviewsLimit: 2,
       showModal: false,
+      currentUser: null,
+      blockedUsers: [],
+      actionLoading: false,
     };
   },
+
   watch: {
     reviews: {
       immediate: true,
@@ -73,41 +134,156 @@ export default {
       },
     },
   },
+
   computed: {
+    isAdmin() {
+      return this.currentUser?.role === "admin";
+    },
+
     totalRating() {
       if (!this.localReviews.length) return 0;
+
       const total = this.localReviews.reduce(
-        (acc, review) => acc + review.rating,
+        (sum, review) => sum + Number(review.rating || 0),
         0,
       );
-      return (total / this.localReviews.length).toFixed(1); // округлимо до 1 знаку
+
+      return (total / this.localReviews.length).toFixed(1);
     },
+
     amountOfReviews() {
       return this.localReviews.length;
     },
+
     currentReviews() {
       return this.localReviews.slice(0, this.reviewsLimit);
     },
+
     buttonText() {
-      return this.reviewsLimit === this.reviews.length
+      return this.reviewsLimit >= this.localReviews.length
         ? "Згорнути"
         : "Читати більше";
     },
   },
+
+  async created() {
+    await this.loadCurrentUser();
+  },
+
   methods: {
-    toggleReviews() {
-      if (this.reviewsLimit === this.reviews.length) {
-        this.reviewsLimit = 2;
+    async loadCurrentUser() {
+      const token = this.$store.state.auth.token;
+
+      if (!token) {
+        this.currentUser = null;
         return;
       }
-      this.reviewsLimit = this.reviews.length;
+
+      try {
+        const { data } = await getCurrentUser(token);
+        this.currentUser = data.user;
+
+        if (this.isAdmin) {
+          await this.loadBlockedUsers();
+        }
+      } catch (err) {
+        console.error(
+          "Помилка отримання користувача:",
+          err.response?.data?.message || err.message,
+        );
+
+        this.currentUser = null;
+      }
     },
+
+    async loadBlockedUsers() {
+      if (!this.isAdmin) return;
+
+      try {
+        const token = this.$store.state.auth.token;
+        const { data } = await getBlockedUsers(token);
+
+        this.blockedUsers = data;
+      } catch (err) {
+        console.error(
+          "Помилка отримання заблокованих користувачів:",
+          err.response?.data?.message || err.message,
+        );
+      }
+    },
+
+    toggleReviews() {
+      this.reviewsLimit =
+        this.reviewsLimit >= this.localReviews.length
+          ? 2
+          : this.localReviews.length;
+    },
+
     toggleModal() {
       this.showModal = !this.showModal;
     },
+
     handleAdded() {
       this.showModal = false;
-      this.$emit("review-added"); // кидаємо подію нагору
+      this.$emit("review-added");
+    },
+
+    async handleDeleteReview(review) {
+      if (!this.isAdmin || this.actionLoading) return;
+
+      const confirmed = window.confirm(
+        "Видалити цей відгук? Цю дію неможливо скасувати.",
+      );
+
+      if (!confirmed) return;
+
+      this.actionLoading = true;
+
+      try {
+        const token = this.$store.state.auth.token;
+
+        await deleteReview(this.placeId, review._id, token);
+
+        this.$emit("review-added");
+      } catch (err) {
+        window.alert(
+          err.response?.data?.message || "Не вдалося видалити відгук.",
+        );
+      } finally {
+        this.actionLoading = false;
+      }
+    },
+
+    async handleToggleBlock({ userId, blocked }) {
+      if (!this.isAdmin || this.actionLoading || !userId) return;
+
+      const action = blocked ? "заблокувати" : "розблокувати";
+
+      const confirmed = window.confirm(
+        `Ви дійсно хочете ${action} цього користувача?`,
+      );
+
+      if (!confirmed) return;
+
+      this.actionLoading = true;
+
+      try {
+        const token = this.$store.state.auth.token;
+
+        await setUserBlocked(userId, blocked, token);
+
+        await this.loadBlockedUsers();
+
+        // Оновлюємо дані відгуків, зокрема статус автора.
+        this.$emit("review-added");
+      } catch (err) {
+        window.alert(
+          err.response?.data?.message ||
+            "Не вдалося змінити статус користувача.",
+        );
+      } finally {
+        this.actionLoading = false;
+      }
     },
   },
 };
@@ -163,6 +339,35 @@ export default {
 
     font-family: inherit;
     font-size: clamp(13px, 1.1vw, 16px);
+  }
+
+  &__admin-panel {
+    margin-top: 24px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  &__blocked-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+
+    button {
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+  }
+
+  &__blocked-message {
+    color: #b42318;
+    font-size: 13px;
   }
 }
 

@@ -4,33 +4,18 @@ const { getPlaceById } = require("../controllers/placeController");
 const multer = require("multer");
 const Place = require("../models/Place");
 const Review = require("../models/Review");
-const path = require("path");
-const fs = require("fs");
-
-//для обрізування фото:
 const sharp = require("sharp");
+const mongoose = require("mongoose");
 
 const { uploadImage, deleteImageByUrl } = require("../services/imageStorage");
 
-// Створюємо папку uploads, якщо її немає
-const uploadsDir = path.join(__dirname, "..", "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
+const {
+  verifyToken,
+  requireNotBlocked,
+  requireAdmin,
+} = require("../middleware/auth.js");
 
 // Налаштування завантаження фото
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
-
-// const upload = multer({ storage, limits: { files: 10 } });
-
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -49,167 +34,344 @@ const upload = multer({
 //---------------------------------------------------------------------
 // Додавання місця
 
-router.post("/", upload.array("images", 10), async (req, res) => {
-  const uploadedUrls = [];
+router.post(
+  "/",
+  verifyToken,
+  requireNotBlocked,
+  upload.array("images", 10),
+  async (req, res) => {
+    const uploadedUrls = [];
 
-  try {
-    const { title, descr, region, city, coordinate, categoryIds } = req.body;
+    try {
+      const { title, descr, region, city, coordinate, categoryIds } = req.body;
 
-    const imgUrls = [];
+      const imgUrls = [];
 
-    for (const file of req.files || []) {
-      const resizedBuffer = await sharp(file.buffer)
-        .rotate()
-        .resize(650, 400, {
-          fit: "cover",
-          position: sharp.strategy.entropy,
-        })
-        .jpeg({ quality: 60 })
-        .toBuffer();
+      for (const file of req.files || []) {
+        const resizedBuffer = await sharp(file.buffer)
+          .rotate()
+          .resize(650, 400, {
+            fit: "cover",
+            position: sharp.strategy.entropy,
+          })
+          .jpeg({ quality: 60 })
+          .toBuffer();
 
-      const uploaded = await uploadImage(resizedBuffer);
+        const uploaded = await uploadImage(resizedBuffer);
 
-      imgUrls.push(uploaded.url);
-      uploadedUrls.push(uploaded.url);
+        imgUrls.push(uploaded.url);
+        uploadedUrls.push(uploaded.url);
+      }
+
+      const parsedCategoryIds = Array.isArray(categoryIds)
+        ? categoryIds
+        : JSON.parse(categoryIds || "[]");
+
+      const place = new Place({
+        title,
+        descr,
+        location: {
+          region,
+          city,
+          coordinate,
+        },
+        imgUrls,
+        categoryIds: parsedCategoryIds,
+        isApproved: false,
+      });
+
+      await place.save();
+
+      return res.status(201).json({
+        message: "Місце успішно додано",
+        place,
+      });
+    } catch (error) {
+      console.error("Помилка додавання місця:", error);
+
+      await Promise.allSettled(
+        uploadedUrls.map((url) => deleteImageByUrl(url)),
+      );
+
+      return res.status(500).json({
+        message: "Не вдалося додати місце",
+      });
     }
+  },
+);
 
-    const parsedCategoryIds = Array.isArray(categoryIds)
-      ? categoryIds
-      : JSON.parse(categoryIds || "[]");
+//---------------------------------------------------------------------
+// GET /api/places — отримати місця, які очікують підтвердження
 
-    const place = new Place({
-      title,
-      descr,
-      location: {
-        region,
-        city,
-        coordinate,
-      },
-      imgUrls,
-      categoryIds: parsedCategoryIds,
-      isApproved: false,
-    });
-
-    await place.save();
-
-    return res.status(201).json({
-      message: "Місце успішно додано",
-      place,
-    });
-  } catch (error) {
-    console.error("Помилка додавання місця:", error);
-
-    await Promise.allSettled(uploadedUrls.map((url) => deleteImageByUrl(url)));
-
-    return res.status(500).json({
-      message: "Не вдалося додати місце",
-    });
-  }
-});
-
-//--------------------------------------------------------------------
-// GET /api/places — отримати всі місця
 router.get("/", async (req, res) => {
   try {
     const places = await Place.find({ isApproved: false }).sort({
       createdAt: -1,
     });
-    res.json(places);
+
+    return res.json(places);
   } catch (err) {
     console.error("❌ Помилка при отриманні місць:", err);
-    res.status(500).json({ message: "Помилка сервера" });
-  }
-});
-//--------------------------------------------------------------------
 
-router.get("/approved", async (req, res) => {
-  try {
-    const approvedPlaces = await Place.find({ isApproved: true }).sort({
-      createdAt: -1,
+    return res.status(500).json({
+      message: "Помилка сервера",
     });
-    res.json(approvedPlaces);
-  } catch (err) {
-    res.status(500).json({ message: "Помилка при отриманні місць" });
   }
 });
 
 //---------------------------------------------------------------------
+// GET /api/places/approved — отримати підтверджені місця
 
-// створення відгуку по id:
-router.post("/:placeId/reviews", async (req, res) => {
+router.get("/approved", async (req, res) => {
   try {
-    const { author, content, rating } = req.body;
-    const { placeId } = req.params;
-    console.log(req.params.placeId); // Перевірка, чи правильно передається placeId
-    console.log(req.body);
-    console.log("Place ID:", placeId); // Лог для перевірки перед додаванням відгуку
+    const approvedPlaces = await Place.find({
+      isApproved: true,
+    }).sort({
+      createdAt: -1,
+    });
 
-    // Перевіряємо чи місце існує
-    const place = await Place.findById(placeId);
-    if (!place) {
-      return res.status(404).json({ message: "Місце не знайдено" });
-    }
-
-    const review = new Review({ author, content, rating, placeId });
-    await review.save();
-    // підрахунок середнього по відгуках рейтингу
-    const allReviews = await Review.find({ placeId });
-    const avgRating =
-      allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
-
-    place.rating = avgRating;
-    await place.save();
-
-    res.status(201).json(review);
+    return res.json(approvedPlaces);
   } catch (err) {
-    console.error("Error while saving review:", err); // Лог для детальної помилки
-    res.status(400).json({ message: "Помилка при створенні відгуку" });
+    console.error("Помилка при отриманні підтверджених місць:", err);
+
+    return res.status(500).json({
+      message: "Помилка при отриманні місць",
+    });
   }
 });
-//-----------------------------------------------------------
 
-// отримання відгуку по id:
+//---------------------------------------------------------------------
+// Створення відгуку
+
+router.post(
+  "/:placeId/reviews",
+  verifyToken,
+  requireNotBlocked,
+  async (req, res) => {
+    try {
+      const { placeId } = req.params;
+      const { content, rating } = req.body;
+
+      if (!mongoose.isValidObjectId(placeId)) {
+        return res.status(400).json({
+          message: "Некоректний ID місця",
+        });
+      }
+
+      if (
+        typeof content !== "string" ||
+        !content.trim() ||
+        content.trim().length > 1000
+      ) {
+        return res.status(400).json({
+          message: "Відгук має містити від 1 до 1000 символів",
+        });
+      }
+
+      const numericRating = Number(rating);
+
+      if (
+        !Number.isInteger(numericRating) ||
+        numericRating < 1 ||
+        numericRating > 5
+      ) {
+        return res.status(400).json({
+          message: "Оцінка має бути цілим числом від 1 до 5",
+        });
+      }
+
+      const place = await Place.findById(placeId);
+
+      if (!place) {
+        return res.status(404).json({
+          message: "Місце не знайдено",
+        });
+      }
+
+      const review = await Review.create({
+        placeId,
+        userId: req.user.id,
+        author: req.user.name,
+        content: content.trim(),
+        rating: numericRating,
+      });
+
+      const allReviews = await Review.find({ placeId });
+
+      place.rating = allReviews.length
+        ? allReviews.reduce((sum, item) => sum + item.rating, 0) /
+          allReviews.length
+        : 0;
+
+      await place.save();
+
+      return res.status(201).json(review);
+    } catch (err) {
+      console.error("Помилка створення відгуку:", err);
+
+      return res.status(500).json({
+        message: "Помилка при створенні відгуку",
+      });
+    }
+  },
+);
+
+//---------------------------------------------------------------------
+// Отримання відгуків за ID місця
 
 router.get("/:placeId/reviews", async (req, res) => {
   try {
     const { placeId } = req.params;
-    const reviews = await Review.find({ placeId }).sort({ _id: -1 });
-    res.json(reviews);
+
+    if (!mongoose.isValidObjectId(placeId)) {
+      return res.status(400).json({
+        message: "Некоректний ID місця",
+      });
+    }
+
+    const reviews = await Review.find({ placeId })
+      .populate("userId", "name")
+      .sort({ _id: -1 });
+
+    return res.json(reviews);
   } catch (err) {
-    res.status(500).json({ message: "Помилка сервера" });
+    console.error("Помилка отримання відгуків:", err);
+
+    return res.status(500).json({
+      message: "Помилка сервера",
+    });
   }
 });
-//------------------------------------------------------
 
-// Отримання місця за id
+//---------------------------------------------------------------------
+// Видалення відгуку адміністратором
+
+router.delete(
+  "/:placeId/reviews/:reviewId",
+  verifyToken,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { placeId, reviewId } = req.params;
+
+      if (!mongoose.isValidObjectId(placeId)) {
+        return res.status(400).json({
+          message: "Некоректний ID місця",
+        });
+      }
+
+      if (!mongoose.isValidObjectId(reviewId)) {
+        return res.status(400).json({
+          message: "Некоректний ID відгуку",
+        });
+      }
+
+      const review = await Review.findOneAndDelete({
+        _id: reviewId,
+        placeId,
+      });
+
+      if (!review) {
+        return res.status(404).json({
+          message: "Відгук не знайдено",
+        });
+      }
+
+      const remainingReviews = await Review.find({ placeId });
+      const place = await Place.findById(placeId);
+
+      if (place) {
+        place.rating = remainingReviews.length
+          ? remainingReviews.reduce((sum, item) => sum + item.rating, 0) /
+            remainingReviews.length
+          : 0;
+
+        await place.save();
+      }
+
+      return res.json({
+        message: "Відгук видалено",
+        rating: place ? place.rating : 0,
+      });
+    } catch (err) {
+      console.error("Помилка видалення відгуку:", err);
+
+      return res.status(500).json({
+        message: "Помилка видалення відгуку",
+      });
+    }
+  },
+);
+
+//---------------------------------------------------------------------
+// Отримання місця за ID
+
 router.get("/:_id", getPlaceById);
 
-//------------------------------------------------------
+//---------------------------------------------------------------------
+// Оновлення місця — тільки адміністратор
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const placeId = req.params.id;
+
+    if (!mongoose.isValidObjectId(placeId)) {
+      return res.status(400).json({
+        message: "Некоректний ID місця",
+      });
+    }
+
     const updated = await Place.findByIdAndUpdate(placeId, req.body, {
       new: true,
+      runValidators: true,
     });
-    res.json(updated);
+
+    if (!updated) {
+      return res.status(404).json({
+        message: "Місце не знайдено",
+      });
+    }
+
+    return res.json(updated);
   } catch (err) {
-    res.status(500).json({ message: "Помилка при оновленні місця" });
+    console.error("Помилка при оновленні місця:", err);
+
+    return res.status(500).json({
+      message: "Помилка при оновленні місця",
+    });
   }
 });
-//----------------------------------------------
 
-router.delete("/:id", async (req, res) => {
+//---------------------------------------------------------------------
+// Видалення місця — тільки адміністратор
+
+router.delete("/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const placeId = req.params.id;
-    const deletedPlace = await Place.findByIdAndDelete(placeId);
-    if (!deletedPlace) {
-      return res.status(404).json({ message: "Місце не знайдено" });
+
+    if (!mongoose.isValidObjectId(placeId)) {
+      return res.status(400).json({
+        message: "Некоректний ID місця",
+      });
     }
-    res.json({ message: "Місце успішно видалено" });
+
+    const deletedPlace = await Place.findByIdAndDelete(placeId);
+
+    if (!deletedPlace) {
+      return res.status(404).json({
+        message: "Місце не знайдено",
+      });
+    }
+
+    return res.json({
+      message: "Місце успішно видалено",
+    });
   } catch (err) {
     console.error("❌ Помилка при видаленні місця:", err);
-    res.status(500).json({ message: "Помилка при видаленні місця" });
+
+    return res.status(500).json({
+      message: "Помилка при видаленні місця",
+    });
   }
 });
 
