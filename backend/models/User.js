@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  avatar: { type: String, default: '' }, // URL або base64-рядок, залежно від способу збереження
+  avatar: { type: String, default: "" }, // URL або base64-рядок, залежно від способу збереження
   isEmailConfirmed: { type: Boolean, default: false },
   emailConfirmToken: String, // SHA‑256 хеш
   emailConfirmExpires: Date,
@@ -13,14 +13,18 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpires: Date,
   role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
-  }
+    enum: ["user", "admin"],
+    default: "user",
+  },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Хешування пароля перед збереженням в базі
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
@@ -30,5 +34,5 @@ userSchema.methods.comparePassword = function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;
