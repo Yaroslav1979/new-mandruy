@@ -1,20 +1,27 @@
 <template>
-  <MainHeader @openAddModal="isModalOpen = true" />
+  <MainHeader @openAddModal="openAddModal" @edit-place="handleEditPlace" />
 
-  <!-- МОДАЛКА -->
-  <div
-    v-if="isModalOpen"
-    class="modal-overlay"
-    @click.self="isModalOpen = false"
-  >
+  <!-- МОДАЛЬНЕ ВІКНО -->
+  <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <template v-if="!isSuccess">
-        <AddPlaceForm @added="handleNewPlace" />
+        <AddPlaceForm
+          :place-to-edit="editingPlace"
+          @added="handleNewPlace"
+          @updated="handlePlaceUpdated"
+          @close="closeModal"
+        />
       </template>
 
       <template v-else>
         <div class="success-message">
-          <p>Місце успішно додано!</p>
+          <p>
+            {{
+              editingPlace
+                ? "Зміни успішно збережено!"
+                : "Місце успішно додано!"
+            }}
+          </p>
           <button @click="closeModal">Добре</button>
         </div>
       </template>
@@ -25,6 +32,7 @@
     <SectionWithHeaderSpacer>
       <AboutService />
     </SectionWithHeaderSpacer>
+
     <MainQuastions />
   </main>
 </template>
@@ -38,6 +46,7 @@ import MainQuastions from "../components/questions/MainQuastions.vue";
 
 export default {
   name: "HomePage",
+
   components: {
     MainHeader,
     AddPlaceForm,
@@ -45,19 +54,45 @@ export default {
     MainQuastions,
     SectionWithHeaderSpacer,
   },
+
   data() {
     return {
       isModalOpen: false,
-      isSuccess: false, // <-- нове поле
+      isSuccess: false,
+      editingPlace: null,
     };
   },
+
   methods: {
+    // Відкриття форми додавання нового місця
+    openAddModal() {
+      this.editingPlace = null;
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    // Відкриття форми редагування вибраного місця
+    handleEditPlace(place) {
+      this.editingPlace = place;
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    // Успішне додавання нового місця
     handleNewPlace() {
       this.isSuccess = true;
     },
+
+    // Успішне редагування або відправлення змін на модерацію
+    handlePlaceUpdated() {
+      this.isSuccess = true;
+    },
+
+    // Закриття модального вікна та очищення стану
     closeModal() {
       this.isModalOpen = false;
       this.isSuccess = false;
+      this.editingPlace = null;
     },
   },
 };

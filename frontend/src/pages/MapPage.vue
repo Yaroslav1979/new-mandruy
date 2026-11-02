@@ -1,25 +1,38 @@
 <template>
   <div class="head">
-    <HeaderAllPages @openAddModal="isModalOpen = true" />
+    <HeaderAllPages
+      @openAddModal="openAddModal"
+      @edit-place="handleEditPlace"
+    />
   </div>
 
   <main>
     <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
       <div class="modal-content">
         <template v-if="!isSuccess">
-          <AddPlaceForm @added="handleNewPlace" />
+          <AddPlaceForm
+            :place-to-edit="editingPlace"
+            @added="handleNewPlace"
+            @updated="handlePlaceUpdated"
+            @close="closeModal"
+          />
         </template>
 
         <template v-else>
           <div class="success-message">
-            <p>Місце успішно додано!</p>
+            <p>
+              {{
+                editingPlace
+                  ? "Зміни успішно збережено!"
+                  : "Місце успішно додано!"
+              }}
+            </p>
             <button @click="closeModal">Добре</button>
           </div>
         </template>
       </div>
     </div>
 
-    <!-- Передаємо масив місць у мапу -->
     <ActiveMap :places="places" />
   </main>
 </template>
@@ -28,45 +41,75 @@
 import AddPlaceForm from "../components/shared/AddPlaceForm.vue";
 import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import ActiveMap from "../components/shared/ActiveMap.vue";
-import axios from "axios"; // Додано для запиту на бекенд
+import axios from "axios";
 
 export default {
   name: "PlacePage",
+
   components: {
     HeaderAllPages,
     ActiveMap,
     AddPlaceForm,
   },
+
   data() {
     return {
-      places: [], // ✅ Масив оголошено, щоб мапа не падала
-      isModalOpen: false, // ДЛЯ МОДАЛКИ
-      isSuccess: false, // ✅ Додано стан успіху для шаблону
+      places: [],
+      isModalOpen: false,
+      isSuccess: false,
+      editingPlace: null,
     };
   },
+
   async created() {
-    // Завантажуємо існуючі місця з бази при завантаженні сторінки
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/places/approved",
-      );
-      this.places = response.data;
-      // console.log("📥 Завантажені місця для мапи:", this.places);
-    } catch (error) {
-      console.error("Помилка при завантаженні місць для мапи:", error);
-    }
+    await this.fetchApprovedPlaces();
   },
 
   methods: {
-    // ✅ Правильний синтаксис об'єкта methods у Vue.js
-    handleNewPlace(newPlace) {
-      this.places.push(newPlace); // Мапа автоматично поставить мітку
-      this.isSuccess = true; // Перемикаємо модалку на екран успіху
+    // Завантаження затверджених місць для мапи
+    async fetchApprovedPlaces() {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/places/approved",
+        );
+
+        this.places = response.data;
+      } catch (error) {
+        console.error("Помилка при завантаженні місць для мапи:", error);
+      }
     },
 
+    // Відкриття форми додавання нового місця
+    openAddModal() {
+      this.editingPlace = null;
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    // Відкриття форми редагування вибраного місця
+    handleEditPlace(place) {
+      this.editingPlace = place;
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    // Успішне додавання нового місця
+    async handleNewPlace() {
+      await this.fetchApprovedPlaces();
+      this.isSuccess = true;
+    },
+
+    // Успішне редагування місця
+    async handlePlaceUpdated() {
+      await this.fetchApprovedPlaces();
+      this.isSuccess = true;
+    },
+
+    // Закриття модального вікна
     closeModal() {
       this.isModalOpen = false;
       this.isSuccess = false;
+      this.editingPlace = null;
     },
   },
 };
@@ -76,6 +119,7 @@ export default {
 .head {
   background-color: #111;
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;

@@ -2,7 +2,7 @@
   <article class="place-main-info" v-if="place">
     <div class="place-main-info__heading">
       <h1 class="place-main-info__title">{{ place.title }}</h1>
-      <Rating :rating="rating || 0" />
+      <Rating v-if="showRating" :rating="rating || 0" />
     </div>
 
     <!-- Слайдер -->
@@ -104,6 +104,10 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    },
+    showRating: {
+      type: Boolean,
+      default: true,
     },
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <HeaderAllPages @openAddModal="isModalOpen = true" />
+    <HeaderAllPages @openAddModal="openAddModal" @edit-place="openEditModal" />
   </div>
   <main class="place-page">
     <div
@@ -10,7 +10,12 @@
     >
       <div class="modal-content">
         <template v-if="!isSuccess">
-          <AddPlaceForm @added="handleNewPlace" />
+          <AddPlaceForm
+            :place-to-edit="editingPlace"
+            @added="handleNewPlace"
+            @updated="handlePlaceUpdated"
+            @close="closeModal"
+          />
         </template>
 
         <template v-else>
@@ -35,9 +40,12 @@
             :rating="place.rating"
             :imgSrc="place.imgUrls"
             :title="place.title"
+            :is-favorite="favoriteIds.includes(place._id)"
+            @toggle-favorite="toggleFavorite"
           />
         </template>
       </PlacesList>
+
       <div v-if="filteredPlaces.length > 10" class="places-pagination">
         <button
           v-if="visiblePlaces.length < filteredPlaces.length"
@@ -68,10 +76,11 @@ import HeaderAllPages from "../components/shared/HeaderAllPages.vue";
 import PlacesList from "../components/place/PlacesList.vue";
 import PlacesItem from "../components/place/PlacesItem.vue";
 import PlacesFilterForm from "../components/place/PlaceFilterForm.vue";
-import axios from "axios";
+import axiosInstance from "../utils/axios.js";
 
 export default {
   name: "SearchPlacePage",
+
   components: {
     HeaderAllPages,
     SectionWithHeaderSpacer,
@@ -80,12 +89,21 @@ export default {
     PlacesItem,
     PlacesFilterForm,
   },
+
   data() {
     return {
       places: [],
       isModalOpen: false,
+      isSuccess: false,
+      editingPlace: null,
 
       displayedCount: 10,
+
+      // ID місць, які користувач додав до обраного
+      favoriteIds: [],
+
+      // ID місць, для яких зараз виконується запит
+      favoriteRequests: [],
 
       filters: {
         title: "",
@@ -95,6 +113,7 @@ export default {
       },
     };
   },
+
   computed: {
     filteredPlaces() {
       let result = this.filterByRegionName(this.places);
@@ -112,27 +131,121 @@ export default {
       return this.filteredPlaces.slice(0, this.displayedCount);
     },
   },
-  async created() {
-    try {
-      const placesResponse = await axios.get(
-        "http://localhost:3000/api/places/approved",
-      );
-      const places = placesResponse.data;
 
-      // Вже використовується рейтинг, що приходить з сервера
-      this.places = places;
-    } catch (error) {
-      console.error("Помилка при завантаженні місць:", error);
-    }
+  async created() {
+    await this.fetchPlaces();
+    await this.fetchFavorites();
   },
 
   methods: {
+    // =========================
+    // ЗАВАНТАЖЕННЯ МІСЦЬ
+    // =========================
+
+    async fetchPlaces() {
+      try {
+        const response = await axiosInstance.get("/places/approved");
+        this.places = response.data;
+      } catch (error) {
+        console.error("Помилка при завантаженні місць:", error);
+      }
+    },
+
+    // =========================
+    // ЗАВАНТАЖЕННЯ ОБРАНОГО
+    // =========================
+
+    async fetchFavorites() {
+      // Якщо користувач не авторизований, обране не завантажуємо
+      if (!localStorage.getItem("token")) {
+        this.favoriteIds = [];
+        return;
+      }
+
+      try {
+        const response = await axiosInstance.get("/places/favorites");
+
+        const favorites = Array.isArray(response.data)
+          ? response.data
+          : response.data.favorites || [];
+
+        this.favoriteIds = favorites
+          .map((favorite) => {
+            // Підтримуємо як Favorite з populated placeId,
+            // так і безпосередньо масив місць
+            const place = favorite.placeId || favorite.place || favorite;
+
+            return place?._id ? String(place._id) : null;
+          })
+          .filter(Boolean);
+      } catch (error) {
+        console.error("Помилка при завантаженні обраного:", error);
+      }
+    },
+
+    // =========================
+    // ДОДАВАННЯ / ВИДАЛЕННЯ ОБРАНОГО
+    // =========================
+
+    async toggleFavorite(placeId) {
+      const id = String(placeId);
+
+      // Не дозволяємо повторні запити для одного місця
+      if (this.favoriteRequests.includes(id)) {
+        return;
+      }
+
+      // Перевіряємо авторизацію
+      if (!localStorage.getItem("token")) {
+        alert("Щоб додавати місця в обране, увійдіть у свій акаунт.");
+        return;
+      }
+
+      const isFavorite = this.favoriteIds.includes(id);
+
+      this.favoriteRequests.push(id);
+
+      try {
+        if (isFavorite) {
+          await axiosInstance.delete(`/places/${id}/favorite`);
+
+          this.favoriteIds = this.favoriteIds.filter(
+            (favoriteId) => favoriteId !== id,
+          );
+        } else {
+          await axiosInstance.post(`/places/${id}/favorite`);
+
+          this.favoriteIds.push(id);
+        }
+      } catch (error) {
+        console.error("Помилка зміни обраного:", error);
+
+        if (error.response?.status === 401) {
+          alert("Ваша сесія завершилася. Увійдіть в акаунт повторно.");
+        } else if (error.response?.status === 403) {
+          alert("У вас немає дозволу виконати цю дію.");
+        } else {
+          alert("Не вдалося змінити список обраного.");
+        }
+      } finally {
+        this.favoriteRequests = this.favoriteRequests.filter(
+          (requestId) => requestId !== id,
+        );
+      }
+    },
+
+    // =========================
+    // ФІЛЬТРАЦІЯ
+    // =========================
+
     filter({ region, title, categoryIds, sortBy }) {
       if (region !== undefined) this.filters.region = region;
       if (title !== undefined) this.filters.title = title;
+
       if (Array.isArray(categoryIds)) {
         this.filters.categoryIds = categoryIds;
       }
+
       if (sortBy !== undefined) this.filters.sortBy = sortBy;
 
       this.displayedCount = 10;
@@ -172,6 +285,10 @@ export default {
       return [...places].sort((a, b) => a.title.localeCompare(b.title));
     },
 
+    // =========================
+    // ПАГІНАЦІЯ
+    // =========================
+
     showMore() {
       this.displayedCount += 10;
     },
@@ -180,8 +297,47 @@ export default {
       this.displayedCount = 10;
     },
 
+    // =========================
+    // РЕДАГУВАННЯ АВТОРОМ СВОГО МІСЦЯ
+    // =========================
+
+    openAddModal() {
+      this.editingPlace = null;
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    openEditModal(place) {
+      this.editingPlace = { ...place };
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    handlePlaceUpdated(updatedPlace) {
+      const index = this.places.findIndex(
+        (place) => place._id === updatedPlace._id,
+      );
+
+      if (index !== -1) {
+        this.places.splice(index, 1, updatedPlace);
+      }
+
+      this.closeModal();
+    },
+
+    // =========================
+    // ДОДАВАННЯ МІСЦЯ
+    // =========================
+
     handleNewPlace(newPlace) {
       this.places.unshift(newPlace);
+      this.isSuccess = true;
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
+      this.isSuccess = false;
+      this.editingPlace = null;
     },
   },
 };

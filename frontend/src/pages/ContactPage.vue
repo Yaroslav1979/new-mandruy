@@ -1,22 +1,32 @@
 <template>
   <div class="head">
-    <HeaderAllPages @openAddModal="isModalOpen = true" class="head-contact" />
+    <HeaderAllPages
+      @openAddModal="openAddModal"
+      @edit-place="handleEditPlace"
+    />
   </div>
 
   <main>
-    <div
-      v-if="isModalOpen"
-      class="modal-overlay"
-      @click.self="isModalOpen = false"
-    >
+    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
       <div class="modal-content">
         <template v-if="!isSuccess">
-          <AddPlaceForm @added="handleNewPlace" />
+          <AddPlaceForm
+            :place-to-edit="editingPlace"
+            @added="handleNewPlace"
+            @updated="handlePlaceUpdated"
+            @close="closeModal"
+          />
         </template>
 
         <template v-else>
           <div class="success-message">
-            <p>Місце успішно додано!</p>
+            <p>
+              {{
+                editingPlace
+                  ? "Зміни успішно збережено!"
+                  : "Місце успішно додано!"
+              }}
+            </p>
             <button @click="closeModal">Добре</button>
           </div>
         </template>
@@ -26,10 +36,6 @@
     <ContactsUs />
 
     <SocialNet />
-
-    <!-- <div class="contact"> -->
-
-    <!-- </div>  -->
   </main>
 </template>
 
@@ -40,17 +46,54 @@ import SocialNet from "../components/shared/SocialNet.vue";
 import ContactsUs from "../components/shared/ContactsUs.vue";
 
 export default {
-  name: "PlacePage",
+  name: "ContactPage",
+
   components: {
     HeaderAllPages,
     ContactsUs,
     AddPlaceForm,
     SocialNet,
   },
+
   data() {
     return {
-      isModalOpen: false, // ДЛЯ МОДАЛКИ
+      isModalOpen: false,
+      isSuccess: false,
+      editingPlace: null,
     };
+  },
+
+  methods: {
+    // Відкриття форми додавання нового місця
+    openAddModal() {
+      this.editingPlace = null;
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    // Відкриття форми редагування вибраного місця
+    handleEditPlace(place) {
+      this.editingPlace = place;
+      this.isSuccess = false;
+      this.isModalOpen = true;
+    },
+
+    // Успішне додавання нового місця
+    handleNewPlace() {
+      this.isSuccess = true;
+    },
+
+    // Успішне оновлення або відправлення змін на модерацію
+    handlePlaceUpdated() {
+      this.isSuccess = true;
+    },
+
+    // Закриття модального вікна та очищення стану
+    closeModal() {
+      this.isModalOpen = false;
+      this.isSuccess = false;
+      this.editingPlace = null;
+    },
   },
 };
 </script>
@@ -59,6 +102,7 @@ export default {
 .head {
   background-color: #111;
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -85,6 +129,7 @@ export default {
   overflow-y: auto;
   max-height: 90vh;
 }
+
 .success-message {
   text-align: center;
   font-family: e-Ukraine, sans-serif;
