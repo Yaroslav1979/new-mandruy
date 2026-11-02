@@ -8,20 +8,31 @@
           alt="Place photo"
           class="places-item__photo"
         />
-
-        <!-- <img
-          v-if="imgSrc.length"
-          :src="`http://localhost:3000/uploads/${imgSrc[0].replace(
-            /^.*[\\/]/,
-            '',
-          )}`"
-          alt="Place photo"
-          class="place-item__photo"
-        /> -->
       </div>
+
       <h2 class="places-item__title">
         {{ title }}
       </h2>
+
+      <!-- Кнопка додавання / видалення з обраного -->
+      <button
+        v-if="showFavorite"
+        class="places-item__favorite"
+        :class="{ 'places-item__favorite--active': isFavorite }"
+        :aria-label="isFavorite ? 'Видалити з обраного' : 'Додати в обране'"
+        :title="isFavorite ? 'Видалити з обраного' : 'Додати в обране'"
+        @click.stop.prevent="$emit('toggle-favorite', id)"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 21s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.2-8 11-8 11Z"
+          />
+        </svg>
+      </button>
 
       <div class="places-item__content">
         <p class="places-item__description">
@@ -33,10 +44,17 @@
         <Rating :rating="rating" />
 
         <router-link
-          :to="{ name: 'PlacePage', params: { id } }"
+          :to="{
+            name: 'PlacePage',
+            params: { id },
+            query: previewChanges
+              ? { previewChanges: 'true' }
+              : previewNew
+              ? { previewNew: 'true' }
+              : {},
+          }"
           class="places-item__link"
-        >
-        </router-link>
+        />
       </div>
     </div>
   </div>
@@ -44,11 +62,16 @@
 
 <script>
 import Rating from "../shared/StarRating.vue";
+
 export default {
   name: "PlacesItem",
+
   components: {
     Rating,
   },
+
+  emits: ["toggle-favorite"],
+
   props: {
     id: {
       type: String,
@@ -69,6 +92,22 @@ export default {
     rating: {
       type: Number,
       default: 0,
+    },
+    isFavorite: {
+      type: Boolean,
+      default: false,
+    },
+    showFavorite: {
+      type: Boolean,
+      default: true,
+    },
+    previewChanges: {
+      type: Boolean,
+      default: false,
+    },
+    previewNew: {
+      type: Boolean,
+      default: false,
     },
   },
 };
@@ -108,12 +147,44 @@ export default {
     display: block;
   }
 
+  &__favorite {
+    position: absolute;
+    top: clamp(10px, 1.5vw, 20px);
+    right: clamp(15px, 3vw, 40px);
+    z-index: 3;
+    width: 38px;
+    height: 38px;
+    padding: 8px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      fill: transparent;
+      stroke: #222;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &--active svg {
+      fill: #e53935;
+      stroke: #e53935;
+    }
+  }
+
   &__content {
     position: absolute;
-
     top: 0;
     left: 0;
-
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -155,10 +226,7 @@ export default {
     font-weight: 400;
     font-style: italic;
     z-index: 1;
-    /*
-     * Щоб довгий заголовок не вилазив за межі картки.
-     */
-    max-width: calc(100% - 60px);
+    max-width: calc(100% - 100px);
     box-sizing: border-box;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -210,7 +278,14 @@ export default {
     top: 10px;
     padding: 6px 12px;
     font-size: 14px;
-    max-width: calc(100% - 30px);
+    max-width: calc(100% - 75px);
+  }
+
+  .places-item__favorite {
+    top: 10px;
+    right: 15px;
+    width: 34px;
+    height: 34px;
   }
 }
 </style>

@@ -47,6 +47,7 @@
             :user="user"
             @close="showProfileModal = false"
             @logout="handleLogout"
+            @edit-place="handleEditPlace"
           />
         </div>
       </div>
@@ -168,7 +169,7 @@ export default {
     LogoType,
     ProfileModal,
   },
-  emits: ["openAddModal"],
+  emits: ["openAddModal", "edit-place"],
   data() {
     return {
       showProfileModal: false,
@@ -194,6 +195,11 @@ export default {
     handleLogout() {
       this.$store.dispatch("auth/logout");
       this.$router.push({ name: "home" });
+    },
+
+    handleEditPlace(place) {
+      this.showProfileModal = false;
+      this.$emit("edit-place", place);
     },
   },
 };

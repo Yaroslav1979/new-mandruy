@@ -19,6 +19,23 @@ const placeSchema = new mongoose.Schema({
     default: false, // нові місця не підтверджені автоматично
   },
   createdAt: { type: Date, default: Date.now },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  pendingChanges: {
+    title: String,
+    descr: String,
+    imgUrls: [String],
+    categoryIds: [String],
+    location: {
+      region: String,
+      city: String,
+      coordinate: String,
+    },
+    submittedAt: Date,
+  },
 });
 
 module.exports = mongoose.model("Place", placeSchema);

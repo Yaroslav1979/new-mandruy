@@ -1,6 +1,9 @@
 <template>
   <div class="header" :style="headerStyle">
-    <HeaderAllPages @openAddModal="$emit('openAddModal')" />
+    <HeaderAllPages
+      @openAddModal="$emit('openAddModal')"
+      @edit-place="$emit('edit-place', $event)"
+    />
 
     <div class="header__hero-block">
       <h1 class="header__hero-title">Вітаємо вас на «Мандруй»</h1>
@@ -42,7 +45,7 @@ export default {
   components: {
     HeaderAllPages,
   },
-  emits: ["openAddModal"],
+  emits: ["openAddModal", "edit-place"],
   data() {
     return {
       bgIndex: 0, // поточне зображення

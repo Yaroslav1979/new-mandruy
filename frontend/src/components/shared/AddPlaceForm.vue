@@ -1,6 +1,8 @@
 <template>
   <section class="add-place">
-    <h2 class="add-place__title">Додати місце</h2>
+    <h2 class="add-place__title">
+      {{ placeToEdit ? "Редагувати місце" : "Додати місце" }}
+    </h2>
     <SuccessModal v-if="successMessageVisible" @close="closeModal" />
 
     <form v-else class="add-place__form" @submit.prevent="handleSubmit">
@@ -120,7 +122,7 @@
         </button>
 
         <SubmitButon type="submit" class="add-place__btn" :disabled="isLoading">
-          Надіслати
+          {{ placeToEdit ? "Зберегти зміни" : "Надіслати" }}
           <img
             src="../../assets/svg/IconMapArrow.svg"
             alt="=>"
@@ -143,6 +145,7 @@
 </template>
 
 <script>
+import axiosInstance from "../../utils/axios.js";
 import CircleLoader from "../loaders/CircleLoader.vue";
 import CustomInput from "./CustomInput.vue";
 import CustomTextArea from "./CustomTextArea.vue";
@@ -154,6 +157,7 @@ import SubmitButon from "./mainButton.vue";
 
 export default {
   name: "AddPlaceForm",
+
   components: {
     CustomInput,
     CustomTextArea,
@@ -163,6 +167,14 @@ export default {
     CircleLoader,
     AddCoordinate,
   },
+
+  props: {
+    placeToEdit: {
+      type: Object,
+      default: null,
+    },
+  },
+
   data() {
     return {
       title: "",
@@ -170,39 +182,116 @@ export default {
       region: "",
       city: "",
       descr: "",
+
+      // Тут зберігаються як наявні, так і нові фотографії
       files: [],
-      categoryIds: [], // зберігаємо ID обраних категорій
+
+      categoryIds: [],
       localCategories: categories,
+
       isLoading: false,
       rules: [],
       fileInputKey: 0,
+
       successMessageVisible: false,
       successMessage: "",
       isMapModalOpen: false,
     };
   },
+
   computed: {
     extraCount() {
       return this.files.length > 4 ? this.files.length - 4 : 0;
     },
+
     visibleThumbnails() {
       return this.files.slice(0, 4);
     },
   },
+
+  watch: {
+    placeToEdit: {
+      immediate: true,
+      handler(place) {
+        this.populateForm(place);
+      },
+    },
+  },
+
   methods: {
+    // =========================
+    // ЗАПОВНЕННЯ ФОРМИ
+    // =========================
+
+    populateForm(place) {
+      if (!place) {
+        this.title = "";
+        this.coordinate = "";
+        this.region = "";
+        this.city = "";
+        this.descr = "";
+        this.files = [];
+        this.categoryIds = [];
+        this.successMessageVisible = false;
+        this.fileInputKey = Date.now();
+        return;
+      }
+
+      // Якщо є незатверджені зміни, завантажуємо саме їх
+      const source = place.pendingChanges || place;
+
+      this.title = source.title || "";
+      this.descr = source.descr || "";
+
+      this.coordinate = source.location?.coordinate || "";
+      this.region = source.location?.region || "";
+      this.city = source.location?.city || "";
+
+      this.categoryIds = [...(source.categoryIds || [])];
+
+      // Перетворюємо URL наявних фотографій у формат прев'ю
+      this.files = (source.imgUrls || []).map((url) => ({
+        file: null,
+        url,
+        preview: url,
+      }));
+
+      this.successMessageVisible = false;
+      this.fileInputKey = Date.now();
+    },
+
+    // =========================
+    // ФОТОГРАФІЇ
+    // =========================
+
     triggerFileUpload() {
       document.getElementById("file-upload")?.click();
     },
 
     handleFileChange(event) {
-      const selectedFiles = Array.from(event.target.files);
-      selectedFiles.forEach((file) => {
+      const selectedFiles = Array.from(event.target.files || []);
+
+      const availableSlots = 10 - this.files.length;
+
+      if (selectedFiles.length > availableSlots) {
+        alert("Можна додати не більше 10 фотографій.");
+      }
+
+      const filesToAdd = selectedFiles.slice(0, availableSlots);
+
+      filesToAdd.forEach((file) => {
         const reader = new FileReader();
+
         reader.onload = (e) => {
-          this.files.push({ file, preview: e.target.result });
+          this.files.push({
+            file,
+            preview: e.target.result,
+          });
         };
+
         reader.readAsDataURL(file);
       });
+
       this.fileInputKey = Date.now();
     },
 
@@ -210,18 +299,27 @@ export default {
       this.files.splice(index, 1);
     },
 
+    // =========================
+    // КАРТА
+    // =========================
+
+    handleCoordinateSelected(coords) {
+      this.coordinate = coords;
+    },
+
+    // =========================
+    // ЗАКРИТТЯ
+    // =========================
+
     closeModal() {
       this.successMessageVisible = false;
       this.successMessage = "";
       this.$emit("close");
     },
 
-    // Обробник отриманих координат з дочірнього компонента
-    handleCoordinateSelected(coords) {
-      this.coordinate = coords;
-    },
-
-    // Функція для вибору категорій
+    // =========================
+    // НАДСИЛАННЯ ФОРМИ
+    // =========================
 
     async handleSubmit() {
       if (
@@ -234,6 +332,7 @@ export default {
         alert("Будь ласка, заповніть усі текстові поля.");
         return;
       }
+
       if (this.files.length === 0) {
         alert("Будь ласка, додайте хоча б одне фото.");
         return;
@@ -243,53 +342,74 @@ export default {
         alert("Будь ласка, виберіть хоча б одну категорію.");
         return;
       }
+
       this.isLoading = true;
-
-      // об'єкт для дебагу в консолі:
-
-      const placeData = {
-        title: this.title,
-        coordinate: this.coordinate,
-        region: this.region,
-        city: this.city,
-        descr: this.descr,
-        categoryIds: this.categoryIds,
-        // інші дані, як файли — окремо
-      };
-      console.log("Готові дані до надсилання:", placeData);
 
       try {
         const formData = new FormData();
-        formData.append("title", this.title);
-        formData.append("coordinate", this.coordinate);
-        formData.append("region", this.region);
-        formData.append("city", this.city);
-        formData.append("descr", this.descr);
+
+        formData.append("title", this.title.trim());
+        formData.append("coordinate", this.coordinate.trim());
+        formData.append("region", this.region.trim());
+        formData.append("city", this.city.trim());
+        formData.append("descr", this.descr.trim());
+
         formData.append("categoryIds", JSON.stringify(this.categoryIds));
 
-        // Додаємо всі зображення
+        // URL фотографій, які потрібно залишити
+        const existingImgUrls = this.files
+          .filter((item) => !item.file && item.url)
+          .map((item) => item.url);
+
+        formData.append("existingImgUrls", JSON.stringify(existingImgUrls));
+
+        // Нові фотографії, які потрібно завантажити
         this.files.forEach(({ file }) => {
-          formData.append("images", file); // "images" — ключ для масиву файлів
+          if (file) {
+            formData.append("images", file);
+          }
         });
 
-        const response = await fetch("http://localhost:3000/api/places", {
-          method: "POST",
-          body: formData,
-        });
+        let response;
 
-        if (!response.ok) {
-          throw new Error("Помилка при надсиланні даних");
+        if (!this.placeToEdit) {
+          // ЗВИЧАЙНЕ ДОДАВАННЯ
+          response = await axiosInstance.post("/places", formData);
+
+          this.$emit("added", response.data);
+
+          this.successMessage =
+            "Ваше місце надіслано на розгляд адміністратору. Після підтвердження воно з'явиться на сайті. Дякуємо!";
+
+          this.successMessageVisible = true;
+        } else if (this.placeToEdit.isApproved) {
+          // РЕДАГУВАННЯ ОПУБЛІКОВАНОГО МІСЦЯ
+          response = await axiosInstance.post(
+            `/places/${this.placeToEdit._id}/submit-changes`,
+            formData,
+          );
+
+          alert("Зміни надіслано на повторну модерацію.");
+
+          this.$emit("updated", response.data.place);
+        } else {
+          // РЕДАГУВАННЯ НЕОПУБЛІКОВАНОГО МІСЦЯ
+          response = await axiosInstance.patch(
+            `/places/${this.placeToEdit._id}/edit`,
+            formData,
+          );
+
+          alert("Місце успішно оновлено.");
+
+          this.$emit("updated", response.data.place);
         }
-
-        const result = await response.json();
-        console.log("Успішно надіслано:", result);
-
-        this.$emit("added", result);
-        this.successMessage =
-          "Ваше місце надіслано на розгляд адміністратору. Після підтвердження його достовірності воно зʼявиться на сайті. Дякуємо!";
-        this.successMessageVisible = true;
       } catch (error) {
-        alert("Помилка при збереженні місця: " + error.message);
+        console.error("Помилка при збереженні місця:", error);
+
+        const message =
+          error.response?.data?.message || error.message || "Невідома помилка";
+
+        alert("Помилка при збереженні місця: " + message);
       } finally {
         this.isLoading = false;
       }
