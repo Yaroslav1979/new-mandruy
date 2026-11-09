@@ -1,6 +1,10 @@
 <template>
   <div class="head">
-    <HeaderAllPages @openAddModal="openAddModal" @edit-place="openEditModal" />
+    <!-- <HeaderAllPages @openAddModal="openAddModal" @edit-place="openEditModal" /> -->
+    <HeaderAllPages
+      @openAddModal="openAddModal"
+      @edit-place="handleEditPlace"
+    />
     <!-- <HeaderAllPages @openAddModal="isModalOpen = true" /> -->
   </div>
 
@@ -150,14 +154,36 @@ export default {
   },
 
   methods: {
+    // async fetchReviews() {
+    //   try {
+    //     console.log("Подія review-added отримана!🔄 Оновлення відгуків...");
+    //     const { id } = this.$route.params;
+    //     const { data: reviewsData } = await getReviewsByPlaceId(id);
+    //     this.reviewsList = reviewsData;
+    //   } catch (err) {
+    //     console.error("❌ Помилка при оновленні відгуків:", err);
+    //   }
+    // },
+
     async fetchReviews() {
       try {
-        console.log("Подія review-added отримана!🔄 Оновлення відгуків...");
+        console.log(
+          "Подія review-added отримана! 🔄 Оновлення відгуків та рейтингу...",
+        );
+
         const { id } = this.$route.params;
-        const { data: reviewsData } = await getReviewsByPlaceId(id);
-        this.reviewsList = reviewsData;
+
+        const [reviewsResponse, placeResponse] = await Promise.all([
+          getReviewsByPlaceId(id),
+          getPlaceById(id),
+        ]);
+
+        this.reviewsList = reviewsResponse.data;
+        this.place = placeResponse.data;
+
+        console.log("Відгуки та рейтинг оновлено:", this.place.rating);
       } catch (err) {
-        console.error("❌ Помилка при оновленні відгуків:", err);
+        console.error("❌ Помилка при оновленні відгуків та рейтингу:", err);
       }
     },
 

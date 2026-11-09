@@ -4,7 +4,6 @@
 
     <!-- Десктопна навігація -->
     <div class="header-top__desktop">
-      <!-- Адмінсторінка (тільки для адміністратора) -->
       <router-link
         v-if="isAdmin"
         :to="{ name: 'admin' }"
@@ -29,30 +28,7 @@
         Контакти
       </router-link>
 
-      <div v-if="isAuthenticated" class="header-top__wrapper">
-        <button class="header-top__add" @click="$emit('openAddModal')">
-          Додати місце
-        </button>
-
-        <div class="header-top__user">
-          <div
-            class="header-top__avatar-circle"
-            @click="showProfileModal = true"
-          >
-            {{ userInitial }}
-          </div>
-
-          <ProfileModal
-            v-if="showProfileModal"
-            :user="user"
-            @close="showProfileModal = false"
-            @logout="handleLogout"
-            @edit-place="handleEditPlace"
-          />
-        </div>
-      </div>
-
-      <div v-else class="header-top__block">
+      <div v-if="!isAuthenticated" class="header-top__block">
         <router-link
           :to="{ name: 'registration-page' }"
           class="header-top__block-login"
@@ -71,19 +47,45 @@
       </div>
     </div>
 
-    <!-- Кнопка бургеру на смартфоні -->
-    <button
-      class="header-top__burger"
-      @click="showMenu = !showMenu"
-      :aria-expanded="showMenu"
-      aria-label="Відкрити меню"
-    >
-      <img src="../../../src/assets/png/burger-menu-67.png" alt="Меню" />
-    </button>
+    <!-- Спільний блок: додати місце, аватар, бургер -->
+    <div class="header-top__controls">
+      <!-- Кнопка додавання місця на десктопі -->
+      <button
+        v-if="isAuthenticated"
+        class="header-top__add"
+        @click="$emit('openAddModal')"
+      >
+        Додати місце
+      </button>
+
+      <!-- Аватар авторизованого користувача -->
+      <div v-if="isAuthenticated" class="header-top__user">
+        <div class="header-top__avatar-circle" @click="showProfileModal = true">
+          {{ userInitial }}
+        </div>
+
+        <ProfileModal
+          v-if="showProfileModal"
+          :user="user"
+          @close="showProfileModal = false"
+          @logout="handleLogout"
+          @edit-place="handleEditPlace"
+        />
+      </div>
+
+      <!-- Кнопка бургеру -->
+      <button
+        class="header-top__burger"
+        @click="showMenu = !showMenu"
+        :aria-expanded="showMenu"
+        aria-label="Відкрити меню"
+      >
+        <img src="../../../src/assets/png/burger-menu-67.png" alt="Меню" />
+      </button>
+    </div>
 
     <!-- Мобільне меню -->
     <div v-if="showMenu" class="header-top__mobile-menu">
-      <!-- Адмінсторінка в мобільному меню (тільки для адміністратора) -->
       <router-link
         v-if="isAdmin"
         :to="{ name: 'admin' }"
@@ -125,7 +127,7 @@
         Контакти
       </router-link>
 
-      <!-- Додати місце тільки для авторизованого користувача -->
+      <!-- Додати місце для авторизованого користувача -->
       <button
         v-if="isAuthenticated"
         class="header-top__mobile-add"
@@ -137,8 +139,8 @@
         Додати місце
       </button>
 
-      <!-- Реєстрація / Вхід для неавторизованого -->
-      <div v-else class="header-top__mobile-auth">
+      <!-- Реєстрація / Вхід -->
+      <div v-if="!isAuthenticated" class="header-top__mobile-auth">
         <router-link
           :to="{ name: 'registration-page' }"
           class="header-top__mobile-link"
@@ -165,11 +167,14 @@ import ProfileModal from "../auth/ProfileModal.vue";
 
 export default {
   name: "HeaderAllPages",
+
   components: {
     LogoType,
     ProfileModal,
   },
+
   emits: ["openAddModal", "edit-place"],
+
   data() {
     return {
       showProfileModal: false,
@@ -181,19 +186,25 @@ export default {
     user() {
       return this.$store.state.auth.user;
     },
+
     isAuthenticated() {
       return !!this.$store.state.auth.token;
     },
+
     isAdmin() {
       return this.user?.role === "admin";
     },
+
     userInitial() {
       return this.user?.name?.[0]?.toUpperCase() || "";
     },
   },
+
   methods: {
     handleLogout() {
       this.$store.dispatch("auth/logout");
+      this.showProfileModal = false;
+      this.showMenu = false;
       this.$router.push({ name: "home" });
     },
 
@@ -214,9 +225,6 @@ export default {
   align-items: center;
   padding: 16px clamp(20px, 3.5vw, 50px);
   background: #212126;
-
-  // opacity: 0.7;
-
   position: relative;
   z-index: 1000;
 
@@ -272,6 +280,7 @@ export default {
   }
 }
 
+// Десктопна навігація
 .header-top > .header-top__desktop {
   display: flex;
   gap: clamp(15px, 3vw, 80px);
@@ -279,17 +288,20 @@ export default {
   align-items: center;
 }
 
-.header-top__wrapper {
+// Спільний блок кнопки додавання місця та аватара
+.header-top__controls {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
+  flex-shrink: 0;
 }
 
+// Аватар
 .header-top__user {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
 }
 
 .header-top__avatar-circle {
@@ -302,16 +314,13 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
   &:hover {
     opacity: 0.7;
   }
 }
 
-.header-top__username {
-  color: #fff;
-  font-size: 14px;
-}
-
+// Кнопка додавання місця
 .header-top__add {
   border-radius: 8px;
   border-color: #fafafa;
@@ -326,6 +335,7 @@ export default {
   }
 }
 
+// Бургер за замовчуванням прихований
 .header-top__burger {
   display: none;
 
@@ -343,61 +353,51 @@ export default {
   }
 }
 
+// Мобільне меню
 .header-top__mobile-menu {
   display: none;
-
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 1001;
 }
 
+// =====================================
+// ПЛАНШЕТИ: до 900px
+// =====================================
 @media (max-width: 900px) {
   .header-top {
+    position: relative;
     padding: 12px 20px;
   }
 
-  .header-top > .header-top__desktop {
-    gap: 12px;
-  }
-
-  .header-top__nav {
-    width: 85px;
-    height: 42px;
-    font-size: 11px;
-  }
-
-  .header-top__block {
-    gap: 8px;
-  }
-
-  .header-top__add {
-    font-size: 11px;
-    padding: 8px 6px;
-  }
-}
-
-@media (max-width: 750px) {
-  .header-top {
-    position: relative;
-    padding: 12px 16px;
-  }
-
+  // Приховуємо десктопну навігацію
   .header-top > .header-top__desktop {
     display: none;
   }
 
+  // Кнопка додавання місця прихована в хедері.
+  // Вона залишається доступною всередині бургер-меню.
+  .header-top__add {
+    display: none;
+  }
+
+  // Аватар і бургер поруч
+  .header-top__controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  // Показуємо бургер
   .header-top__burger {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
+  // Випадаюче меню
   .header-top__mobile-menu {
     position: absolute;
     top: 100%;
     right: 0;
-    z-index: 100;
+    z-index: 1001;
 
     display: flex;
     flex-direction: column;
@@ -408,7 +408,7 @@ export default {
 
     background: #212126;
     border-radius: 0 0 10px 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   }
 
   .header-top__mobile-link {
@@ -449,6 +449,34 @@ export default {
   .header-top__mobile-auth {
     display: flex;
     flex-direction: column;
+  }
+}
+
+// =====================================
+// СМАРТФОНИ: до 750px
+// =====================================
+@media (max-width: 750px) {
+  .header-top {
+    padding: 12px 16px;
+  }
+
+  .header-top__controls {
+    gap: 12px;
+  }
+
+  .header-top__avatar-circle {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-top__burger img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-top__mobile-menu {
+    min-width: 220px;
+    max-width: calc(100vw - 20px);
   }
 }
 </style>

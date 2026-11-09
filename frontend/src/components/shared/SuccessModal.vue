@@ -2,7 +2,9 @@
   <div class="modal-overlay">
     <div class="modal">
       <p class="success-txt">{{ message }}</p>
-      <button class="success-btn" @click="$emit('close')">Добре</button>
+      <button type="button" class="success-btn" @click="closeModal">
+        Добре
+      </button>
     </div>
   </div>
 </template>
@@ -15,6 +17,11 @@ export default {
       default: "Успішно!",
     },
   },
+  methods: {
+    closeModal() {
+      this.$emit("close");
+    },
+  },
 };
 </script>
 
@@ -22,16 +29,21 @@ export default {
 @import "../../assets/scss/variables";
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
+  pointer-events: auto;
 }
+
 .modal {
+  position: relative;
+  z-index: 10000;
+  pointer-events: auto;
   font-family: e-Ukraine, sans-serif;
   display: flex;
   flex-direction: column;

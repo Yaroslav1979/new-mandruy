@@ -1,13 +1,13 @@
 <template>
-  <div class="modal-overlay">
+  <div class="modal-overlay" @click.self="$emit('close')">
     <Container class="profile">
-      <div class="profile-modal">
+      <div class="profile-modal" @click.stop>
         <Title class="profile-modal__title">
           <div class="header-top__avatar-circle">
             {{ userInitial }}
           </div>
 
-          <div>
+          <div class="profile-modal__user-info">
             {{ user.name }}
             <p class="profile-modal__title--sub">
               {{ user.email }}
@@ -32,15 +32,6 @@
         <div class="profile-item" @click="showFavoritesModal = true">
           <span>Обрані</span>
         </div>
-
-        <!-- <div class="profile-item">
-          <button @click="showMyPlacesModal = true">Мої місця</button>
-        
-        </div> -->
-
-        <!-- <div class="profile-item">
-          <button @click="showMyPlacesModal = true">Обрані</button>
-        </div> -->
 
         <button class="logout-btn" @click="logoutAndClose">
           Вихід з акаунту
@@ -157,33 +148,34 @@ export default {
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
+  padding: 80px 20px 20px;
+  box-sizing: border-box;
 }
-/* .modal-overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 0;
-  background: rgba(0, 0, 0);
-  display: flex;
-  align-items: top;
-  justify-content: right;
-} */
 
 .profile {
   display: flex;
   width: 350px;
+  max-width: 100%;
+  max-height: calc(100dvh - 100px);
   border-radius: 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .profile-modal {
   position: relative;
+  width: 100%;
+  min-width: 0;
   padding: 20px;
   background-color: #fff;
+  border-radius: 20px;
+  box-sizing: border-box;
 }
 
 .header-top__avatar-circle {
   width: 50px;
   height: 50px;
+  flex-shrink: 0;
   background: #007bff;
   color: white;
   border-radius: 50%;
@@ -194,24 +186,35 @@ export default {
 
 .profile-modal__title {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   gap: 12px;
   margin: 20px 0;
+  min-width: 0;
+}
+
+.profile-modal__user-info {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .profile-modal__title--sub {
   font-size: 12px;
   margin-top: 8px;
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 
 .profile-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   margin: 16px 0;
-  width: 250px;
+  width: 100%;
   border-bottom: 1px solid #111;
+  padding-bottom: 8px;
+  box-sizing: border-box;
   cursor: pointer;
 }
 
@@ -222,9 +225,11 @@ export default {
 .logout-btn {
   display: flex;
   justify-content: center;
+  width: 100%;
   font-family: e-Ukraine, sans-serif;
   background: transparent;
   color: #111;
+  border: none;
   border-radius: 8px;
   font-size: 14px;
   padding: 8px;
@@ -243,10 +248,57 @@ export default {
   background: transparent;
   border: none;
   font-size: 28px;
+  line-height: 1;
   cursor: pointer;
 }
 
 .close-btn:hover {
   font-weight: bold;
+}
+
+/* Планшети */
+@media (max-width: 900px) {
+  .modal-overlay {
+    padding: 75px 16px 16px;
+  }
+
+  .profile {
+    width: 330px;
+  }
+}
+
+/* Смартфони */
+@media (max-width: 750px) {
+  .modal-overlay {
+    padding: 68px 10px 10px;
+  }
+
+  .profile {
+    width: min(330px, calc(100vw - 20px));
+    max-height: calc(100dvh - 80px);
+  }
+
+  .profile-modal {
+    padding: 16px;
+  }
+
+  .profile-modal__title {
+    gap: 10px;
+    margin: 18px 0;
+  }
+
+  .header-top__avatar-circle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .profile-item {
+    margin: 14px 0;
+    font-size: 13px;
+  }
+
+  .logout-btn {
+    font-size: 13px;
+  }
 }
 </style>

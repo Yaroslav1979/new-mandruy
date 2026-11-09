@@ -91,7 +91,7 @@ export default {
 
     statusText(place) {
       if (place.isApproved && place.pendingChanges) {
-        return "Опубліковане · зміни очікують модерації";
+        return "Опубліковане";
       }
 
       if (place.isApproved) {
@@ -120,6 +120,7 @@ export default {
         await axiosInstance.delete(`/places/${place._id}`);
 
         this.places = this.places.filter((item) => item._id !== place._id);
+        alert("Місце успішно видалено!");
       } catch (error) {
         console.error("Помилка видалення місця:", error);
         alert("Не вдалося видалити місце.");

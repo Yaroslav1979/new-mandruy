@@ -7,10 +7,10 @@ import MapPage from "./pages/MapPage.vue";
 import SearchPlacePage from "./pages/SearchPlacePage.vue";
 import ContactPage from "./pages/ContactPage.vue";
 import ErrorPage from "./pages/ErrorPage.vue";
-import LoginPage from "./pages/LoginPage";
-import RegistrationPage from "./pages/RegistrationPage";
-import RecoveryPasswordPage from "./pages/RecoveryPasswordPage";
-import ConfirmEmailPage from "./pages/ConfirmEmailPage";
+import LoginPage from "./pages/LoginPage.vue";
+import RegistrationPage from "./pages/RegistrationPage.vue";
+import RecoveryPasswordPage from "./pages/RecoveryPasswordPage.vue";
+import ConfirmEmailPage from "./pages/ConfirmEmailPage.vue";
 import AdminPage from "./pages/AdminPage.vue";
 
 const routes = [
@@ -40,7 +40,6 @@ const routes = [
     name: "ContactPage",
     component: ContactPage,
   },
-
   {
     path: "/registration",
     name: "registration-page",
@@ -63,15 +62,13 @@ const routes = [
     component: ConfirmEmailPage,
     props: true,
   },
-
   {
     path: "/admin",
     name: "admin",
     component: AdminPage,
   },
-
   {
-    path: "/:pathMatch(.*)*", // Новий формат для Vue 3
+    path: "/:pathMatch(.*)*",
     name: "error-page",
     component: ErrorPage,
   },
@@ -87,6 +84,7 @@ router.beforeEach((to, from, next) => {
   if (["registration-page", "login-page"].includes(to.name)) {
     localStorage.setItem("preRegistrationRoute", from.fullPath);
   }
+
   next();
 });
 
