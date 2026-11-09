@@ -269,6 +269,7 @@ export default {
 
     // Закриття повідомлення про успішну дію
     closeSuccessModal() {
+      console.log("Кнопку Добре натиснуто");
       this.successMessageVisible = false;
       this.successMessage = "";
     },

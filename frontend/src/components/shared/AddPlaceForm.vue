@@ -238,7 +238,27 @@ export default {
       }
 
       // Якщо є незатверджені зміни, завантажуємо саме їх
-      const source = place.pendingChanges || place;
+      // const source = place.pendingChanges || place;
+      const pending = place.pendingChanges;
+
+      const hasPendingChanges =
+        pending &&
+        (pending.title ||
+          pending.descr ||
+          pending.location ||
+          pending.imgUrls?.length ||
+          pending.categoryIds?.length);
+
+      const source = hasPendingChanges
+        ? {
+            ...place,
+            ...pending,
+            imgUrls: pending.imgUrls?.length ? pending.imgUrls : place.imgUrls,
+            categoryIds: pending.categoryIds?.length
+              ? pending.categoryIds
+              : place.categoryIds,
+          }
+        : place;
 
       this.title = source.title || "";
       this.descr = source.descr || "";

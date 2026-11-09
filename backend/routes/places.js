@@ -196,7 +196,8 @@ router.post(
       await place.save();
 
       return res.status(201).json({
-        message: "Місце успішно додано",
+        message:
+          "Успішно! Очікуйте на публікацію місця після підтверджененя адміністратором",
         place,
       });
     } catch (error) {
@@ -992,10 +993,10 @@ router.delete("/:id", verifyToken, async (req, res) => {
       ...(place.pendingChanges?.imgUrls || []),
     ];
 
-    // Спочатку видаляємо саме місце
+    // Видаляємо саме місце
     await Place.findByIdAndDelete(id);
 
-    // Потім пов'язані записи
+    // Видаляємо пов'язані записи
     const cleanupResults = await Promise.allSettled([
       Favorite.deleteMany({ placeId: id }),
       Review.deleteMany({ placeId: id }),
@@ -1007,10 +1008,17 @@ router.delete("/:id", verifyToken, async (req, res) => {
       }
     });
 
-    // Видаляємо фотографії, якщо вони більше ніде не використовуються
-    await deleteUnusedImages(imageUrls, id);
+    // Очищення фотографій — окрема операція
+    try {
+      await deleteUnusedImages(imageUrls, id);
+    } catch (imageError) {
+      console.error(
+        "Місце видалено, але виникла помилка очищення фотографій:",
+        imageError,
+      );
+    }
 
-    return res.json({
+    return res.status(200).json({
       message: "Місце успішно видалено",
     });
   } catch (error) {
