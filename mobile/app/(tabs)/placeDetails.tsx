@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import {
   View,
@@ -19,7 +19,7 @@ import { HeaderHatContent } from "../../components/HeaderHatContent";
 import categories from "../../constants/categories";
 import PlaceCategory from "../../components/PlaceCategory";
 import StarRating from "../../components/star-rating";
-import Reviews from "../../components/reviews/reviewItem/reviewsAll";
+import Reviews from "./../../components/reviews/reviewsAll";
 import { Review } from "../../components/reviews/reviewItem/typesReviews";
 
 const { width } = Dimensions.get("window");
@@ -38,37 +38,44 @@ export default function PlaceDetails() {
 
   const { token, loading } = useAuth();
 
-  const fetchPlace = async () => {
+  const fetchPlace = useCallback(async () => {
+    if (!placeId) return;
+
     try {
       const response = await fetch(`${API_URL}/api/places/${placeId}`);
+
+      if (!response.ok) {
+        throw new Error("Не вдалося отримати місце");
+      }
+
       const data = await response.json();
       setPlace(data);
     } catch (error) {
       console.error("Помилка отримання місця:", error);
     }
-  };
+  }, [placeId]);
 
-  const fetchReviews = async () => {
-    if (!id) return;
+  const fetchReviews = useCallback(async () => {
+    if (!placeId) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/places/${placeId}/reviews`);
-      const data = await res.json();
-      setReviewsList(Array.isArray(data) ? data : []);
-    } catch (e) {
-      console.error("Помилка відгуків:", e);
-    }
-  };
+      const response = await fetch(`${API_URL}/api/places/${placeId}/reviews`);
 
-  useEffect(
-    () => {
-      if (placeId) {
-        fetchPlace();
-        fetchReviews();
+      if (!response.ok) {
+        throw new Error("Не вдалося отримати відгуки");
       }
-    },
-    // [id]
-  );
+
+      const data = await response.json();
+      setReviewsList(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Помилка відгуків:", error);
+    }
+  }, [placeId]);
+
+  useEffect(() => {
+    fetchPlace();
+    fetchReviews();
+  }, [fetchPlace, fetchReviews]);
 
   if (loading || !place) {
     return (

@@ -13,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { API_URL } from "@/constants/api";
 import * as ImagePicker from "expo-image-picker";
-import { CloseButton } from "..//components/close-btn";
+import { CloseButton } from "../components/close-btn";
 
 type Props = {
   visible: boolean;
@@ -38,12 +38,14 @@ export function ProfilesModal({ visible, setVisible }: Props) {
 
   const [avatar, setAvatar] = useState<string | null>(null);
 
+  // Вихід з акаунта
   const handleLogout = async () => {
     await logout();
     setVisible(false);
     router.replace("/");
   };
 
+  // Вибір аватара
   const pickAvatar = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -63,6 +65,7 @@ export function ProfilesModal({ visible, setVisible }: Props) {
     }
   };
 
+  // Зміна імені
   const changeName = async () => {
     const res = await fetch(`${API_URL}/api/auth/change-name`, {
       method: "PATCH",
@@ -83,6 +86,7 @@ export function ProfilesModal({ visible, setVisible }: Props) {
     }
   };
 
+  // Зміна пароля
   const changePassword = async () => {
     const res = await fetch(`${API_URL}/api/auth/change-password`, {
       method: "PATCH",
@@ -105,162 +109,193 @@ export function ProfilesModal({ visible, setVisible }: Props) {
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      supportedOrientations={["portrait", "landscape"]}
-    >
-      <Pressable style={styles.modalOverlay} onPress={() => setVisible(false)}>
-        <View
-          style={[
-            styles.modalContent,
-            isLandscape && styles.modalContentLandscape,
-          ]}
-        >
-          <CloseButton onPress={() => setVisible(false)} />
-
-          {user?.avatar ? (
-            <Image source={{ uri: user.avatar }} style={styles.avatarBig} />
-          ) : (
-            <View style={styles.avatarCircle}>
-              <Text style={styles.avatarLetter}>{userInitial}</Text>
-            </View>
-          )}
-
-          <Text style={styles.name}>{user?.name}</Text>
-          <Text style={styles.email}>{user?.email}</Text>
-
-          <Pressable
-            style={styles.optionBtn}
-            onPress={() => setNameModal(true)}
-          >
-            <Text style={styles.optionText}>Змінити імʼя</Text>
-          </Pressable>
-
-          <Pressable
-            style={styles.optionBtn}
-            onPress={() => setPasswordModal(true)}
-          >
-            <Text style={styles.optionText}>Змінити пароль</Text>
-          </Pressable>
-
-          <Pressable
-            style={styles.optionBtn}
-            onPress={() => setAvatarModal(true)}
-          >
-            <Text style={styles.optionText}>Змінити аватар</Text>
-          </Pressable>
-
-          <Pressable style={styles.button} onPress={handleLogout}>
-            <Text style={styles.textBtn}>Вийти</Text>
-          </Pressable>
-        </View>
-      </Pressable>
-
-      {/* Модалка встановлення та зміни аватара */}
-
+    <>
+      {/* Основна модалка профілю */}
       <Modal
-        visible={avatarModal}
+        visible={visible}
         transparent
-        animationType="slide"
+        animationType="fade"
         supportedOrientations={["portrait", "landscape"]}
+        onRequestClose={() => setVisible(false)}
       >
-        <View style={styles.modalOverlay}>
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setVisible(false)}
+        >
           <View
             style={[
               styles.modalContent,
               isLandscape && styles.modalContentLandscape,
             ]}
           >
-            <CloseButton onPress={() => setAvatarModal(false)} />
+            <CloseButton onPress={() => setVisible(false)} />
 
-            {avatar ? (
-              <Image source={{ uri: avatar }} style={styles.avatarBig} />
+            {user?.avatar ? (
+              <Image source={{ uri: user.avatar }} style={styles.avatarBig} />
             ) : (
               <View style={styles.avatarCircle}>
                 <Text style={styles.avatarLetter}>{userInitial}</Text>
               </View>
             )}
-            <Pressable style={styles.button} onPress={pickAvatar}>
-              <Text style={styles.textBtn}>Вибрати фото</Text>
+
+            <Text style={styles.name}>{user?.name}</Text>
+            <Text style={styles.email}>{user?.email}</Text>
+
+            <Pressable
+              style={styles.optionBtn}
+              onPress={() => setNameModal(true)}
+            >
+              <Text style={styles.optionText}>Змінити імʼя</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.optionBtn}
+              onPress={() => setPasswordModal(true)}
+            >
+              <Text style={styles.optionText}>Змінити пароль</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.optionBtn}
+              onPress={() => setAvatarModal(true)}
+            >
+              <Text style={styles.optionText}>Змінити аватар</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.optionBtn}
+              onPress={() => {
+                setVisible(false);
+                router.push("/my-places");
+              }}
+            >
+              <Text style={styles.optionText}>Мої місця</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.optionBtn}
+              onPress={() => {
+                setVisible(false);
+                router.push("/favorites");
+              }}
+            >
+              <Text style={styles.optionText}>Обрані місця</Text>
+            </Pressable>
+
+            <Pressable style={styles.button} onPress={handleLogout}>
+              <Text style={styles.textBtn}>Вийти</Text>
             </Pressable>
           </View>
-        </View>
-      </Modal>
+        </Pressable>
 
-      {/* Модалка зміни імені */}
+        {/* Модалка встановлення та зміни аватара */}
+        <Modal
+          visible={avatarModal}
+          transparent
+          animationType="slide"
+          supportedOrientations={["portrait", "landscape"]}
+          onRequestClose={() => setAvatarModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View
+              style={[
+                styles.modalContent,
+                isLandscape && styles.modalContentLandscape,
+              ]}
+            >
+              <CloseButton onPress={() => setAvatarModal(false)} />
 
-      <Modal
-        visible={nameModal}
-        transparent
-        animationType="slide"
-        supportedOrientations={["portrait", "landscape"]}
-      >
-        <View style={styles.modalOverlay}>
-          <View
-            style={[
-              styles.modalContent,
-              isLandscape && styles.modalContentLandscape,
-            ]}
-          >
-            <CloseButton onPress={() => setNameModal(false)} />
+              {avatar ? (
+                <Image source={{ uri: avatar }} style={styles.avatarBig} />
+              ) : (
+                <View style={styles.avatarCircle}>
+                  <Text style={styles.avatarLetter}>{userInitial}</Text>
+                </View>
+              )}
 
-            <View style={styles.blockContent}>
-              <TextInput
-                placeholder="Нове імʼя"
-                style={styles.input}
-                value={newName}
-                onChangeText={setNewName}
-              />
+              <Pressable style={styles.button} onPress={pickAvatar}>
+                <Text style={styles.textBtn}>Вибрати фото</Text>
+              </Pressable>
             </View>
-            <Pressable style={styles.button} onPress={changeName}>
-              <Text style={styles.textBtn}>Змінити імʼя</Text>
-            </Pressable>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Модалка зміни паролю */}
+        {/* Модалка зміни імені */}
+        <Modal
+          visible={nameModal}
+          transparent
+          animationType="slide"
+          supportedOrientations={["portrait", "landscape"]}
+          onRequestClose={() => setNameModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View
+              style={[
+                styles.modalContent,
+                isLandscape && styles.modalContentLandscape,
+              ]}
+            >
+              <CloseButton onPress={() => setNameModal(false)} />
 
-      <Modal
-        visible={passwordModal}
-        transparent
-        animationType="slide"
-        supportedOrientations={["portrait", "landscape"]}
-      >
-        <View style={styles.modalOverlay}>
-          <View
-            style={[
-              styles.modalContent,
-              isLandscape && styles.modalContentLandscape,
-            ]}
-          >
-            <CloseButton onPress={() => setPasswordModal(false)} />
-            <View style={styles.blockContent}>
-              <TextInput
-                style={[styles.optionText, styles.input]}
-                placeholder="Поточний пароль"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-              />
+              <View style={styles.blockContent}>
+                <TextInput
+                  placeholder="Нове імʼя"
+                  style={styles.input}
+                  value={newName}
+                  onChangeText={setNewName}
+                />
+              </View>
 
-              <TextInput
-                style={[styles.optionText, styles.input]}
-                placeholder="Новий пароль"
-                secureTextEntry
-                value={newPassword}
-                onChangeText={setNewPassword}
-              />
+              <Pressable style={styles.button} onPress={changeName}>
+                <Text style={styles.textBtn}>Змінити імʼя</Text>
+              </Pressable>
             </View>
-            <Pressable style={styles.button} onPress={changePassword}>
-              <Text style={styles.textBtn}>Змінити пароль</Text>
-            </Pressable>
           </View>
-        </View>
+        </Modal>
+
+        {/* Модалка зміни пароля */}
+        <Modal
+          visible={passwordModal}
+          transparent
+          animationType="slide"
+          supportedOrientations={["portrait", "landscape"]}
+          onRequestClose={() => setPasswordModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View
+              style={[
+                styles.modalContent,
+                isLandscape && styles.modalContentLandscape,
+              ]}
+            >
+              <CloseButton onPress={() => setPasswordModal(false)} />
+
+              <View style={styles.blockContent}>
+                <TextInput
+                  style={[styles.optionText, styles.input]}
+                  placeholder="Поточний пароль"
+                  secureTextEntry
+                  value={password}
+                  onChangeText={setPassword}
+                />
+
+                <TextInput
+                  style={[styles.optionText, styles.input]}
+                  placeholder="Новий пароль"
+                  secureTextEntry
+                  value={newPassword}
+                  onChangeText={setNewPassword}
+                />
+              </View>
+
+              <Pressable style={styles.button} onPress={changePassword}>
+                <Text style={styles.textBtn}>Змінити пароль</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
       </Modal>
-    </Modal>
+    </>
   );
 }
 
@@ -280,6 +315,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
+
   blockContent: {
     width: "100%",
     gap: 20,
@@ -361,21 +397,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  closeBtn: {
-    position: "absolute",
-    top: 8,
-    right: 10,
-    width: 35,
-    height: 35,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 10,
-  },
-
-  closeText: {
-    fontSize: 30,
-    lineHeight: 32,
-    color: "#111",
-    fontFamily: "Ukrainian-Regular",
+  editModalContent: {
+    width: "95%",
+    maxHeight: "90%",
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    padding: 15,
+    overflow: "hidden",
   },
 });
