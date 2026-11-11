@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { router } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -13,25 +12,20 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import { API_URL } from "../../constants/api";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
-import StarRating from "../../components/star-rating";
+import PlaceCard, { Place } from "../../components/PlaceCard";
 import { PortalProvider } from "@gorhom/portal";
+import { useAuth } from "@/context/AuthContext";
 
-interface Place {
-  _id: string;
-  title: string;
-  imgUrls: string[];
-  rating: number;
-  categoryIds?: string[];
-  createdAt?: string;
-  location?: {
-    region?: string;
-    city?: string;
-  };
-}
+export default function SearchScreen() {
+  const { token, loading: authLoading } = useAuth();
 
-export default function LoginScreen() {
   const [places, setPlaces] = useState<Place[]>([]);
+
+  // const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  // const [favoritesLoaded, setFavoritesLoaded] = useState(false);
+
   const [loading, setLoading] = useState(true);
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -101,6 +95,51 @@ export default function LoginScreen() {
   useEffect(() => {
     fetchPlaces();
   }, []);
+
+  // useEffect(() => {
+  //   if (authLoading) return;
+
+  //   const fetchFavorites = async () => {
+  //     if (!token) {
+  //       setFavoriteIds([]);
+  //       setFavoritesLoaded(true);
+  //       return;
+  //     }
+
+  //     try {
+  //       const response = await fetch(`${API_URL}/api/places/favorites`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error("Не вдалося отримати обрані місця");
+  //       }
+
+  //       const data = await response.json();
+
+  //       setFavoriteIds(data.map((place: Place) => place._id));
+  //     } catch (error) {
+  //       console.error("Помилка отримання обраних місць:", error);
+  //     } finally {
+  //       setFavoritesLoaded(true);
+  //     }
+  //   };
+
+  //   setFavoritesLoaded(false);
+  //   fetchFavorites();
+  // }, [token, authLoading]);
+
+  // const handleFavoriteChange = (placeId: string, favorite: boolean) => {
+  //   setFavoriteIds((prev) => {
+  //     if (favorite) {
+  //       return prev.includes(placeId) ? prev : [...prev, placeId];
+  //     }
+
+  //     return prev.filter((id) => id !== placeId);
+  //   });
+  // };
 
   useEffect(() => {
     setVisibleCount(10);
@@ -291,14 +330,10 @@ export default function LoginScreen() {
               index === visiblePlaces.length - 1;
 
             return (
-              <TouchableOpacity
+              <View
                 style={[
-                  styles.placeCard,
-                  isLandscape && !isLastOdd
-                    ? {
-                        width: "48%",
-                      }
-                    : undefined,
+                  styles.placeCardWrapper,
+                  isLandscape && !isLastOdd ? { width: "48%" } : undefined,
                   isLandscape && isLastOdd
                     ? {
                         width: "48%",
@@ -306,35 +341,15 @@ export default function LoginScreen() {
                       }
                     : undefined,
                 ]}
-                activeOpacity={0.9}
-                onPress={() =>
-                  router.push({
-                    pathname: "/placeDetails",
-                    params: {
-                      id: item._id,
-                    },
-                  })
-                }
               >
-                {item.imgUrls?.length > 0 && (
-                  <Image
-                    source={{
-                      uri: item.imgUrls[0],
-                    }}
-                    style={styles.placeImage}
-                  />
-                )}
-
-                <Text style={styles.placeTitle}>{item.title}</Text>
-
-                <View style={styles.regionWrapper}>
-                  <Text style={styles.placeRegion}>
-                    {item.location?.region}
-                  </Text>
-
-                  <StarRating rating={Number(item.rating) || 0} />
-                </View>
-              </TouchableOpacity>
+                <PlaceCard
+                  place={item}
+                  showFavorite
+                  // isFavorite={favoriteIds.includes(item._id)}
+                  // onFavoriteChange={handleFavoriteChange}
+                  // showFavorite={favoritesLoaded}
+                />
+              </View>
             );
           }}
           ListEmptyComponent={
@@ -484,38 +499,9 @@ const styles = StyleSheet.create({
     color: "#111",
   },
 
-  placeCard: {
-    backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 15,
-    marginTop: 15,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-
-  placeImage: {
+  placeCardWrapper: {
     width: "100%",
-    aspectRatio: 16 / 9,
-    borderRadius: 10,
-  },
-
-  placeTitle: {
-    fontSize: 18,
-    fontFamily: "Ukrainian-Bold",
-    marginTop: 8,
-  },
-
-  regionWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    justifyContent: "space-between",
-  },
-
-  placeRegion: {
-    fontSize: 14,
-    color: "#555",
+    marginBottom: 15,
   },
 
   emptyText: {
@@ -540,483 +526,3 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Bold",
   },
 });
-
-// import { useState, useEffect } from "react";
-// import { router } from "expo-router";
-// import {
-//   StyleSheet,
-//   Text,
-//   TextInput,
-//   View,
-//   FlatList,
-//   Image,
-//   TouchableOpacity,
-//   useWindowDimensions,
-// } from "react-native";
-// import DropDownPicker from "react-native-dropdown-picker";
-// import { API_URL } from "../../constants/api";
-// import { HeaderHatContent } from "../../components/HeaderHatContent";
-// import StarRating from "../../components/star-rating";
-// import { PortalProvider } from "@gorhom/portal";
-
-// interface Place {
-//   _id: string;
-//   title: string;
-//   imgUrls: string[];
-//   rating: number;
-//   categoryIds?: string[];
-//   createdAt?: string;
-//   location?: {
-//     region?: string;
-//     city?: string;
-//   };
-// }
-
-// export default function LoginScreen() {
-//   const [places, setPlaces] = useState<Place[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [searchQuery, setSearchQuery] = useState("");
-
-//   useEffect(() => {
-//     fetchPlaces();
-//   }, []);
-
-//   const fetchPlaces = async () => {
-//     try {
-//       const response = await fetch(`${API_URL}/api/places/approved`);
-//       const data = await response.json();
-//       setPlaces(data);
-//     } catch (error) {
-//       console.error("Помилка отримання місць:", error);
-//       console.log("API_URL:", API_URL);
-//       console.log("FULL URL:", `${API_URL}/api/places/approved`);
-//       console.error("Fetch error:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-//   const [categoryOpen, setCategoryOpen] = useState(false);
-//   const [category, setCategory] = useState("Без категорії");
-//   const [categoryItems, setCategoryItems] = useState([
-//     { label: "Без категорії", value: "Без категорії" },
-//     { label: "Табір", value: "Табір" },
-//     { label: "Мандрівка", value: "Мандрівка" },
-//     { label: "Питна вода", value: "Питна вода" },
-//     { label: "Пам'ятка", value: "Пам'ятка" },
-//     { label: "Музей", value: "Музей" },
-//     { label: "Водойма", value: "Водойма" },
-//     { label: "Автомобіль", value: "Автомобіль" },
-//   ]);
-
-//   const [regionOpen, setRegionOpen] = useState(false);
-//   const [region, setRegion] = useState("Вся Україна");
-//   const [regionItems, setRegionItems] = useState([
-//     { label: "Вся Україна", value: "Вся Україна" },
-//     { label: "Волинська область", value: "Волинська область" },
-//     { label: "Вінницька область", value: "Вінницька область" },
-//     { label: "Дніпропетровська область", value: "Дніпропетровська область" },
-//     { label: "Донецька область", value: "Донецька область" },
-//     { label: "Житомирська область", value: "Житомирська область" },
-//     { label: "Закарпатська область", value: "Закарпатська область" },
-//     { label: "Запорізька область", value: "Запорізька область" },
-//     { label: "Івано-Франківська область", value: "Івано-Франківська область" },
-//     { label: "Київська область", value: "Київська область" },
-//     { label: "Кіровоградська область", value: "Кіровоградська область" },
-//     { label: "Луганська область", value: "Луганська область" },
-//     { label: "Львівська область", value: "Львівська область" },
-//     { label: "Миколаївська область", value: "Миколаївська область" },
-//     { label: "Одеська область", value: "Одеська область" },
-//     { label: "Полтавська область", value: "Полтавська область" },
-//     { label: "Рівненська область", value: "Рівненська область" },
-//     { label: "Сумська область", value: "Сумська область" },
-//     { label: "Тернопільська область", value: "Тернопільська область" },
-//     { label: "Харківська область", value: "Харківська область" },
-//     { label: "Херсонська область", value: "Херсонська область" },
-//     { label: "Хмельницька область", value: "Хмельницька область" },
-//     { label: "Черкаська область", value: "Черкаська область" },
-//     { label: "Чернівецька область", value: "Чернівецька область" },
-//     { label: "Чернігівська область", value: "Чернігівська область" },
-//     { label: "Крим автономна республіка", value: "Крим автономна республіка" },
-//   ]);
-
-//   const [sortedbyOpen, setSortedbyOpen] = useState(false);
-//   const [sortedby, setSortedby] = useState("За замовчуванням");
-//   const [sortedbyItems, setSortedbyItems] = useState([
-//     { label: "За замовчуванням", value: "За замовчуванням" },
-//     { label: "За назвою", value: "За назвою" },
-//     { label: "За датою", value: "За датою" },
-//   ]);
-
-//   const { width, height } = useWindowDimensions();
-//   const isLandscape = width > height;
-//   const [visibleCount, setVisibleCount] = useState(10);
-
-//   useEffect(() => {
-//     fetchPlaces();
-//   }, []);
-
-//   useEffect(() => {
-//     setVisibleCount(10);
-//   }, [searchQuery, category, region, sortedby]);
-
-//   const processedPlaces = places
-//     .filter((place) =>
-//       place.title.toLowerCase().includes(searchQuery.toLowerCase()),
-//     )
-//     .filter((place) =>
-//       category === "Без категорії"
-//         ? true
-//         : place.categoryIds?.includes(category),
-//     )
-//     .filter((place) =>
-//       region === "Вся Україна" ? true : place.location?.region === region,
-//     )
-//     .sort((a, b) => {
-//       if (sortedby === "За назвою") {
-//         return a.title.localeCompare(b.title);
-//       }
-
-//       if (sortedby === "За датою") {
-//         return (
-//           new Date(b.createdAt || "").getTime() -
-//           new Date(a.createdAt || "").getTime()
-//         );
-//       }
-//       return 0;
-//     });
-
-//   const visiblePlaces = processedPlaces.slice(0, visibleCount);
-
-//   return (
-//     <PortalProvider>
-//       <View style={styles.container}>
-//         <View style={[styles.header, isLandscape && styles.headerLandscape]}>
-//           <HeaderHatContent
-//             containerStyle={{
-//               gap: 50,
-//               marginTop: 0,
-//             }}
-//             logoWidth={150}
-//           />
-//         </View>
-
-//         <View style={styles.searchHeader}>
-//           <View style={styles.titleWrapper}>
-//             <Text style={styles.title}>ПОШУК МІСЦЬ</Text>
-//           </View>
-
-//           <View style={styles.form}>
-//             <View style={styles.formBlock}>
-//               <TextInput
-//                 style={styles.input}
-//                 textAlign="center"
-//                 placeholder="Введіть назву"
-//                 value={searchQuery}
-//                 onChangeText={setSearchQuery}
-//               />
-
-//               <Image
-//                 source={require("../../assets/images/iconSearch.png")}
-//                 style={styles.searchBtn}
-//               />
-//             </View>
-
-//             <View style={styles.pickerWrapper}>
-//               {/* Категорія */}
-//               <View style={styles.pickerBlock}>
-//                 <Text style={styles.label}>Категорія:</Text>
-
-//                 <DropDownPicker
-//                   open={categoryOpen}
-//                   value={category}
-//                   items={categoryItems}
-//                   setOpen={setCategoryOpen}
-//                   setValue={setCategory}
-//                   setItems={setCategoryItems}
-//                   placeholder="Категорія"
-//                   style={styles.dropdown}
-//                   textStyle={styles.dropdownText}
-//                   listMode="SCROLLVIEW"
-//                   dropDownContainerStyle={styles.dropdownContainer}
-//                 />
-//               </View>
-
-//               {/* Область */}
-//               <View style={styles.pickerBlock}>
-//                 <Text style={styles.label}>Область:</Text>
-
-//                 <DropDownPicker
-//                   open={regionOpen}
-//                   value={region}
-//                   items={regionItems}
-//                   setOpen={setRegionOpen}
-//                   setValue={setRegion}
-//                   setItems={setRegionItems}
-//                   placeholder="Область"
-//                   style={styles.dropdown}
-//                   textStyle={styles.dropdownText}
-//                   listMode="SCROLLVIEW"
-//                   dropDownContainerStyle={styles.dropdownContainer}
-//                 />
-//               </View>
-
-//               {/* Сортування */}
-//               <View style={styles.pickerBlock}>
-//                 <Text style={styles.label}>Сортувати:</Text>
-
-//                 <DropDownPicker
-//                   open={sortedbyOpen}
-//                   value={sortedby}
-//                   items={sortedbyItems}
-//                   setOpen={setSortedbyOpen}
-//                   setValue={setSortedby}
-//                   setItems={setSortedbyItems}
-//                   placeholder="Сортувати"
-//                   style={styles.dropdown}
-//                   textStyle={styles.dropdownText}
-//                   listMode="SCROLLVIEW"
-//                   dropDownContainerStyle={styles.dropdownContainer}
-//                 />
-//               </View>
-//             </View>
-//           </View>
-//         </View>
-
-//         {/* Список місць */}
-//         <FlatList<Place>
-//           data={visiblePlaces}
-//           style={styles.bgd}
-//           key={isLandscape ? "landscape" : "portrait"}
-//           numColumns={isLandscape ? 2 : 1}
-//           columnWrapperStyle={
-//             isLandscape ? { justifyContent: "space-between" } : undefined
-//           }
-//           contentContainerStyle={{
-//             paddingBottom: 20,
-//           }}
-//           keyExtractor={(item) => item._id}
-//           renderItem={({ item, index }) => {
-//             const isLastOdd =
-//               isLandscape &&
-//               visiblePlaces.length % 2 !== 0 &&
-//               index === visiblePlaces.length - 1;
-
-//             return (
-//               <TouchableOpacity
-//                 style={[
-//                   styles.placeCard,
-//                   isLandscape && !isLastOdd ? { width: "48%" } : undefined,
-//                   isLandscape && isLastOdd
-//                     ? {
-//                         width: "48%",
-//                         alignSelf: "flex-start",
-//                       }
-//                     : undefined,
-//                 ]}
-//                 activeOpacity={0.9}
-//                 onPress={() =>
-//                   router.push({
-//                     pathname: "/placeDetails",
-//                     params: { id: item._id },
-//                   })
-//                 }
-//               >
-//                 {item.imgUrls?.length > 0 && (
-//                   <Image
-//                     source={{
-//                       uri: `${API_URL}${item.imgUrls[0]}`,
-//                     }}
-//                     style={styles.placeImage}
-//                   />
-//                 )}
-
-//                 <Text style={styles.placeTitle}>{item.title}</Text>
-
-//                 <View style={styles.regionWrapper}>
-//                   <Text style={styles.placeRegion}>
-//                     {item.location?.region}
-//                   </Text>
-
-//                   <StarRating rating={Number(item.rating) || 0} />
-//                 </View>
-//               </TouchableOpacity>
-//             );
-//           }}
-//           ListEmptyComponent={
-//             !loading ? (
-//               <Text style={styles.emptyText}>Місця не знайдені</Text>
-//             ) : null
-//           }
-//           ListFooterComponent={
-//             processedPlaces.length > 10 ? (
-//               <TouchableOpacity
-//                 style={styles.loadMoreBtn}
-//                 onPress={() => {
-//                   if (visibleCount < processedPlaces.length) {
-//                     setVisibleCount((prev) => prev + 10);
-//                   } else {
-//                     setVisibleCount(10);
-//                   }
-//                 }}
-//               >
-//                 <Text style={styles.loadMoreText}>
-//                   {visibleCount < processedPlaces.length
-//                     ? "Показати ще"
-//                     : "Згорнути"}
-//                 </Text>
-//               </TouchableOpacity>
-//             ) : null
-//           }
-//         />
-//       </View>
-//     </PortalProvider>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     gap: 10,
-//   },
-//   header: {
-//     flexDirection: "row",
-//     justifyContent: "space-around",
-//     backgroundColor: "#111",
-//     padding: 10,
-//     alignItems: "center",
-//     marginTop: 50,
-//   },
-//   headerLandscape: {
-//     marginTop: 0,
-//   },
-//   searchHeader: {
-//     backgroundColor: "#eee",
-//   },
-//   bgd: {
-//     backgroundColor: "#eee",
-//   },
-//   titleWrapper: {
-//     alignItems: "center",
-//     marginTop: 20,
-//     marginBottom: 10,
-//   },
-//   title: {
-//     fontFamily: "Ukrainian-Bold",
-//     color: "#111",
-//     fontSize: 20,
-//   },
-//   form: {
-//     gap: 20,
-//     marginTop: 30,
-//     marginHorizontal: 30,
-//   },
-//   formBlock: {
-//     flex: 1,
-//     flexDirection: "row",
-//     gap: 10,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     marginBottom: 20,
-//   },
-//   label: {
-//     fontFamily: "Ukrainian-Regular",
-//     color: "#111",
-//     fontSize: 15,
-//     left: 8,
-//   },
-//   subtitle: {
-//     fontFamily: "Ukrainian-Bold",
-//     color: "#111",
-//     fontSize: 20,
-//   },
-//   input: {
-//     borderWidth: 2,
-//     borderColor: "#333",
-//     height: 50,
-//     borderRadius: 10,
-//     fontSize: 20,
-//     fontFamily: "Ukrainian-Regular",
-//     color: "#555",
-//     minWidth: 300,
-//   },
-//   pickerWrapper: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     gap: 5,
-//   },
-//   pickerBlock: {
-//     width: "33%",
-//     gap: 5,
-//   },
-//   searchBtn: {
-//     width: 50,
-//     height: 50,
-//     borderWidth: 2,
-//     borderColor: "#333",
-//     borderRadius: 10,
-//   },
-//   dropdown: {
-//     borderColor: "#333",
-//     borderWidth: 2,
-//     borderRadius: 10,
-//     minHeight: 45,
-//   },
-//   dropdownContainer: {
-//     backgroundColor: "#fff",
-//     borderColor: "#333",
-//     maxHeight: 200,
-//   },
-//   dropdownText: {
-//     fontFamily: "Ukrainian-Regular",
-//     fontSize: 10,
-//     color: "#111",
-//   },
-//   placeCard: {
-//     backgroundColor: "#fff",
-//     padding: 12,
-//     borderRadius: 12,
-//     marginBottom: 15,
-//     marginTop: 15,
-//     borderWidth: 1,
-//     borderColor: "#ddd",
-//   },
-//   placeImage: {
-//     width: "100%",
-//     aspectRatio: 16 / 9, // або 4/3 якщо фото інші
-//     borderRadius: 10,
-//   },
-//   placeTitle: {
-//     fontSize: 18,
-//     fontFamily: "Ukrainian-Bold",
-//     marginTop: 8,
-//   },
-//   regionWrapper: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     gap: 10,
-//     justifyContent: "space-between",
-//   },
-//   placeRegion: {
-//     fontSize: 14,
-//     color: "#555",
-//   },
-//   emptyText: {
-//     textAlign: "center",
-//     marginTop: 40,
-//     fontFamily: "Ukrainian-Regular",
-//     fontSize: 16,
-//   },
-//   loadMoreBtn: {
-//     marginVertical: 20,
-//     alignSelf: "center",
-//     paddingVertical: 12,
-//     paddingHorizontal: 25,
-//     backgroundColor: "#111",
-//     borderRadius: 8,
-//   },
-//   loadMoreText: {
-//     color: "#fff",
-//     fontSize: 16,
-//     fontFamily: "Ukrainian-Bold",
-//   },
-// });

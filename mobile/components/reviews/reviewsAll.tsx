@@ -8,10 +8,10 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import ReviewItem from "./reviewItem";
-import AddReviewForm from "../addReviewForm";
-import Rating from "../../star-rating";
-import { Review } from "./typesReviews";
+import ReviewItem from "./reviewItem/reviewItem";
+import AddReviewForm from "./addReviewForm";
+import Rating from "../star-rating";
+import { Review } from "./reviewItem/typesReviews";
 
 interface Props {
   reviews: Review[];
