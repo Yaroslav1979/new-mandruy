@@ -14,15 +14,9 @@ import { API_URL } from "../../constants/api";
 import { HeaderHatContent } from "../../components/HeaderHatContent";
 import PlaceCard, { Place } from "../../components/PlaceCard";
 import { PortalProvider } from "@gorhom/portal";
-import { useAuth } from "@/context/AuthContext";
 
 export default function SearchScreen() {
-  const { token, loading: authLoading } = useAuth();
-
   const [places, setPlaces] = useState<Place[]>([]);
-
-  // const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
-  // const [favoritesLoaded, setFavoritesLoaded] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -95,51 +89,6 @@ export default function SearchScreen() {
   useEffect(() => {
     fetchPlaces();
   }, []);
-
-  // useEffect(() => {
-  //   if (authLoading) return;
-
-  //   const fetchFavorites = async () => {
-  //     if (!token) {
-  //       setFavoriteIds([]);
-  //       setFavoritesLoaded(true);
-  //       return;
-  //     }
-
-  //     try {
-  //       const response = await fetch(`${API_URL}/api/places/favorites`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error("Не вдалося отримати обрані місця");
-  //       }
-
-  //       const data = await response.json();
-
-  //       setFavoriteIds(data.map((place: Place) => place._id));
-  //     } catch (error) {
-  //       console.error("Помилка отримання обраних місць:", error);
-  //     } finally {
-  //       setFavoritesLoaded(true);
-  //     }
-  //   };
-
-  //   setFavoritesLoaded(false);
-  //   fetchFavorites();
-  // }, [token, authLoading]);
-
-  // const handleFavoriteChange = (placeId: string, favorite: boolean) => {
-  //   setFavoriteIds((prev) => {
-  //     if (favorite) {
-  //       return prev.includes(placeId) ? prev : [...prev, placeId];
-  //     }
-
-  //     return prev.filter((id) => id !== placeId);
-  //   });
-  // };
 
   useEffect(() => {
     setVisibleCount(10);

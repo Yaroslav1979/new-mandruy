@@ -26,21 +26,18 @@ const ReviewsAll: React.FC<Props> = ({
   placeId,
   onReviewAdded,
   isAuthenticated,
-  totalRating, // Отримуємо з пропсів
+  totalRating,
 }) => {
   const [localReviews, setLocalReviews] = useState<Review[]>([]);
   const [limit, setLimit] = useState<number>(2);
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  // Відгук, який зараз редагується
+  const [editingReview, setEditingReview] = useState<Review | null>(null);
+
   useEffect(() => {
     setLocalReviews(reviews);
   }, [reviews]);
-
-  // const totalRating = useMemo((): string => {
-  //   if (!localReviews.length) return "0";
-  //   const total = localReviews.reduce((acc, r) => acc + r.rating, 0);
-  //   return (total / localReviews.length).toFixed(1);
-  // }, [localReviews]);
 
   const currentReviews = localReviews.slice(0, limit);
 
@@ -48,8 +45,32 @@ const ReviewsAll: React.FC<Props> = ({
     setLimit(limit === localReviews.length ? 2 : localReviews.length);
   };
 
-  const handleAdded = (): void => {
+  // Відкриття форми нового відгуку
+  const handleOpenNewReview = () => {
+    setEditingReview(null);
+    setShowModal(true);
+  };
+
+  // Відкриття форми редагування
+  const handleEditReview = (review: Review) => {
+    setEditingReview(review);
+    setShowModal(true);
+  };
+
+  // Закриття форми
+  const handleCloseModal = () => {
     setShowModal(false);
+    setEditingReview(null);
+  };
+
+  // Після створення або редагування
+  const handleSaved = () => {
+    handleCloseModal();
+    onReviewAdded();
+  };
+
+  // Після видалення
+  const handleDeleted = () => {
     onReviewAdded();
   };
 
@@ -65,18 +86,11 @@ const ReviewsAll: React.FC<Props> = ({
       </View>
 
       {isAuthenticated ? (
-        <TouchableOpacity
-          onPress={() => {
-            // if (!isAuthenticated) return;
-            setShowModal(!showModal);
-          }}
-        >
-          <Text style={styles.button}>
-            {showModal ? "Приховати" : "Залишити відгук"}
-          </Text>
+        <TouchableOpacity onPress={handleOpenNewReview}>
+          <Text style={styles.button}>Залишити відгук</Text>
         </TouchableOpacity>
       ) : (
-        <Text style={{ marginVertical: 10, fontFamily: "Ukrainian-Medium" }}>
+        <Text style={styles.registrationText}>
           Зареєструйтесь щоб залишити відгук
         </Text>
       )}
@@ -85,18 +99,19 @@ const ReviewsAll: React.FC<Props> = ({
         visible={showModal}
         transparent={false}
         animationType="fade"
-        onRequestClose={() => setShowModal(false)}
+        onRequestClose={handleCloseModal}
         supportedOrientations={["portrait", "landscape"]}
       >
-        <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
+        <TouchableWithoutFeedback onPress={handleCloseModal}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
-              {/* Цей порожній TouchableWithoutFeedback зупиняє закриття при кліку на саму форму */}
               <View style={styles.modalContent}>
                 <AddReviewForm
+                  key={editingReview?._id || "new-review"}
                   placeId={placeId}
-                  onAdded={handleAdded}
-                  onClose={() => setShowModal(false)} // Передаємо функцію закриття
+                  review={editingReview}
+                  onAdded={handleSaved}
+                  onClose={handleCloseModal}
                   isAuthenticated={isAuthenticated}
                 />
               </View>
@@ -106,14 +121,22 @@ const ReviewsAll: React.FC<Props> = ({
       </Modal>
 
       {currentReviews.map((review, index) => (
-        <ReviewItem key={review._id || index.toString()} review={review} />
+        <ReviewItem
+          key={review._id || index.toString()}
+          review={review}
+          placeId={placeId}
+          onEdit={handleEditReview}
+          onDeleted={handleDeleted}
+        />
       ))}
 
-      <TouchableOpacity onPress={toggleReviews}>
-        <Text style={styles.showMore}>
-          {limit >= localReviews.length ? "Згорнути" : "Читати більше..."}
-        </Text>
-      </TouchableOpacity>
+      {localReviews.length > 2 && (
+        <TouchableOpacity onPress={toggleReviews}>
+          <Text style={styles.showMore}>
+            {limit >= localReviews.length ? "Згорнути" : "Читати більше..."}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -139,6 +162,10 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     fontSize: 16,
     color: "blue",
+  },
+  registrationText: {
+    marginVertical: 10,
+    fontFamily: "Ukrainian-Medium",
   },
   showMore: {
     fontSize: 16,
