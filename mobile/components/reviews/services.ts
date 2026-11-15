@@ -22,10 +22,7 @@ export const postReview = async (
 ) => {
   const { data } = await axios.post(
     `${API_URL}/api/places/${placeId}/reviews`,
-    {
-      content: reviewData.content,
-      rating: reviewData.rating,
-    },
+    reviewData,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -36,33 +33,43 @@ export const postReview = async (
   return data;
 };
 
-// import axios from "axios";
-// import { API_URL } from "../../constants/api";
-// import { Review } from "./reviewItem/typesReviews";
+// Редагування відгуку
+export const updateReview = async (
+  placeId: string,
+  reviewId: string,
+  reviewData: {
+    content: string;
+    rating: number;
+  },
+  token: string,
+) => {
+  const { data } = await axios.patch(
+    `${API_URL}/api/places/${placeId}/reviews/${reviewId}`,
+    reviewData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
 
-// export const getReviewsByPlaceId = async (
-//   placeId: string,
-// ): Promise<Review[]> => {
-//   const { data } = await axios.get<Review[]>(
-//     `${API_URL}/api/places/${placeId}/reviews`,
-//   );
+  return data;
+};
 
-//   return data;
-// };
+// Видалення відгуку
+export const deleteReview = async (
+  placeId: string,
+  reviewId: string,
+  token: string,
+) => {
+  const { data } = await axios.delete(
+    `${API_URL}/api/places/${placeId}/reviews/${reviewId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
 
-// export const postReview = async (reviewData: {
-//   author: string;
-//   content: string;
-//   rating: number;
-//   placeId: string;
-// }) => {
-//   // Важливо: переносимо placeId в URL, як того очікує бекенд
-//   return await axios.post(
-//     `${API_URL}/api/places/${reviewData.placeId}/reviews`,
-//     {
-//       author: reviewData.author,
-//       content: reviewData.content,
-//       rating: reviewData.rating,
-//     },
-//   );
-// };
+  return data;
+};

@@ -1,6 +1,7 @@
 <template>
   <div v-if="isBlocked" class="review-form__blocked">
-    Ваш обліковий запис заблоковано. Ви не можете залишати відгуки.
+    Ваш обліковий запис заблоковано. Ви не можете залишати або редагувати
+    відгуки.
   </div>
 
   <div v-else-if="isAuthenticated">
@@ -27,7 +28,17 @@
       </p>
 
       <button type="submit" class="review-form__submit" :disabled="submitting">
-        {{ submitting ? "Надсилання..." : "Надіслати" }}
+        {{
+          submitting
+            ? "Збереження..."
+            : isEditing
+            ? "Зберегти зміни"
+            : "Надіслати"
+        }}
+      </button>
+
+      <button type="button" class="review-form__cancel" @click="$emit('close')">
+        Скасувати
       </button>
     </form>
   </div>
@@ -36,7 +47,12 @@
 </template>
 
 <script>
-import { postReview, getCurrentUser } from "../../services/reviews.service.js";
+import {
+  postReview,
+  updateReview,
+  getCurrentUser,
+} from "../../services/reviews.service.js";
+
 import CustomTextarea from "../shared/CustomTextArea.vue";
 
 export default {
@@ -51,12 +67,19 @@ export default {
       type: String,
       required: true,
     },
+
+    review: {
+      type: Object,
+      default: null,
+    },
   },
+
+  emits: ["review-added", "close"],
 
   data() {
     return {
-      content: "",
-      rating: 5,
+      content: this.review?.content || "",
+      rating: this.review?.rating || 5,
       submitting: false,
       isBlocked: false,
       errorMessage: "",
@@ -66,6 +89,10 @@ export default {
   computed: {
     isAuthenticated() {
       return !!this.$store.state.auth.token;
+    },
+
+    isEditing() {
+      return !!this.review;
     },
   },
 
@@ -102,20 +129,25 @@ export default {
       try {
         const token = this.$store.state.auth.token;
 
-        await postReview({
-          placeId: this.placeId,
-          content: this.content.trim(),
-          rating: this.rating,
-          token,
-        });
-
-        this.content = "";
-        this.rating = 5;
+        if (this.isEditing) {
+          await updateReview(this.placeId, this.review._id, {
+            content: this.content.trim(),
+            rating: this.rating,
+            token,
+          });
+        } else {
+          await postReview({
+            placeId: this.placeId,
+            content: this.content.trim(),
+            rating: this.rating,
+            token,
+          });
+        }
 
         this.$emit("review-added");
       } catch (err) {
         this.errorMessage =
-          err.response?.data?.message || "Не вдалося надіслати відгук.";
+          err.response?.data?.message || "Не вдалося зберегти відгук.";
 
         if (err.response?.status === 403) {
           this.isBlocked = true;
@@ -150,6 +182,7 @@ export default {
   &__input,
   &__textarea,
   &__submit,
+  &__cancel,
   select {
     width: 100%;
     box-sizing: border-box;
@@ -166,13 +199,22 @@ export default {
   }
 
   &__submit {
-    background-color: #000000;
+    background-color: #000;
     color: white;
     border: none;
     cursor: pointer;
 
     &:hover {
       opacity: 0.7;
+    }
+  }
+
+  &__cancel {
+    background: white;
+    cursor: pointer;
+
+    &:hover {
+      background: #eee;
     }
   }
 }

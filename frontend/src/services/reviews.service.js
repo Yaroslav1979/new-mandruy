@@ -1,18 +1,3 @@
-// import axios from 'axios';
-
-// export const getReviewsByPlaceId = (placeId) => {
-//   return axios.get(`http://localhost:3000/api/places/${placeId}/reviews`);
-// };
-
-// export const postReview = ({ placeId, author, content, rating }) => {
-//     console.log(placeId);
-//   return axios.post(`http://localhost:3000/api/places/${placeId}/reviews`, {
-//     author,
-//     content,
-//     rating
-//   });
-// };
-
 import axios from "axios";
 
 export const API_URL = "http://localhost:3000/api";
@@ -52,3 +37,10 @@ export const getBlockedUsers = (token) =>
   axios.get(`${API_URL}/auth/admin/users`, {
     headers: authHeaders(token),
   });
+
+export const updateReview = (placeId, reviewId, { content, rating, token }) =>
+  axios.patch(
+    `${API_URL}/places/${placeId}/reviews/${reviewId}`,
+    { content, rating },
+    { headers: authHeaders(token) },
+  );

@@ -350,6 +350,7 @@ const styles = StyleSheet.create({
     fontFamily: "Ukrainian-Regular",
     color: "#111",
     backgroundColor: "#eeeeee90",
+    paddingHorizontal: 20,
   },
 
   btn: {

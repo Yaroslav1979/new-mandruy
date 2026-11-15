@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,15 +9,17 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { postReview } from "./services";
+import { postReview, updateReview } from "./services";
 import Rating from "../star-rating";
 import { useAuth } from "@/context/AuthContext";
+import { Review } from "./reviewItem/typesReviews";
 
 interface Props {
   placeId: string;
   onAdded: () => void;
   onClose: () => void;
   isAuthenticated: boolean;
+  review?: Review | null;
 }
 
 const AddReviewForm: React.FC<Props> = ({
@@ -25,16 +27,28 @@ const AddReviewForm: React.FC<Props> = ({
   onAdded,
   onClose,
   isAuthenticated,
+  review,
 }) => {
   const { token } = useAuth();
 
-  const [content, setContent] = useState("");
-  const [rating, setRating] = useState(5);
+  const [content, setContent] = useState(review?.content || "");
+  const [rating, setRating] = useState(review?.rating || 5);
   const [submitting, setSubmitting] = useState(false);
+
+  // Заповнюємо форму при переході в режим редагування
+  useEffect(() => {
+    setContent(review?.content || "");
+    setRating(review?.rating || 5);
+  }, [review]);
 
   const submitReview = async () => {
     if (!content.trim()) {
       Alert.alert("Увага", "Напишіть текст відгуку.");
+      return;
+    }
+
+    if (content.trim().length > 1000) {
+      Alert.alert("Увага", "Максимальна довжина відгуку — 1000 символів.");
       return;
     }
 
@@ -51,27 +65,31 @@ const AddReviewForm: React.FC<Props> = ({
     setSubmitting(true);
 
     try {
-      await postReview(
-        placeId,
-        {
-          content: content.trim(),
-          rating,
-        },
-        token,
-      );
+      const reviewData = {
+        content: content.trim(),
+        rating,
+      };
+
+      if (review?._id) {
+        // Редагування наявного відгуку
+        await updateReview(placeId, review._id, reviewData, token);
+      } else {
+        // Створення нового відгуку
+        await postReview(placeId, reviewData, token);
+      }
 
       onAdded();
-      onClose();
     } catch (error: any) {
-      console.error(
-        "Помилка надсилання відгуку:",
-        error.response?.data || error.message || error,
+      console.log(
+        "Помилка збереження відгуку:",
+        error.response?.status,
+        error.response?.data || error.message,
       );
 
       Alert.alert(
         "Помилка",
         error.response?.data?.message ||
-          "Не вдалося надіслати відгук. Спробуйте ще раз.",
+          "Не вдалося зберегти відгук. Спробуйте ще раз.",
       );
     } finally {
       setSubmitting(false);
@@ -94,7 +112,9 @@ const AddReviewForm: React.FC<Props> = ({
 
   return (
     <View style={styles.form}>
-      <Text style={styles.modalTitle}>Новий відгук</Text>
+      <Text style={styles.modalTitle}>
+        {review ? "Редагувати відгук" : "Новий відгук"}
+      </Text>
 
       <TextInput
         placeholder="Ваш відгук"
@@ -104,6 +124,7 @@ const AddReviewForm: React.FC<Props> = ({
         multiline
         textAlignVertical="top"
         editable={!submitting}
+        maxLength={1000}
       />
 
       <View style={styles.ratingContainer}>
@@ -128,7 +149,9 @@ const AddReviewForm: React.FC<Props> = ({
           {submitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.submitText}>Надіслати</Text>
+            <Text style={styles.submitText}>
+              {review ? "Зберегти" : "Надіслати"}
+            </Text>
           )}
         </TouchableOpacity>
       </View>

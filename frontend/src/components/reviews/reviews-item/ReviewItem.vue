@@ -6,7 +6,18 @@
       {{ review.content }}
     </p>
 
-    <div v-if="isAdmin" class="reviews-item__admin">
+    <div v-if="isOwner || isAdmin" class="reviews-item__admin">
+      <!-- Редагувати може тільки автор -->
+      <button
+        v-if="isOwner"
+        type="button"
+        class="reviews-item__admin-button"
+        @click="$emit('edit-review', review)"
+      >
+        Редагувати
+      </button>
+
+      <!-- Видаляти може автор або адміністратор -->
       <button
         type="button"
         class="reviews-item__admin-button reviews-item__admin-button--delete"
@@ -15,8 +26,9 @@
         Видалити відгук
       </button>
 
+      <!-- Блокування доступне тільки адміністратору -->
       <button
-        v-if="reviewUserId"
+        v-if="isAdmin && reviewUserId && !isOwner"
         type="button"
         class="reviews-item__admin-button"
         @click="
@@ -53,9 +65,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    currentUserId: {
+      type: String,
+      default: null,
+    },
   },
 
-  emits: ["delete-review", "toggle-block"],
+  emits: ["edit-review", "delete-review", "toggle-block"],
 
   computed: {
     reviewUserId() {
@@ -64,6 +80,14 @@ export default {
       if (!user) return null;
 
       return typeof user === "object" ? user._id : user;
+    },
+
+    isOwner() {
+      return (
+        !!this.currentUserId &&
+        !!this.reviewUserId &&
+        this.currentUserId.toString() === this.reviewUserId.toString()
+      );
     },
   },
 };

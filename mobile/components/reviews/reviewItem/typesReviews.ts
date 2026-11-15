@@ -4,4 +4,10 @@ export interface Review {
   content: string;
   rating: number;
   placeId?: string;
+  userId?:
+    | string
+    | {
+        _id: string;
+        name?: string;
+      };
 }

@@ -168,6 +168,10 @@ const deleteUnusedImages = async (urls, placeId) => {
 // Перевірка ObjectId
 const isValidId = (id) => mongoose.isValidObjectId(id);
 
+const getUserId = (req) => {
+  return req.user?.id?.toString() || "";
+};
+
 // =====================================================
 // 1. СТВОРЕННЯ МІСЦЯ
 
@@ -347,7 +351,7 @@ router.get("/:placeId/reviews", async (req, res) => {
     }
 
     const reviews = await Review.find({ placeId })
-      .populate("userId", "name")
+      .populate("userId", "name isBlocked")
       .sort({ _id: -1 });
 
     return res.json(reviews);
@@ -359,17 +363,17 @@ router.get("/:placeId/reviews", async (req, res) => {
     });
   }
 });
+//======================================================
 
-// =====================================================
-// 6. ВИДАЛЕННЯ ВІДГУКУ АДМІНІСТРАТОРОМ
-
-router.delete(
+// 5а. РЕДАГУВАННЯ ВЛАСНОГО ВІДГУКУ
+router.patch(
   "/:placeId/reviews/:reviewId",
   verifyToken,
-  requireAdmin,
+  requireNotBlocked,
   async (req, res) => {
     try {
       const { placeId, reviewId } = req.params;
+      const { content, rating } = req.body;
 
       if (!isValidId(placeId) || !isValidId(reviewId)) {
         return res.status(400).json({
@@ -377,7 +381,29 @@ router.delete(
         });
       }
 
-      const review = await Review.findOneAndDelete({
+      if (
+        typeof content !== "string" ||
+        !content.trim() ||
+        content.trim().length > 1000
+      ) {
+        return res.status(400).json({
+          message: "Відгук має містити від 1 до 1000 символів",
+        });
+      }
+
+      const numericRating = Number(rating);
+
+      if (
+        !Number.isInteger(numericRating) ||
+        numericRating < 1 ||
+        numericRating > 5
+      ) {
+        return res.status(400).json({
+          message: "Оцінка має бути цілим числом від 1 до 5",
+        });
+      }
+
+      const review = await Review.findOne({
         _id: reviewId,
         placeId,
       });
@@ -388,33 +414,128 @@ router.delete(
         });
       }
 
-      const [remainingReviews, place] = await Promise.all([
-        Review.find({ placeId }),
-        Place.findById(placeId),
-      ]);
+      const currentUserId = getUserId(req);
+      const reviewUserId = review.userId.toString();
+
+      console.log("PATCH review authorization:", {
+        currentUserId,
+        reviewUserId,
+        role: req.user.role,
+      });
+
+      if (reviewUserId !== currentUserId) {
+        return res.status(403).json({
+          message: "Ви можете редагувати лише власні відгуки",
+        });
+      }
+
+      review.content = content.trim();
+      review.rating = numericRating;
+
+      await review.save();
+
+      // Перерахунок середнього рейтингу
+      const reviews = await Review.find({ placeId });
+
+      const place = await Place.findById(placeId);
 
       if (place) {
-        place.rating = remainingReviews.length
-          ? remainingReviews.reduce((sum, item) => sum + item.rating, 0) /
-            remainingReviews.length
+        place.rating = reviews.length
+          ? reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length
           : 0;
 
         await place.save();
       }
 
       return res.json({
-        message: "Відгук видалено",
+        message: "Відгук успішно оновлено",
+        review,
         rating: place ? place.rating : 0,
       });
     } catch (error) {
-      console.error("Помилка видалення відгуку:", error);
+      console.error("Помилка редагування відгуку:", error);
 
       return res.status(500).json({
-        message: "Помилка видалення відгуку",
+        message: "Помилка редагування відгуку",
       });
     }
   },
 );
+
+// =====================================================
+// 6. ВИДАЛЕННЯ ВЛАСНОГО ВІДГУКУ АБО АДМІНІСТРАТОРОМ
+router.delete("/:placeId/reviews/:reviewId", verifyToken, async (req, res) => {
+  try {
+    const { placeId, reviewId } = req.params;
+
+    if (!isValidId(placeId) || !isValidId(reviewId)) {
+      return res.status(400).json({
+        message: "Некоректний ID місця або відгуку",
+      });
+    }
+
+    const review = await Review.findOne({
+      _id: reviewId,
+      placeId,
+    });
+
+    if (!review) {
+      return res.status(404).json({
+        message: "Відгук не знайдено",
+      });
+    }
+
+    const currentUserId = getUserId(req);
+    const reviewUserId = review.userId.toString();
+
+    const isAdmin = req.user.role === "admin";
+    const isOwner = reviewUserId === currentUserId;
+
+    console.log("DELETE review authorization:", {
+      currentUserId,
+      reviewUserId,
+      role: req.user.role,
+      isOwner,
+      isAdmin,
+    });
+
+    // const isAdmin = req.user.role === "admin";
+    // const isOwner = review.userId.toString() === req.user.id;
+
+    if (!isAdmin && !isOwner) {
+      return res.status(403).json({
+        message: "Немає прав на видалення цього відгуку",
+      });
+    }
+
+    await Review.findByIdAndDelete(reviewId);
+
+    const [remainingReviews, place] = await Promise.all([
+      Review.find({ placeId }),
+      Place.findById(placeId),
+    ]);
+
+    if (place) {
+      place.rating = remainingReviews.length
+        ? remainingReviews.reduce((sum, item) => sum + item.rating, 0) /
+          remainingReviews.length
+        : 0;
+
+      await place.save();
+    }
+
+    return res.json({
+      message: "Відгук успішно видалено",
+      rating: place ? place.rating : 0,
+    });
+  } catch (error) {
+    console.error("Помилка видалення відгуку:", error);
+
+    return res.status(500).json({
+      message: "Помилка видалення відгуку",
+    });
+  }
+});
 
 // =====================================================
 // 7. МОЇ МІСЦЯ

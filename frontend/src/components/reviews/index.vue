@@ -28,9 +28,11 @@
       <div class="modal-content">
         <AddReviewForm
           v-if="placeId"
+          :key="editingReview?._id || 'new-review'"
           :placeId="placeId"
+          :review="editingReview"
           @review-added="handleAdded"
-          @close="showModal = false"
+          @close="closeReviewModal"
         />
       </div>
     </div>
@@ -39,7 +41,9 @@
       v-for="review in currentReviews"
       :key="review._id"
       :review="review"
-      :isAdmin="isAdmin"
+      :is-admin="isAdmin"
+      :current-user-id="currentUser?._id"
+      @edit-review="openEditReview"
       @delete-review="handleDeleteReview"
       @toggle-block="handleToggleBlock"
     />
@@ -123,6 +127,7 @@ export default {
       currentUser: null,
       blockedUsers: [],
       actionLoading: false,
+      editingReview: null,
     };
   },
 
@@ -224,12 +229,30 @@ export default {
     },
 
     handleAdded() {
-      this.showModal = false;
+      this.closeReviewModal();
       this.$emit("review-added");
     },
 
+    openEditReview(review) {
+      this.editingReview = { ...review };
+      this.showModal = true;
+    },
+
+    closeReviewModal() {
+      this.showModal = false;
+      this.editingReview = null;
+    },
+
     async handleDeleteReview(review) {
-      if (!this.isAdmin || this.actionLoading) return;
+      if (this.actionLoading) return;
+
+      const reviewUserId =
+        typeof review.userId === "object" ? review.userId?._id : review.userId;
+
+      const isOwner =
+        this.currentUser?._id?.toString() === reviewUserId?.toString();
+
+      if (!this.isAdmin && !isOwner) return;
 
       const confirmed = window.confirm(
         "Видалити цей відгук? Цю дію неможливо скасувати.",

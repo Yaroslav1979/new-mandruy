@@ -2,16 +2,18 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View, Modal } from "react-native";
 import { useAuth } from "../context/AuthContext";
+
 export function BurgerMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+
+  const navigate = (path: string) => {
+    setMenuOpen(false);
+    router.push(path as any);
+  };
+
   return (
-    <View
-      style={{
-        display: "flex",
-        flexDirection: "row",
-      }}
-    >
+    <View style={styles.container}>
       <Pressable onPress={() => setMenuOpen((prev) => !prev)}>
         <Image
           source={require("@/assets/images/burger-menu-67.png")}
@@ -24,53 +26,35 @@ export function BurgerMenu() {
           transparent
           animationType="fade"
           supportedOrientations={["portrait", "landscape"]}
+          onRequestClose={() => setMenuOpen(false)}
         >
           <Pressable style={styles.overlay} onPress={() => setMenuOpen(false)}>
             <View style={styles.dropdown}>
-              <Pressable
-                onPress={() => {
-                  setMenuOpen(false);
-                  router.push("/");
-                }}
-              >
+              <Pressable onPress={() => navigate("/")}>
                 <Text style={styles.dropdownItem}>Головна</Text>
               </Pressable>
 
-              <Pressable
-                onPress={() => {
-                  setMenuOpen(false);
-                  router.push("/search");
-                }}
-              >
+              <Pressable onPress={() => navigate("/search")}>
                 <Text style={styles.dropdownItem}>Пошук місць</Text>
               </Pressable>
 
               {token && (
-                <Pressable
-                  onPress={() => {
-                    setMenuOpen(false);
-                    router.push("/addPlace");
-                  }}
-                >
+                <Pressable onPress={() => navigate("/addPlace")}>
                   <Text style={styles.dropdownItem}>Додати місце</Text>
                 </Pressable>
               )}
 
-              <Pressable
-                onPress={() => {
-                  setMenuOpen(false);
-                  router.push("/map");
-                }}
-              >
+              <Pressable onPress={() => navigate("/map")}>
                 <Text style={styles.dropdownItem}>Мапа</Text>
               </Pressable>
 
-              <Pressable
-                onPress={() => {
-                  setMenuOpen(false);
-                  router.push("/aboutUs");
-                }}
-              >
+              {user?.role === "admin" && (
+                <Pressable onPress={() => navigate("/admin")}>
+                  <Text style={styles.dropdownItem}>Адміністрування</Text>
+                </Pressable>
+              )}
+
+              <Pressable onPress={() => navigate("/aboutUs")}>
                 <Text style={styles.dropdownItem}>Про нас</Text>
               </Pressable>
             </View>
@@ -82,8 +66,11 @@ export function BurgerMenu() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+  },
+
   reactMenu: {
-    paddingTop: -50,
     height: 50,
     width: 50,
   },
